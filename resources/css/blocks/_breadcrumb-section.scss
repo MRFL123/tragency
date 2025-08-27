@@ -1,0 +1,27 @@
+.breadcrumb-section {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.85) 100%);
+
+
+    [dir="ltr"] &  {
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.85) 92.81%);
+    }
+  }
+
+  a {
+    color: $brand-primary;
+
+    &.active,
+    &:hover {
+      color: $brand-white;
+    }
+  }
+}

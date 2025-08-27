@@ -1,0 +1,107 @@
+.services-archive {
+    .posts {
+        .container-cards {
+            column-count: 2;
+            column-gap: 20px;
+            margin: auto;
+
+            .card-services {
+                break-inside: avoid;
+                overflow: hidden;
+                border-radius: 8px;
+
+
+                &:not(:last-child) {
+                    margin-bottom: 15px;
+                }
+
+                &:nth-child(1) {
+                    height: 205px;
+                }
+
+                &:nth-child(2) {
+                    height: 328px;
+                }
+
+                &:nth-child(3) {
+                    height: 287px;
+                }
+
+                &:nth-child(4) {
+                    height: 246px;
+                }
+
+                &:not(:last-child) {
+                    margin-bottom: 15px;
+                }
+
+                &:hover {
+                    .image-back {
+                        transition: all .5s;
+                        scale: 1.4;
+                    }
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                column-count: 1;
+                column-gap: 0;
+
+                .card-services {
+                    height: 300px !important;
+                }
+            }
+        }
+
+        .card-services {
+            .content {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                z-index: 7 !important;
+            }
+
+            .image-back {
+                object-fit: cover !important;
+            }
+
+            .overlay {
+                z-index: 5;
+                background: #0004;
+            }
+
+            * {
+                transition: all .5s;
+            }
+
+            .img {
+                min-width: 35px;
+                min-height: 36px;
+                background-color: $brand-white;
+            }
+
+            &:hover {
+                &>* {
+                    transition: all .5s;
+                }
+
+                .overlay {
+                    background: #0006;
+                }
+
+                .title {
+                    color: $brand-primary !important;
+                }
+
+                transition: .5s;
+
+                .img {
+                    background-color: $brand-primary;
+                }
+
+
+            }
+        }
+    }
+}

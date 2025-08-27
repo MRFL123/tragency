@@ -1,0 +1,37 @@
+.banner-block {
+    min-height: 500px;
+    // background-repeat: no-repeat;
+    // background-size: 100% 100%;
+
+    @include media-breakpoint-down(md) {
+        min-height: 300px;
+    }
+
+    .content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .breadcrumb-item {
+        a {
+            color: $brand-white !important;
+        }
+
+        &::before {
+            color: $brand-white;
+        }
+
+        &.active {
+            color: $brand-primary !important;
+        }
+    }
+
+}

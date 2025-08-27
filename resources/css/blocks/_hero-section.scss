@@ -1,0 +1,228 @@
+.main-slider {
+  min-height: 80vh;
+
+  @include media-breakpoint-up(lg) {
+    overflow: hidden;
+  }
+
+  .slide-wrapper {
+    .slick-list {
+      // .slick-track {
+      //   min-height: 70vh;
+      //   display: flex;
+      // }
+
+      .slick-slide {
+        height: inherit !important;
+
+        .slide-content {
+          .content {
+            position: relative;
+            top: -200px;
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+
+            * {
+              line-height: 150%;
+            }
+
+            p {
+              font-size: 22px;
+              line-height: 36px;
+              font-family: $primary-font;
+              color: #EDEDED;
+
+              @include media-breakpoint-down(md) {
+                font-size: 16px;
+                line-height: 24px;
+              }
+            }
+          }
+
+          @include media-breakpoint-down(md) {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: start;
+          }
+        }
+
+        &.slick-current {
+          .slide-content {
+            .content {
+              transition: all 1s ease-in-out;
+              top: 0;
+              opacity: 1;
+            }
+
+            .slide-img {
+              bottom: -25px;
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      padding: 0 20px;
+    }
+
+    @include media-breakpoint-down(lg) {
+      padding: 0 15px;
+    }
+  }
+
+  .slick-arrows {
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    left: -40px;
+    top: 0;
+
+    [dir="rtl"] &  {
+      left: auto;
+      right: -40px;
+    }
+
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      left: -5px;
+
+      [dir="rtl"] &  {
+        left: auto;
+        right: -5px;
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      height: auto;
+      width: 100%;
+      top: auto;
+      left: 0;
+      bottom: -25px;
+
+      .next-btn,
+      .prev-btn {
+        display: none !important;
+      }
+
+      [dir="rtl"] &  {
+        left: auto;
+        right: 0;
+      }
+    }
+
+    .slick-dots {
+      height: auto;
+      flex-direction: column;
+      gap: 24px;
+      margin: 10px 0;
+
+      li  {
+        button {
+          width: 12px;
+          height: 12px;
+          background: #9B9999;
+          border-radius: 50%;
+
+          &::before {
+            transition: all 0.5s ease-in-out;
+          }
+        }
+
+
+        &.slick-active {
+          button {
+            background-color: $brand-white;
+            opacity: 1;
+            width: 15px;
+            height: 15px;
+
+            &::before {
+              border: 1px solid $brand-white;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+
+      @include media-breakpoint-down(lg) {
+        flex-direction: row;
+        gap: 4px;
+
+        li  {
+          button {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+
+
+
+.tooglePlay {
+  position: absolute;
+  top: 50%;
+  right: 25%;
+  transform: translate(0%, -50%);
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 78px;
+  height: 78px;
+  background: #222;
+  overflow: visible;
+  z-index: 10;
+
+  span {
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.tooglePlay svg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  transform: translate(50%, -50%) scale(0);
+  background: radial-gradient(circle at 49.64% 46.4%, #999999 0%, rgba(255,255,255,0) 100%);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 1;
+  animation: rippleAnim 3s infinite;
+}
+
+.ripple2 {
+  animation-delay: 1.2s;
+}
+
+@keyframes rippleAnim {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+    }
+    70% {
+      transform: translate(-50%, -50%) scale(1.45);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1.6);
+      opacity: 0;
+    }
+  }
+}

@@ -1,0 +1,53 @@
+.block-section-counter {
+  .container-image {
+    position: relative;
+    min-height: 500px;
+
+    @include media-breakpoint-down(sm) {
+      min-height: 300px;
+    }
+
+    img {
+      border: 11px solid $white;
+      position: absolute;
+      object-fit: cover;
+
+      &.image-left {
+        top: 0;
+        right: 0;
+        width: 70%;
+        height: 50%;
+
+        @include media-breakpoint-down(sm) {
+          top: 0;
+          width: 85%;
+          height: auto;
+        }
+      }
+
+      &.image-right {
+        left: 0;
+        bottom: 0;
+        width: 70%;
+        height: 70%;
+
+        @include media-breakpoint-down(sm) {
+          bottom: -20px;
+          width: 90%;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .container-counter {
+    .title .svg {
+      position: absolute;
+      bottom: -18px;
+      left: 0;
+    }
+
+    .card-counter {
+    }
+  }
+}

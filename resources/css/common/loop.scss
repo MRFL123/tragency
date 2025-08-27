@@ -1,0 +1,204 @@
+@use 'sass:list';
+
+@each $theme-color in $theme-all-color {
+  $name: list.nth($theme-color, 1);
+  $brand-color: list.nth($theme-color, 2);
+  $brand-text: list.nth($theme-color, 3);
+  $brand-text-secondry: list.nth($theme-color, 4);
+
+  .bg-#{$name} {
+    background-color: $brand-color !important;
+
+    .text-secondry-color {
+      background-color: $brand-text-secondry !important;
+    }
+  }
+
+  .text-#{$name} {
+    color: $brand-color !important;
+  }
+
+  .border-#{$name} {
+    border-color: $brand-color !important;
+  }
+
+  .text-#{$name}-deep {
+    color: $brand-color !important;
+
+    * {
+      color: $brand-color;
+    }
+  }
+
+  .btn-#{$name} {
+    background-color: $brand-color !important;
+    color: $brand-text !important;
+    padding: 10px 60px;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: $brand-text !important;
+      color: $brand-color !important;
+    }
+  }
+
+  .btn-outline-#{$name} {
+    background: transparent !important;
+    border: 2px solid $brand-color !important;
+    border-radius: 6px !important;
+    color: $brand-color !important;
+    padding: 6px 50px;
+    transition: all 0.3s !important;
+
+    &:hover {
+      background: $brand-color !important;
+      border: 2px solid $brand-color !important;
+      color: $brand-white !important;
+      transition: all 0.3s !important;
+    }
+  }
+}
+
+// ===================================
+// generate .rotate-10 , rotate-20 ...
+// ===================================
+@each $name, $value in $rotations {
+  // $class:$value*10;
+  $rotate: $value * 1deg;
+
+  html:lang(en) {
+    .rotate-#{$name} {
+      transform: rotate($rotate);
+    }
+  }
+
+  html:lang(ar) {
+    .rotate-#{$name} {
+      transform: rotate($rotate * -1);
+    }
+  }
+}
+
+// ===================================
+// generate font-sizes
+// ===================================
+
+@each $name, $value in $ui-fonts {
+  .font-#{$name} {
+    font-size: $value * 1px !important;
+
+    // @media (min-width: 991px) and (max-width: 1320px) {
+    //   font-size: $value * 0.70px !important;
+    // }
+
+    @include media-breakpoint-down(lg) {
+      font-size: $value * 0.70px !important;
+    }
+  }
+
+  .font-#{$name}-deep {
+    font-size: $value * 1px !important;
+
+    // @media (min-width: 991px) and (max-width: 1320px) {
+    //   font-size: $value * 0.80px !important;
+    // }
+
+    @include media-breakpoint-down(lg) {
+      font-size: $value * 0.70px !important;
+    }
+
+    * {
+      font-size: $value * 1px !important;
+
+      @media (min-width: 991px) and (max-width: 1320px) {
+        font-size: $value * 0.80px !important;
+      }
+
+      @include media-breakpoint-down(lg) {
+        font-size: $value * 0.70px !important;
+      }
+    }
+  }
+
+  .lh-#{$name} {
+    line-height: $value * 1px;
+
+    @media (min-width: 991px) and (max-width: 1320px) {
+      line-height: $value * 0.80px !important;
+    }
+
+    @include media-breakpoint-down(lg) {
+      line-height: $value * 0.70px;
+    }
+  }
+
+  .lh-#{$name}-deep {
+    line-height: $value * 1px;
+
+    @media (min-width: 991px) and (max-width: 1320px) {
+      line-height: $value * 0.80px !important;
+    }
+
+    @include media-breakpoint-down(lg) {
+      line-height: $value * 0.70px;
+    }
+
+    * {
+      line-height: $value * 1px;
+
+      @media (min-width: 991px) and (max-width: 1320px) {
+        line-height: $value * 0.70px !important;
+      }
+
+      @include media-breakpoint-down(lg) {
+        line-height: $value * 0.70px;
+      }
+    }
+  }
+
+  .rounded-#{$name} {
+    border-radius: $value * 1px;
+    overflow: hidden;
+  }
+
+}
+
+@each $name, $value in $ui-fonts-weights {
+  .fw-#{$name} {
+    font-weight: $value !important;
+  }
+
+  .fw-#{$name}-deep {
+    font-weight: $value !important;
+
+    * {
+      font-weight: $value !important;
+    }
+  }
+}
+
+// // ===================================
+// generate Z-indexes
+// // ===================================
+
+@each $name, $value in $z-indexes {
+  .z-index-#{$name} {
+    z-index: $value;
+  }
+}
+
+// // ===================================
+// generate spacers
+// // ===================================
+
+@each $name, $value in $spacer-variations {
+  .spacer-#{$name} {
+    height: $value * 1px;
+    width: 100%;
+    display: block;
+
+    @media (max-width: 1320px) {
+      height: $value * 0.6px;
+    }
+  }
+}

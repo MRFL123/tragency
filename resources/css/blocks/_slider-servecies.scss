@@ -1,0 +1,108 @@
+.services-slider {
+    height: fit-content !important;
+
+    .line-height-title {
+        line-height: 46px;
+    }
+
+    .arrws-title {
+        position: absolute;
+        left: 0;
+        top: 38px;
+
+        @include media-breakpoint-down(xl) {
+            top: 28px;
+        }
+    }
+
+    .control {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        width: 50%;
+        transform: translate(50%, -50%);
+        z-index: 1000;
+
+        .arrow-left,
+        .arrow-right {
+            cursor: pointer !important;
+
+            html[dir="rtl"] &,
+            &[dir="rtl"] {
+                rotate: 180deg;
+            }
+
+        }
+
+        @media (max-width: 767.98px) {
+            & {
+                width: 100%;
+            }
+        }
+    }
+
+
+
+    .height-image {
+        height: 519px !important;
+
+        @media (max-width: 767.98px) {
+            & {
+                height: 300px !important;
+            }
+        }
+    }
+
+    .item-slide {
+
+        .content {
+            opacity: 0;
+
+            .btn-more {
+                width: fit-content !important;
+                height: fit-content !important;
+            }
+        }
+
+        &.slick-active.slick-center .content {
+            opacity: 1;
+            transition: 1s;
+        }
+    }
+
+    ///block cards ///////////////////
+    .container-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+
+        .card {
+            border: 2px solid transparent;
+            box-shadow: 0 0 4.42px 0 rgba(0, 0, 0, 0.15);
+
+            .img {
+                min-width: 35px;
+                min-height: 36px;
+                background-color: $brand-black;
+            }
+
+            transition: .5s;
+
+            &:hover {
+                transition: .5s;
+                color: $brand-primary ;
+                border: 2px solid $brand-primary ;
+
+                .img {
+                    background-color: $brand-primary;
+                }
+
+                .title {
+                    color: $brand-primary;
+                }
+
+            }
+
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.media-with-content {
+  position: relative;
+
+  .victor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    [dir="rtl"] & {
+      left: auto;
+      right: 0;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Tw Cen MT';
+  src: url('@fonts/TwCenMTStd.otf') format("opentype"),
+}
+
+@font-face {
+  font-family: 'Tw Cen MT Bold';
+  src: url('@fonts/TwCenMTStdBold.otf') format("opentype"),
+}
+
+// @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+
+//fonts
+$primary-font: 'Tw Cen MT', sans-serif;
+$font-bold: 'Tw Cen MT Bold', sans-serif;

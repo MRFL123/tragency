@@ -1,0 +1,52 @@
+.image-with-content {
+  background: linear-gradient(50.22deg, #0D111A 0%, #144A8B 71.1%);
+
+  .image-col {
+    @include media-breakpoint-up(md) {
+      clip-path: polygon(0 0, 85% 0, 100% 100%, 0 100%);
+
+      [dir="rtl"] & {
+        clip-path: polygon(15% 0%, 100% 0, 100% 100%, 0% 100%);
+      }
+    }
+  }
+
+  .text-col {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    @include media-breakpoint-down(md) {
+      padding: 30px 15px;
+    }
+
+    .description {
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .right-icon {
+      position: absolute;
+      inset-inline-end: 45px;
+      top: 0;
+
+      @include media-breakpoint-down(md) {
+        inset-inline-end: 0;
+      }
+    }
+
+    .left-icon {
+      position: absolute;
+      left: -11%;
+      top: 0;
+
+      [dir="rtl"] & {
+        right: -8%;
+        rotate: 22deg;
+        left: auto;
+      }
+
+    }
+  }
+}

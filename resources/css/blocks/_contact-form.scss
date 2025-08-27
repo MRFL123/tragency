@@ -1,0 +1,33 @@
+.contact-form {
+  position: relative;
+  background-color: #F2F7F6;
+
+  .info {
+    .content {
+      h4, h5, h6 {
+        font-weight: 700 !important;
+        margin-bottom: 20px;
+      }
+
+      img {
+        margin-right: 10px;
+
+        [dir="rtl"] & {
+          margin-left: 5px;
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+
+  .victor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    [dir="rtl"] & {
+      left: auto;
+      right: 0;
+    }
+  }
+}

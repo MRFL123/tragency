@@ -1,0 +1,14 @@
+.vision-and-mission {
+  background-repeat: no-repeat;
+  background-position: calc(100% - 0px) center;
+  background-size: contain;
+  background-color: #fff;
+  width: 100%;
+
+  .vision{
+    padding-left: 5%;
+    @include media-breakpoint-down(md) {
+      padding: auto;
+  }
+  }
+}
