@@ -20,26 +20,33 @@
   function isInViewport(element) {
     const rect = element.getBoundingClientRect();
     return (
-      rect.top <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
       rect.bottom >= 0
     );
   }
 
-  let animated = false;
+  let animatedSections = new Set();
+
   function onScroll() {
-    if (animated) return;
-    const section = document.querySelector('.block-section-counter');
-    if (section && isInViewport(section)) {
-      animated = true;
-      const counters = section.querySelectorAll('.counter[data-count]');
-      counters.forEach(function (counter) {
-        animateCounter(counter, counter.getAttribute('data-count'), 2000);
-      });
+    const sections = document.querySelectorAll('.block-section-counter, .goals-in-numbers');
+
+    sections.forEach(section => {
+      if (animatedSections.has(section)) return;
+
+      if (isInViewport(section)) {
+        animatedSections.add(section);
+        const counters = section.querySelectorAll('.counter[data-count]');
+        counters.forEach(counter => {
+          animateCounter(counter, counter.getAttribute('data-count'), 2000);
+        });
+      }
+    });
+
+    if (animatedSections.size === sections.length) {
       window.removeEventListener('scroll', onScroll);
     }
   }
+
   window.addEventListener('scroll', onScroll);
-  // In case already in view
   onScroll();
 })();

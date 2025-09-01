@@ -1,52 +1,66 @@
 .image-with-content {
-  background: linear-gradient(50.22deg, #0D111A 0%, #144A8B 71.1%);
 
   .image-col {
-    @include media-breakpoint-up(md) {
-      clip-path: polygon(0 0, 85% 0, 100% 100%, 0 100%);
-
-      [dir="rtl"] & {
-        clip-path: polygon(15% 0%, 100% 0, 100% 100%, 0% 100%);
-      }
-    }
-  }
-
-  .text-col {
     position: relative;
-    display: flex;
-    align-items: center;
 
-    @include media-breakpoint-down(md) {
-      padding: 30px 15px;
+    .image_2 {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      height: 350px;
+      object-fit: cover;
     }
 
-    .description {
+    .content {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, -40%);
+      background-color: $brand-white;
+      padding: 35px 50px;
+      border-radius: 18px;
+      box-shadow: 0px 0px 4px 0px #0000001F;
+
       p {
         margin-bottom: 0;
       }
     }
 
-    .right-icon {
-      position: absolute;
-      inset-inline-end: 45px;
-      top: 0;
+    @include media-breakpoint-down(lg) {
+      .image_2 {
+        right: 15px;
+        height: 180px;
+      }
 
-      @include media-breakpoint-down(md) {
-        inset-inline-end: 0;
+      .content {
+        bottom: 15px;
+        left: 15px;
+        transform: translate(0%, 0%);
+        padding: 30px 40px;
       }
     }
+  }
 
-    .left-icon {
-      position: absolute;
-      left: -11%;
-      top: 0;
+  .text-col {
+    .content {
+      .description {
+        p {
 
-      [dir="rtl"] & {
-        right: -8%;
-        rotate: 22deg;
-        left: auto;
+          @include media-breakpoint-up(lg) {
+            margin-bottom: 26px;
+          }
+
+          strong {
+            font-size: 26px;
+
+            @include media-breakpoint-down(lg) {
+              font-size: 18px;
+            }
+          }
+        }
       }
-
     }
   }
 }

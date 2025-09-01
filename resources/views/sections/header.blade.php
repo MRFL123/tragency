@@ -48,14 +48,14 @@
                       @if ($right_button)
                           <div class="call-to-action">
                               <a class="main-btn" href="<?= $right_button['url'] ?>" target="<?= $right_button['target'] ?>">
-                                  <span class="text"> <?= $right_button['title'] ?> </span>
+                                  <?= $right_button['title'] ?>
                               </a>
                           </div>
                       @endif
                       @if ($right_button_2)
                         <div class="call-to-action">
                           <a class="animated-btn white" href="<?= $right_button_2['url'] ?>" target="<?= $right_button_2['target'] ?>">
-                            <span class="text"> <?= $right_button_2['title'] ?> </span>
+                            <?= $right_button_2['title'] ?>
                           </a>
                         </div>
                       @endif
@@ -69,15 +69,15 @@
                 <div class="justify-content-end right-menu d-none d-lg-flex mt-1 gap-3">
                     @if ($right_button)
                         <div class="call-to-action">
-                            <a class="main-btn" href="<?= $right_button['url'] ?>" target="<?= $right_button['target'] ?>">
-                                <span class="text"> <?= $right_button['title'] ?> </span>
+                            <a class="main-btn transparent" href="<?= $right_button['url'] ?>" target="<?= $right_button['target'] ?>">
+                                <?= $right_button['title'] ?>
                             </a>
                         </div>
                     @endif
                     @if ($right_button_2)
                       <div class="call-to-action">
                         <a class="animated-btn white" href="<?= $right_button_2['url'] ?>" target="<?= $right_button_2['target'] ?>">
-                          <span class="text"> <?= $right_button_2['title'] ?> </span>
+                         <?= $right_button_2['title'] ?>
                         </a>
                       </div>
                     @endif

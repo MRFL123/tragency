@@ -1,108 +1,109 @@
-.services-slider {
-    height: fit-content !important;
+.services-slider{
+  .slider-cards {
+    .item {
+      a {
+        .wrapper {
+          display: flex;
+          flex-direction: column;
+          justify-content: end;
+          position: relative;
+          overflow: hidden;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          transition: background-size 0.3s ease-in-out;
+          min-height: 450px;
 
-    .line-height-title {
-        line-height: 46px;
-    }
+          @include media-breakpoint-down(md) {
+            min-height: 300px;
+          }
 
-    .arrws-title {
-        position: absolute;
-        left: 0;
-        top: 38px;
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            overflow: hidden;
+          }
 
-        @include media-breakpoint-down(xl) {
-            top: 28px;
-        }
-    }
+          &::before {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 41.92%, rgba(0, 0, 0, 0.64) 72.55%);
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+          }
 
-    .control {
-        position: absolute;
-        top: 50%;
-        right: 50%;
-        width: 50%;
-        transform: translate(50%, -50%);
-        z-index: 1000;
-
-        .arrow-left,
-        .arrow-right {
-            cursor: pointer !important;
-
-            html[dir="rtl"] &,
-            &[dir="rtl"] {
-                rotate: 180deg;
-            }
-
-        }
-
-        @media (max-width: 767.98px) {
-            & {
-                width: 100%;
-            }
-        }
-    }
-
-
-
-    .height-image {
-        height: 519px !important;
-
-        @media (max-width: 767.98px) {
-            & {
-                height: 300px !important;
-            }
-        }
-    }
-
-    .item-slide {
-
-        .content {
+          &::after {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 41.92%, rgba(0, 0, 0, 0.64) 72.55%);
             opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+          }
+
+          .title {
+            font-size: 28px;
+            transition: all 0.3s ease-in-out;
+
+            @include media-breakpoint-down(lg) {
+              font-size: 18px;
+            }
+          }
+
+          .desc {
+            .short {
+              display: block;
+              max-height: 95px;
+              overflow: hidden;
+              font-size: 15px;
+              margin-bottom: 0;
+              transition: all 0.3s ease-in-out;
+
+              @include media-breakpoint-down(lg) {
+                font-size: 13px;
+                max-height: 80px;
+              }
+            }
+          }
+
+          .btn-more {
+              opacity: 0;
+              height: 0;
+              transition: all 0.5s ease-in-out;
+          }
+
+          &:hover {
+            background-size: 110% 110%;
+
+            &::before {
+              opacity: 0;
+            }
+
+            &::after {
+              opacity: 1;
+            }
+
+            .title {
+              font-size: 30px;
+
+              @include media-breakpoint-down(lg) {
+                font-size: 20px;
+              }
+            }
+
+            .desc {
+              .short {
+                margin-bottom: 20px;
+              }
+            }
 
             .btn-more {
-                width: fit-content !important;
-                height: fit-content !important;
+                opacity: 1;
+                height: 22.4px !important;
             }
+          }
         }
-
-        &.slick-active.slick-center .content {
-            opacity: 1;
-            transition: 1s;
-        }
+      }
     }
-
-    ///block cards ///////////////////
-    .container-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-
-        .card {
-            border: 2px solid transparent;
-            box-shadow: 0 0 4.42px 0 rgba(0, 0, 0, 0.15);
-
-            .img {
-                min-width: 35px;
-                min-height: 36px;
-                background-color: $brand-black;
-            }
-
-            transition: .5s;
-
-            &:hover {
-                transition: .5s;
-                color: $brand-primary ;
-                border: 2px solid $brand-primary ;
-
-                .img {
-                    background-color: $brand-primary;
-                }
-
-                .title {
-                    color: $brand-primary;
-                }
-
-            }
-
-        }
-    }
+  }
 }

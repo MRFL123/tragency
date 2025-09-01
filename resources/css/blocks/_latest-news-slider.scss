@@ -1,0 +1,110 @@
+.latest-news-section {
+  .news-card-link {
+    display: block;
+    height: 100%;
+  }
+
+  .news-card {
+    height: 400px;
+    overflow: hidden;
+    border-radius: 7%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+
+    .news-card-img {
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        display: block;
+      }
+    }
+
+    .read-more {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    &:hover {
+      .news-card-img img {
+        transform: scale(1.1);
+      }
+
+      .read-more {
+        transform: scale(1.1);
+
+      }
+    }
+  }
+
+
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    .prev-btn,
+    .next-btn {
+      cursor: pointer;
+
+      svg {
+        width: 35px;
+        height: 36px;
+        display: block;
+      }
+    }
+
+    .slider-dots {
+      .slick-dots {
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+
+        li {
+          width: 10px;
+          height: 10px;
+
+          button {
+            width: 100%;
+            height: 100%;
+            background-color: $brand-gray-3;
+            transition: all 0.3s ease;
+
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              background-color: transparent;
+              transition: all 0.3s ease;
+            }
+          }
+
+          &.slick-active button {
+            background-color:  $brand-dark;
+          }
+
+          &.slick-active button::before {
+            content: '';
+            width: 150%;
+            height: 150%;
+            background-color: transparent;
+            border: 1px solid  $brand-dark;
+            box-sizing: border-box;
+          }
+        }
+      }
+    }
+  }
+}

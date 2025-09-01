@@ -7,5 +7,6 @@ import.meta.glob([
 import 'bootstrap';
 
 // Import Custom Js
-import './common.js';
 import './counter.js';
+import './common.js';
+

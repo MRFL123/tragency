@@ -199,7 +199,7 @@ $locations = get_field('locations'); // repeater
         <!-- Popup -->
         <div class="map-popup">
             <div class="popup-header d-flex align-items-center justify-content-between p-2 p-md-3">
-                <h6 class="popup-title text-primary mb-0"><?= __('Country Details', 'tragency') ?></h6>
+                <h6 class="popup-title text-primary  mb-0"><?= __('Country Details', 'fkgroup') ?></h6>
                 <span class="popup-close pointer">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.125"/>
@@ -208,7 +208,7 @@ $locations = get_field('locations'); // repeater
                 </span>
             </div>
             <div class="popup-img">
-                <img class="popup-image" src="" alt="<?= __('Country image', 'tragency') ?>">
+                <img class="popup-image" src="" alt="<?= __('Country image', 'fkgroup') ?>">
             </div>
             <div class="popup-content p-2 p-md-4">
                 <h3 class="popup-name mb-3"></h3>

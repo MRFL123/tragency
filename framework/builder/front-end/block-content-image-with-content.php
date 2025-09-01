@@ -3,52 +3,47 @@
 /**
  * Block Name: Image with content
  */
-$image          = get_field('image');
-$content        = get_field('content');
-$button         = get_field('button');
+$image                  = get_field('image');
+$image_2                = get_field('image_2');
+$content                = get_field('content');
+$content_above_images   = get_field('content_above_images');
+$button                 = get_field('button');
 ?>
 
 <section class="image-with-content position-relative">
-    <div class="row g-0">
-        <!-- Left: Image -->
-        <div class="col-md-5">
-            <div class="image-col h-100">
-                <?php if ($image) : ?>
-                    <img class="w-100 h-100 object-fit-cover" src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>">
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Right: Text and Button -->
-        <div class="col-md-7 text-col">
-            <div class="content m-auto col-md-9">
-                <div class="spacer-200"></div>
-                <div class="description text-white-deep">
-                    <?= $content ?>
+    <div class="spacer-100"></div>
+    <div class="container">
+        <div class="row align-items g-md-5">
+            <!-- Left: Text and Button -->
+            <div class="col-md-5 text-col mb-3">
+                <div class="content">
+                    <div class="description">
+                        <?= $content ?>
+                    </div>
+                    <?php if ($button) : ?>
+                        <a href="<?= $button['url'] ?>" target="<?= $button['target'] ?>" class="animated-btn">
+                            <span class="text"><?= $button['title'] ?></span>
+                        </a>
+                    <?php endif; ?>
                 </div>
-                <div class="spacer-40"></div>
-                <?php if ($button) : ?>
-                    <a href="<?= $button['url'] ?>" target="<?= $button['target'] ?>" class="btn-primary"><?= $button['title'] ?></a>
-                <?php endif; ?>
-                <div class="spacer-200"></div>
-
             </div>
-            <div class="left-icon">
-                <svg width="91" height="133" viewBox="0 0 91 133" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M43.9964 108.013C45.6579 107.734 47.3195 108.711 47.6518 110.247C47.818 111.643 46.6549 113.039 44.9934 113.178C43.3319 113.458 41.6703 112.48 41.5041 111.084C41.1718 109.549 42.3349 108.292 43.9964 108.013Z" fill="white" />
-                    <path d="M37.1844 72.8339C39.0121 72.5547 40.5075 73.5319 40.8398 75.0675C41.1721 76.4635 40.009 77.7199 38.1813 77.9991C36.5197 78.2783 34.8582 77.3011 34.6921 75.9051C34.3598 74.3695 35.5229 73.1131 37.1844 72.8339Z" fill="white" />
-                    <path d="M30.5383 37.6547C32.1998 37.3755 33.8613 38.3527 34.0275 39.7487C34.3598 41.2843 33.1967 42.5407 31.5352 42.8199C29.7075 43.0991 28.2121 42.1219 27.8798 40.5863C27.5475 39.1903 28.7106 37.9339 30.5383 37.6547Z" fill="white" />
-                    <path d="M23.726 2.47549C25.3876 2.19629 27.0491 3.17349 27.2153 4.56949C27.5476 6.10508 26.3845 7.36148 24.7229 7.64068C23.0614 7.91988 21.3999 6.94269 21.0675 5.40709C20.9014 4.01109 22.0645 2.61509 23.726 2.47549Z" fill="white" />
-                    <path d="M69.5843 127.278C71.412 126.999 72.9074 127.976 73.2397 129.512C73.572 130.908 72.4089 132.164 70.5812 132.443C68.9196 132.722 67.4243 131.745 67.092 130.349C66.7597 128.814 67.9228 127.557 69.5843 127.278Z" fill="white" />
-                    <path d="M62.9381 92.0988C64.5997 91.8196 66.2612 92.7968 66.4273 94.1928C66.7596 95.7284 65.5966 96.9848 63.935 97.264C62.1073 97.5432 60.612 96.566 60.2797 95.0304C59.9474 93.6344 61.1105 92.378 62.9381 92.0988Z" fill="white" />
-                    <path d="M56.126 56.9196C57.7875 56.6404 59.449 57.6176 59.7813 59.0136C59.9474 60.5492 58.7844 61.8056 57.1229 62.0848C55.4613 62.364 53.7998 61.3868 53.4674 59.8512C53.3013 58.4552 54.4644 57.0592 56.126 56.9196Z" fill="white" />
-                    <path d="M49.3138 21.7404C50.9753 21.4612 52.6369 22.4384 52.9692 23.8344C53.1353 25.37 51.9723 26.6264 50.3108 26.9056C48.6492 27.1848 46.9876 26.2076 46.8215 24.672C46.4892 23.276 47.6523 21.88 49.3138 21.7404Z" fill="white" />
-                    <path d="M86.6981 102.15C88.5258 102.01 90.0212 102.988 90.3535 104.384C90.6858 105.78 89.5227 107.176 87.6951 107.455C86.0335 107.594 84.5381 106.617 84.2058 105.221C83.8735 103.825 85.0365 102.429 86.6981 102.15Z" fill="white" />
-                    <path d="M80.0519 66.9708C81.7135 66.8312 83.3751 67.8084 83.5412 69.2044C83.8735 70.6004 82.7104 71.9964 81.0489 72.136C79.2212 72.4152 77.7258 71.438 77.3935 70.042C77.0612 68.646 78.2242 67.25 80.0519 66.9708Z" fill="white" />
-                    <path d="M73.2392 31.7916C74.9008 31.652 76.5623 32.6292 76.7284 34.0252C77.0607 35.4212 75.8977 36.8172 74.2361 36.9568C72.5746 37.236 70.913 36.2588 70.5807 34.8628C70.4146 33.4668 71.5777 32.0708 73.2392 31.7916Z" fill="white" />
-                    <path d="M66.4271 -3.38762C68.0886 -3.52722 69.7502 -2.55002 70.0825 -1.15402C70.2486 0.241982 69.0856 1.63798 67.4241 1.77758C65.7625 2.05678 64.1009 1.07958 63.9348 -0.316417C63.6025 -1.71242 64.7655 -3.10842 66.4271 -3.38762Z" fill="white" />
-                </svg>
+
+            <!-- Right: Images -->
+            <div class="col-md-7">
+                <div class="image-col h-100">
+                    <?php if ($image) : ?>
+                        <img class="image w-md-90 object-fit-cover rounded-18" src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>">
+                    <?php endif; if ($image_2) : ?>
+                        <img class="image_2" src="<?= $image_2['url'] ?>" alt="<?= $image_2['alt'] ?>">
+                    <?php endif; if($content_above_images) : ?>
+                        <div class="content">
+                            <?= $content_above_images ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="spacer-100"></div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="spacer-100"></div>
 </section>

@@ -2,14 +2,15 @@
   .goal-card {
     border-radius: 20px;
     padding: 12% 5%;
+
+  }
+  .underline-secondary {
+    text-decoration: underline;
+    text-decoration-color: $brand-gray;
   }
 
   .goal-icon {
     height: 4rem;
-  }
-
-  .goal-symbol {
-    height: 3rem;
   }
 
   .goal-number {

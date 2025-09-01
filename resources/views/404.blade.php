@@ -10,9 +10,9 @@
         <span class="fade-in" id="digit2">0</span>
         <span class="fade-in" id="digit3">4</span>
       </h1>
-      <p>{{ __('ERROR, sorry something went wrong. this page is not found Please go back.', 'tragency') }}</p>
+      <p>{{ __('ERROR, sorry something went wrong. this page is not found Please go back.', 'fkgroup') }}</p>
       <div class="spacer-30"></div>
-      <a href="{{ home_url('/') }}" class="main-btn">{{ __('Go Back To Home Page', 'tragency') }}</a>
+      <a href="{{ home_url('/') }}" class="main-btn">{{ __('Go Back To Home Page', 'fkgroup') }}</a>
     </div>
   </div>
 </section>

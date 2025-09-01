@@ -61,7 +61,7 @@
                                             </div>
                                             <div class="read-more text-end">
                                                 <a href="<?= get_the_permalink($single) ?>">
-                                                    <span class="text"><?= __('Read More ', 'tragency') ?></span>
+                                                    <span class="text"><?= __('Read More ', 'fkgroup') ?></span>
                                                     <span class="icon svg-arrow">
                                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="#A0937B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -112,7 +112,7 @@
                                             </div>
                                             <div class="read-more text-end">
                                                 <a href="<?= get_the_permalink() ?>">
-                                                    <span class="text"><?= __('Read More ', 'tragency') ?></span>
+                                                    <span class="text"><?= __('Read More ', 'fkgroup') ?></span>
                                                     <span class="icon svg-arrow">
                                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="#A0937B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

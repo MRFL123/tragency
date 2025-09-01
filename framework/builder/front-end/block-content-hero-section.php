@@ -8,6 +8,7 @@
  $type          = get_field('background_type');
  $upload_video  = get_field('upload_video');
  $youtube_video = get_field('youtube_video');
+ $right_content = get_field('right_content');
  $image         = (get_field('image')) ? get_field('image')['url'] : '';
  $count         = 0;
 ?>
@@ -128,8 +129,9 @@
                 if(have_rows('slider_content')) :
                     while(have_rows('slider_content')) :
                         the_row();
-                        $content = get_sub_field('content');
-                        $button  = get_sub_field('button');
+                        $content  = get_sub_field('content');
+                        $button   = get_sub_field('button');
+                        $button_2 = get_sub_field('button_2');
                         $count++;
             ?>
                         <div class="slide h-100">
@@ -141,14 +143,22 @@
                                                 <?= $content ?>
                                             </div>
                                             <div class="spacer-20"></div>
-                                        <?php endif; if($button) : ?>
-                                            <div class="call-to-action">
-                                                <a class="animated-btn white" href="<?= $button['url'] ?>" target="<?= $button['target'] ?>">
-                                                    <span class="text"> <?= $button['title'] ?> </span>
-                                                </a>
-                                            </div>
-                                            <div class="spacer-20"></div>
-                                        <?php endif;?>
+                                        <?php endif; ?>
+                                        <div class="d-flex gap-4">
+                                            <?php if($button) : ?>
+                                                <div class="button">
+                                                    <a class="main-btn" href="<?= $button['url'] ?>" target="<?= $button['target'] ?>">
+                                                        <?= $button['title'] ?>
+                                                    </a>
+                                                </div>
+                                            <?php endif; if($button_2) : ?>
+                                                <div class="button">
+                                                    <a class="main-btn transparent" href="<?= $button_2['url'] ?>" target="<?= $button_2['target'] ?>">
+                                                        <?= $button_2['title'] ?>
+                                                    </a>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
                                 </div>
                             </div>
                             <div class="spacer-40 d-md-none"></div>
