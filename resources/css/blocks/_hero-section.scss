@@ -1,5 +1,5 @@
 .main-slider {
-  min-height: 80vh;
+  min-height: 90vh;
 
   @include media-breakpoint-up(lg) {
     overflow: hidden;
@@ -22,18 +22,21 @@
             opacity: 0;
             transition: all 0.2s ease-in-out;
 
-            * {
-              line-height: 150%;
+            h1,h2,h3,
+            h4,h5,h6 {
+              margin-bottom: 16px;
             }
 
             p {
               font-size: 22px;
-              line-height: 36px;
-              color: #EDEDED;
 
               @include media-breakpoint-down(md) {
                 font-size: 16px;
                 line-height: 24px;
+              }
+
+              &:first-of-type {
+                margin-bottom: 0;
               }
             }
           }
@@ -79,6 +82,24 @@
     height: 100%;
     left: -40px;
     top: 0;
+
+    .next-btn,
+    .prev-btn {
+      svg {
+        width: 44px;
+        transform: rotate(90deg);
+
+        &:hover {
+          g {
+            fill: #c3cb6f;
+          }
+        }
+      }
+
+      path {
+        fill: $brand-white;
+      }
+    }
 
     [dir="rtl"] &  {
       left: auto;
@@ -131,15 +152,16 @@
         }
 
 
+        &:hover,
         &.slick-active {
           button {
-            background-color: $brand-white;
+            background-color: $brand-primary;
             opacity: 1;
             width: 15px;
             height: 15px;
 
             &::before {
-              border: 1px solid $brand-white;
+              border: 1px solid $brand-primary;
               border-radius: 50%;
             }
           }
@@ -158,77 +180,6 @@
           }
         }
       }
-    }
-  }
-
-
-
-.tooglePlay {
-  position: absolute;
-  top: 50%;
-  right: 25%;
-  transform: translate(0%, -50%);
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 78px;
-  height: 78px;
-  background: #222;
-  overflow: visible;
-  z-index: 10;
-
-  svg {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-  }
-
-  .ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    transform: translate(50%, -50%) scale(0);
-    background: radial-gradient(circle at 49.64% 46.4%, #999999 0%, rgba(255,255,255,0) 100%);
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 1;
-    animation: rippleAnim 3s infinite;
-  }
-
-  .ripple2 {
-    animation-delay: 1.2s;
-  }
-
-  span {
-    z-index: 99;
-    position: relative;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
-  @include media-breakpoint-down(lg) {
-    display: none;
-  }
-}
-
-@keyframes rippleAnim {
-    0% {
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 1;
-    }
-    70% {
-      transform: translate(-50%, -50%) scale(1.45);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-50%, -50%) scale(1.6);
-      opacity: 0;
     }
   }
 }

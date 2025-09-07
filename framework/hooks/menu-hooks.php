@@ -13,7 +13,7 @@ add_filter('nav_menu_css_class' , 'special_nav_class' , 10 , 2);
 
 // Add This Hook For Add Bootstrap Menu link Class
 function special_nav_class_href($item_output, $item, $depth, $args) {
-    $class= "nav-link line-height-28 font-16 fw-500";
+    $class= "nav-link line-height-30 font-20 fw-500";
     $item_output = preg_replace('/<a /', '<a class="'.$class.'"', $item_output, 1);
     return $item_output;
  }

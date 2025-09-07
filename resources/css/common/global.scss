@@ -31,7 +31,7 @@ html {
 }
 
 h1 {
-  font-size: 70px;
+  font-size: 54px;
   font-weight: 700;
   color: $brand-primary;
 
@@ -41,7 +41,7 @@ h1 {
 }
 
 h2 {
-  font-size: 50px;
+  font-size: 46px;
   font-weight: 700;
   color: $brand-primary;
 
@@ -51,7 +51,7 @@ h2 {
 }
 
 h3 {
-  font-size: 40px;
+  font-size: 38px;
   font-weight: 600;
   color: $brand-primary;
 
@@ -61,7 +61,7 @@ h3 {
 }
 
 h4 {
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 500;
   color: $brand-primary;
 
@@ -80,7 +80,7 @@ h5 {
 }
 
 h6 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 300;
 
   @include media-breakpoint-down(lg) {
@@ -104,8 +104,8 @@ a {
 p {
   font-size: 18px;
   font-weight: 400;
-  line-height: 30px;
-  color: $brand-black;
+  line-height: 100%;
+  color: $brand-blue200;
 
   @include media-breakpoint-down(lg) {
     font-size: 12px;
@@ -359,6 +359,14 @@ hr {
   }
 }
 
+.w-md-95 {
+  width: 95%;
+
+  @include media-breakpoint-down(lg) {
+    width: 100%;
+  }
+}
+
 .w-md-90 {
   width: 90%;
 
@@ -449,11 +457,12 @@ hr {
 
   @media (min-width: 991px) and (max-width: 1320px) {
     font-size: 16px;
-    padding: 8px 30px;
+    padding: 16px 20px;
   }
 
   @include media-breakpoint-down(lg) {
     font-size: 14px;
+    padding: 12px 20px;
   }
 
   &:hover {

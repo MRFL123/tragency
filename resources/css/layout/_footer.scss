@@ -16,7 +16,12 @@ footer {
         position: relative;
         color: #E7E7E7;
         padding: 0;
+        font-size: 16px !important;
         font-family: $primary-font;
+
+        @include media-breakpoint-down(lg) {
+          font-size: 12px !important;
+        }
 
         &:focus,
         &:hover {
@@ -30,7 +35,16 @@ footer {
       gap: 30px;
 
       li {
-        width: max-content;
+        width: 45%;
+        float: left;
+
+        @include media-breakpoint-up(lg) {
+          margin: 0;
+        }
+
+        @include media-breakpoint-down(lg) {
+          width: 40%;
+        }
       }
 
       @include media-breakpoint-down(md) {

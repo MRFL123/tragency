@@ -140,8 +140,12 @@ jQuery( document ).ready(function($) {
     ],
   });
 
+
   // Hero Slider
-  $('.main-slider .slide-wrapper').slick({
+  var $heroSlider = $('.main-slider .slide-wrapper')
+  var heroSliderCount = $heroSlider.children().length
+
+  $heroSlider.slick({
     slidesToShow: 1,
     slidesToScroll: 1,
     infinite: true,
@@ -150,7 +154,7 @@ jQuery( document ).ready(function($) {
     arrows: true,
     prevArrow: $('.main-slider .prev-btn'),
     nextArrow: $('.main-slider .next-btn'),
-    dots: true,
+    dots: heroSliderCount > 1,
     appendDots: $('.main-slider .custom-dots'),
     rtl: check_rtl,
     pauseOnHover: true,

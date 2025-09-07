@@ -18,7 +18,7 @@ $after_year           = get_field('after_year', 'option');
           @endif
         </div>
         <div class="spacer-10"></div>
-        <p class="short-desc font-22 line-height-32 text-gray">
+        <p class="short-desc font-21 line-height-32 text-gray">
           {{$short_description}}
         </p>
         <div class="social-media">
@@ -63,7 +63,7 @@ $after_year           = get_field('after_year', 'option');
         </div>
       </div>
 
-      <div class="col-lg-4 mb-3 mb-md-0">
+      <div class="col-lg-4 px-lg-0 mb-3 mb-md-0">
         <div class="footer-menu">
           <div class="spacer-30"></div>
           @if (has_nav_menu('footer_navigation_2'))

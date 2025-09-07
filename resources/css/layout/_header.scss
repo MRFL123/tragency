@@ -46,10 +46,10 @@
         display: flex;
         align-items: center;
         z-index: 9;
-        padding: 12px !important;
+        padding: 26px !important;
 
         @media (min-width: 1100px) and (max-width: 1410px) {
-          padding: 8px !important;
+          padding: 10px !important;
           font-size: 15px !important;
         }
 
@@ -71,6 +71,17 @@
           font-weight: 500 !important;
           color: $brand-white;
           position: relative;
+
+          &::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            width: 30px;
+            bottom: 30px;
+            height: 1.5px;
+            transform: translate(-50%, 0);
+            background-color: $brand-white;
+          }
 
           .caret {
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='6' viewBox='0 0 12 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.322928 0.38394C0.525103 0.148069 0.88021 0.120753 1.11608 0.322928L6.00001 4.50915L10.8839 0.322929C11.1198 0.120754 11.4749 0.14807 11.6771 0.383941C11.8793 0.619811 11.8519 0.974918 11.6161 1.17709L6.36608 5.67709C6.15543 5.85765 5.84459 5.85765 5.63394 5.67709L0.38394 1.17709C0.148069 0.974917 0.120753 0.619811 0.322928 0.38394Z' fill='%23152946'/%3E %3C/svg%3E ");
@@ -306,8 +317,16 @@
       .languages {
         .languages-wrapper {
           li {
+            cursor: pointer;
+
             a {
               text-transform: uppercase;
+              pointer-events: none;
+              padding: 0 20px 0 12px !important;
+
+              @include media-breakpoint-down(md) {
+                padding: 0 !important;
+              }
             }
           }
         }

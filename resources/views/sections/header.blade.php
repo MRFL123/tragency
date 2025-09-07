@@ -44,7 +44,7 @@
                         ]) !!}
                     @endif
 
-                    <div class="right-menu mobile d-lg-none mt-lg-1">
+                    <div class="right-menu mobile d-lg-none mt-1">
                       @if ($right_button)
                           <div class="call-to-action">
                               <a class="main-btn" href="<?= $right_button['url'] ?>" target="<?= $right_button['target'] ?>">
@@ -62,11 +62,19 @@
                     </div>
                 </div>
 
-                <div class="languages mx-lg-4">
+                <div class="search">
+                  <div class="icon pointer">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M11 1.25C5.61522 1.25 1.25 5.61522 1.25 11C1.25 16.3848 5.61522 20.75 11 20.75C13.4224 20.75 15.6385 19.8666 17.3437 18.4043L21.4697 22.5303C21.7626 22.8232 22.2374 22.8232 22.5303 22.5303C22.8232 22.2374 22.8232 21.7626 22.5303 21.4697L18.4043 17.3437C19.8666 15.6385 20.75 13.4224 20.75 11C20.75 5.61522 16.3848 1.25 11 1.25ZM2.75 11C2.75 6.44365 6.44365 2.75 11 2.75C15.5563 2.75 19.25 6.44365 19.25 11C19.25 15.5563 15.5563 19.25 11 19.25C6.44365 19.25 2.75 15.5563 2.75 11Z" fill="white"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="languages">
                   {!! Utilities::language_selector_flags() !!}
                 </div>
 
-                <div class="justify-content-end right-menu d-none d-lg-flex mt-1 gap-3">
+                <div class="justify-content-end right-menu d-none d-lg-flex gap-3">
                     @if ($right_button)
                         <div class="call-to-action">
                             <a class="main-btn transparent" href="<?= $right_button['url'] ?>" target="<?= $right_button['target'] ?>">
