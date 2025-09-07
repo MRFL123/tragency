@@ -55,8 +55,8 @@ if ($service_selection === 'latest') {
             </div>
             <div class="col-md-4 text-end">
                 <?php if ($button): ?>
-                    <a href="<?= esc_url($button['url']); ?>" target="<?= esc_attr($button['target']); ?>" class="btn btn-primary">
-                        <?= esc_html($button['title']); ?>
+                    <a href="<?= $button['url']; ?>" target="<?= $button['target']; ?>" class="btn btn-primary">
+                        <?= $button['title']; ?>
                     </a>
                 <?php endif; ?>
             </div>
@@ -80,16 +80,16 @@ if ($service_selection === 'latest') {
                             ?>
                             <div class="slider-item">
                                 <div class="slider-image mb-3">
-                                    <a href="<?= esc_url($permalink); ?>">
+                                    <a href="<?= $permalink; ?>">
                                         <?= $thumbnail ?>
                                     </a>
                                 </div>
                                 <div class="slider-content text-start">
-                                    <h3 class="slider-title"><?= esc_html($title) ?></h3>
+                                    <h3 class="slider-title"><?= $title ?></h3>
                                     <?php if ($excerpt): ?>
-                                        <p class="slider-excerpt"><?= esc_html($excerpt) ?></p>
+                                        <p class="slider-excerpt"><?= $excerpt ?></p>
                                     <?php endif; ?>
-                                    <a href="<?= esc_url($permalink); ?>" class="service-details">
+                                    <a href="<?= $permalink; ?>" class="service-details">
                                         <?= __('Service details', 'tragency') ?>
                                     </a>
                                 </div>

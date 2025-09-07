@@ -6,7 +6,6 @@
 $left_image  = get_field('left_image');
 $right_image = get_field('right_image');
 $vector      = get_field('vector');
-$title       = get_field('title');
 $text        = get_field('text');
 ?>
 <section class="who-we-are">
@@ -34,15 +33,9 @@ $text        = get_field('text');
         </div>
 
         <div class="col-md-6 who-we-are-text">
-            <?php if ($title): ?>
-            <h2><?= $title; ?></h2>
-            <?php endif; ?>
-
-            <?php if ($text): ?>
             <div class="description">
                 <?= $text; ?>
             </div>
-            <?php endif; ?>
         </div>
 
         </div>
