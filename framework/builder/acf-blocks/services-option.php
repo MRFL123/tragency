@@ -1,123 +1,119 @@
 <?php
+// Add the options page
+add_action('acf/init', function () {
+	acf_add_options_page(array(
+		'page_title'  => 'Services Settings',
+		'menu_slug'   => 'services-settings',
+		'parent_slug' => 'edit.php?post_type=services',
+		'redirect'    => false,
+	));
+});
+
+// Register the fields
 add_action('acf/include_fields', function () {
 	if (! function_exists('acf_add_local_field_group')) {
 		return;
 	}
 
 	acf_add_local_field_group(array(
-		'key' => 'group_68865d3f4c929',
-		'title' => 'banner services',
+		'key' => 'group_68bf048ec521e',
+		'title' => 'Services Settings',
 		'fields' => array(
 			array(
-				'key' => 'field_68865d429e679',
-				'label' => 'breadcrumb',
-				'name' => 'breadcrumb',
-				'aria-label' => '',
-				'type' => 'repeater',
-				'instructions' => '',
-				'required' => 0,
-				'conditional_logic' => 0,
-				'wrapper' => array(
-					'width' => '',
-					'class' => '',
-					'id' => '',
-				),
-				'layout' => 'table',
-				'pagination' => 0,
-				'min' => 0,
-				'max' => 0,
-				'collapsed' => '',
-				'button_label' => 'Add Row',
-				'rows_per_page' => 20,
-				'sub_fields' => array(
-					array(
-						'key' => 'field_68865d6f9e67a',
-						'label' => 'link',
-						'name' => 'link',
-						'aria-label' => '',
-						'type' => 'link',
-						'instructions' => '',
-						'required' => 0,
-						'conditional_logic' => 0,
-						'wrapper' => array(
-							'width' => '',
-							'class' => '',
-							'id' => '',
-						),
-						'return_format' => 'array',
-						'allow_in_bindings' => 0,
-						'parent_repeater' => 'field_68865d429e679',
-					),
-				),
+				'key' => 'field_68bf048ffff5c',
+				'label' => 'Banner',
+				'type' => 'message',
+				'new_lines' => 'wpautop',
 			),
 			array(
-				'key' => 'field_68865d899e67b',
-				'label' => 'background image',
-				'name' => 'services_image',
-				'aria-label' => '',
-				'type' => 'image',
-				'instructions' => '',
-				'required' => 0,
-				'conditional_logic' => 0,
-				'wrapper' => array(
-					'width' => '',
-					'class' => '',
-					'id' => '',
-				),
-				'return_format' => 'url',
-				'library' => 'all',
-				'min_width' => '',
-				'min_height' => '',
-				'min_size' => '',
-				'max_width' => '',
-				'max_height' => '',
-				'max_size' => '',
-				'mime_types' => '',
-				'allow_in_bindings' => 0,
-				'preview_size' => 'medium',
+				'key' => 'field_68bf070efff5d',
+				'label' => 'Banner Title',
+				'name' => 'page_title',
+				'type' => 'text',
+				'wrapper' => array('width' => '50'),
 			),
-			 array(
-                'key' => 'field_68864db49db9asdbs8',
-                'label' => 'Banner Title',
-                'name' => 'banner_title',
-                'aria-label' => '',
-                'type' => 'text',
-                'instructions' => '',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => array(
-                    'width' => '',
-                    'class' => '',
-                    'id' => '',
-                ),
-                'default_value' => '',
-                'maxlength' => '',
-                'allow_in_bindings' => 0,
-                'placeholder' => '',
-                'prepend' => '',
-                'append' => '',
-            ),
-            array(
-                'key' => 'field_68864basd49db9sb8',
-                'label' => 'Page Title',
-                'name' => 'title',
-                'aria-label' => '',
-                'type' => 'wysiwyg',
-                'instructions' => '',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => array(
-                    'width' => '',
-                    'class' => '',
-                    'id' => '',
-                ),
-                'default_value' => '',
-                'maxlength' => '',
-                'allow_in_bindings' => 0,
-                'placeholder' => '',
-                'prepend' => '',
-                'append' => '',
-            ),
+			array(
+				'key' => 'field_68bf0729fff5e',
+				'label' => 'Links',
+				'name' => 'links',
+				'type' => 'repeater',
+				'layout' => 'table',
+				'button_label' => 'Add Row',
+				'sub_fields' => array(
+					array(
+						'key' => 'field_68bf0735fff5f',
+						'label' => 'Link',
+						'name' => 'link',
+						'type' => 'link',
+						'return_format' => 'array',
+					),
+				),
+				'wrapper' => array('width' => '50'),
+			),
+			array(
+				'key' => 'field_68bf074afff60',
+				'label' => 'Background Image',
+				'name' => 'background_image',
+				'type' => 'image',
+				'return_format' => 'array',
+				'preview_size' => 'medium',
+				'library' => 'all',
+			),
+			array(
+				'key' => 'field_68bf0777fff61',
+				'label' => 'Service Page Content',
+				'type' => 'message',
+				'new_lines' => 'wpautop',
+			),
+			array(
+				'key' => 'field_68bf0795fff62',
+				'label' => 'Page Title',
+				'name' => 'page_title',
+				'type' => 'text',
+				'wrapper' => array('width' => '50'),
+			),
+			// ✅ New field for Search
+			array(
+				'key' => 'field_68bf0800fff63',
+				'label' => 'Search Placeholder',
+				'name' => 'service_search_placeholder',
+				'type' => 'text',
+				'instructions' => 'Enter placeholder text for the service search input.',
+				'default_value' => 'Search services...',
+				'wrapper' => array('width' => '50'),
+			),
+			array(
+				'key' => 'field_68866aaa12345',
+				'label' => 'Service Display Mode',
+				'name' => 'service_selection',
+				'type' => 'radio',
+				'choices' => array(
+					'Latest' => 'Latest',
+					'Random' => 'Random',
+					'Select' => 'Select',
+				),
+				'default_value' => 'Latest',
+				'layout' => 'vertical',
+			),
+			array(
+				'key' => 'field_68866bbb12346',
+				'label' => 'Select Services',
+				'name' => 'selected_services',
+				'type' => 'relationship',
+				'conditional_logic' => array(
+					array(
+						array(
+							'field' => 'field_68866aaa12345',
+							'operator' => '==',
+							'value' => 'Select',
+						),
+					),
+				),
+				'post_type' => array('services'),
+				'post_status' => array('publish'),
+				'filters' => array('search', 'taxonomy'),
+				'return_format' => 'object',
+			),
 		),
 		'location' => array(
 			array(
@@ -128,24 +124,11 @@ add_action('acf/include_fields', function () {
 				),
 			),
 		),
-		'menu_order' => 0,
 		'position' => 'normal',
 		'style' => 'default',
 		'label_placement' => 'top',
 		'instruction_placement' => 'label',
-		'hide_on_screen' => '',
 		'active' => true,
-		'description' => '',
-		'show_in_rest' => 0,
 	));
 });
-
-add_action('acf/init', function () {
-	acf_add_options_page(array(
-		'page_title' => 'services settings',
-		'menu_slug' => 'services-settings',
-		'parent_slug' => 'edit.php?post_type=services',
-		'position' => '',
-		'redirect' => false,
-	));
-});
+?>
