@@ -13,10 +13,9 @@
     class="breadcrumb-section bg-img"
     style="background-image: url('<?= $background_image ?>');"
 >
-    <div class="spacer-80 d-none d-md-block"></div>
-    <div class="spacer-40 d-md-none"></div>
+    <div class="spacer-40 d-none d-md-block"></div>
     <div class="container position-relative z-index-9">
-        <h1  class="text-white mb-0"><?= $page_name ?></h1>
+        <h1  class="text-white font-40 mb-0"><?= $page_name ?></h1>
         <div class="spacer-20"></div>
         <div class="breadcrumb">
             <div class="links">
@@ -28,15 +27,15 @@
                             $link = get_sub_field('link');
                 ?>
                             <a
-                                class="font-20 <?= ($links_count == $counter) ? 'active d-link' : 'normal' ?>"
+                                class="font-20 text-primary <?= ($links_count == $counter) ? 'active d-link' : 'normal' ?>"
                                 href="<?= $link['url'] ?>"
                             >
                                 <?= $link['title'] ?>
                             </a>
                             <?php if($links_count != $counter) : ?>
-                                <span class="mx-1 mx-md-2">
-                                    <svg class="svg-arrow" width="6" height="9" viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.99999 4.52054C6.00056 4.43559 5.98165 4.35139 5.94434 4.27276C5.90704 4.19412 5.85207 4.1226 5.7826 4.06229L1.28491 0.189811C1.14375 0.068277 0.952306 -4.16266e-08 0.752682 -3.29008e-08C0.553059 -2.4175e-08 0.361611 0.068277 0.220456 0.189811C0.0793003 0.311345 2.08145e-08 0.47618 2.83274e-08 0.648054C3.58402e-08 0.819929 0.0793003 0.984764 0.220456 1.1063L4.19342 4.52054L0.227952 7.93477C0.105146 8.05824 0.0409736 8.21706 0.0482607 8.3795C0.0555478 8.54193 0.133757 8.69602 0.26726 8.81096C0.400762 8.92591 0.579724 8.99324 0.768384 8.99952C0.957045 9.00579 1.14151 8.95054 1.28491 8.84481L5.7826 4.97232C5.92109 4.85211 5.99916 4.68985 5.99999 4.52054Z" fill="#A0937B"/>
+                                <span class="">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.19752 12.0575C5.08668 12.0575 4.97585 12.0167 4.88835 11.9292C4.71918 11.76 4.71918 11.48 4.88835 11.3108L8.69168 7.5075C8.97168 7.2275 8.97168 6.7725 8.69168 6.4925L4.88835 2.68916C4.71918 2.52 4.71918 2.24 4.88835 2.07083C5.05752 1.90166 5.33752 1.90166 5.50668 2.07083L9.31002 5.87416C9.60752 6.17166 9.77668 6.57416 9.77668 7C9.77668 7.42583 9.61335 7.82833 9.31002 8.12583L5.50668 11.9292C5.41918 12.0108 5.30835 12.0575 5.19752 12.0575Z" fill="#C1C4CB"/>
                                     </svg>
                                 </span>
                             <?php endif; ?>
@@ -47,6 +46,5 @@
             </div>
         </div>
     </div>
-    <div class="spacer-80 d-none d-md-block"></div>
-    <div class="spacer-40 d-md-none"></div>
+    <div class="spacer-40 d-none d-md-block"></div>
 </section>

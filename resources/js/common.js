@@ -6,6 +6,8 @@ jQuery( document ).ready(function($) {
   } else {
     check_rtl = false;
   }
+
+
   // ===== Slick Slider =====
   // post slider
     var $slider = $('.post-slider');
@@ -108,36 +110,70 @@ jQuery( document ).ready(function($) {
 
 
 
-  // ===== Slick Slider =====
-  // Partners
+  // ===== Services Slider =====
+  var $slider = $('.services-slider');
+  var $progressLine = $('.progress-line span');
+
+  $slider.slick({
+    centerMode: true,
+    slidesToShow: 3,
+    arrows: true,
+    appendArrows: $('.services-slider-progress'), // keep arrows in progress bar
+    prevArrow: $('.services-slider-progress .slick-prev'),
+    nextArrow: $('.services-slider-progress .slick-next'),
+    dots: false,
+    rtl: check_rtl,
+    responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          centerMode: true,
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          centerMode: true,
+          slidesToShow: 1
+        }
+      }
+    ]
+  });
+
+  // Progress bar update
+  $slider.on('init reInit afterChange', function (event, slick, currentSlide) {
+    var i = (currentSlide ? currentSlide : 0) + 1;
+    var percent = (i / slick.slideCount) * 100;
+    $progressLine.css('width', percent + '%');
+  });
+
+  // ===== Partners Slider =====
   $('.partners .our-clients').slick({
     slidesToShow: 9,
     slidesToScroll: 3,
-    loop: true,
     infinite: true,
     autoplay: true,
     speed: 1000,
     arrows: false,
     dots: true,
     rtl: check_rtl,
-    swipe: true,
-    swipeToSlide: false,
-    touchMove: true,
-    responsive: [{
-      breakpoint: 1024,
+    responsive: [
+      {
+        breakpoint: 1024,
         settings: {
-            slidesToShow: 6,
-            slidesToScroll: 2,
-        },
+          slidesToShow: 6,
+          slidesToScroll: 2
+        }
       },
       {
-      breakpoint: 800,
+        breakpoint: 800,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-    ],
+          slidesToScroll: 2
+        }
+      }
+    ]
   });
 
 
@@ -162,8 +198,8 @@ jQuery( document ).ready(function($) {
     fade: true,
     swipe: true,
     swipeToSlide: true,
-    touchMove: true,
-  })
+    touchMove: true
+  });
 
   // Services Slider
   $('.services-slider .slider-cards').slick({
@@ -223,10 +259,10 @@ jQuery( document ).ready(function($) {
   );
 
   // Slick equal height
+  // ===== Equal Heights for Slick Slides =====
   function equalizeSlickSlideHeights() {
     $('.slick-slider').each(function () {
       let maxHeight = 0;
-
       $(this).find('.slick-slide').css('height', 'auto');
 
       $(this).find('.slick-slide').each(function () {
@@ -250,7 +286,3 @@ jQuery( document ).ready(function($) {
     equalizeSlickSlideHeights();
   });
 });
-
-
-
-
