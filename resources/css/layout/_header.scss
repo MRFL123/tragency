@@ -6,7 +6,8 @@
   z-index: 9999;
   backdrop-filter: blur(15px);
   border-bottom: 1px solid #FFFFFF6B;
-  background: #FFFFFF05;
+  background: linear-gradient(0deg, rgba(60, 60, 60, 0.42), rgba(60, 60, 60, 0.42)),
+  linear-gradient(90deg, rgba(132, 132, 132, 0.12) 0%, rgba(30, 30, 30, 0.12) 100%);
 
   .navbar-collapse {
     flex-basis: auto
@@ -16,11 +17,13 @@
     .navbar-collapse {
       padding: 20px 12px;
       position: absolute;
-      top: 100%;
-      background-color: $brand-white;
+      top: calc(100% + 8px);
       left: -12px;
       right: -12px;
-      padding: 12px;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      background-color: #43443e;
+      border-bottom: 1px solid #FFFFFF6B;
     }
   }
 
@@ -282,7 +285,15 @@
               a {
                 font-size: 14px !important;
                 line-height: 18px !important;
-                padding: 2px !important;
+                padding: 15px !important;
+              }
+
+              &.active {
+                a {
+                  &::before {
+                    bottom: 15px;
+                  }
+                }
               }
             }
           }
@@ -304,6 +315,15 @@
                 font-size: 14px !important;
                 line-height: 20px !important;
                 padding: 8px !important;
+              }
+
+              &.active {
+                a {
+                  &::before {
+                    left: 24px;
+                    bottom: 8px;
+                  }
+                }
               }
             }
 

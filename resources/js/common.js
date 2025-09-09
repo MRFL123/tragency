@@ -149,33 +149,49 @@ jQuery( document ).ready(function($) {
   });
 
   // ===== Partners Slider =====
-  $('.partners .our-clients').slick({
-    slidesToShow: 9,
-    slidesToScroll: 3,
+
+  var $logossSlider = $('.logos-slider .slick-slider');
+  var $logosProgressLine = $('.logos-slider .slick-progress .progress-line span');
+
+  $('.logos-slider .slick-slider').slick({
+    slidesToShow: 5,
+    slidesToScroll: 1,
     infinite: true,
     autoplay: true,
     speed: 1000,
-    arrows: false,
-    dots: true,
+    arrows: true,
+    appendArrows: $('.logos-slider .slick-progress'), // keep arrows in progress bar
+    prevArrow: $('.logos-slider .prev-btn'),
+    nextArrow: $('.logos-slider .next-btn'),
+    dots: false,
     rtl: check_rtl,
+    swipe: true,
+    swipeToSlide: false,
+    touchMove: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 6,
-          slidesToScroll: 2
-        }
+          slidesToShow: 4,
+          slidesToScroll: 4,
+        },
       },
       {
         breakpoint: 800,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2
-        }
-      }
-    ]
+          slidesToScroll: 2,
+        },
+      },
+    ],
   });
 
+  // Progress bar update
+  $logossSlider.on('init reInit afterChange', function (event, slick, currentSlide) {
+    var i = (currentSlide ? currentSlide : 0) + 1;
+    var percent = (i / slick.slideCount) * 100;
+    $logosProgressLine.css('width', percent + '%');
+  });
 
   // Hero Slider
   var $heroSlider = $('.main-slider .slide-wrapper')

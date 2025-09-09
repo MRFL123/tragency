@@ -6,7 +6,7 @@ add_action( 'acf/include_fields', function() {
 
 	acf_add_local_field_group( array(
         'key' => 'group_686033bc7b1d0',
-        'title' => 'Partners',
+        'title' => 'logos-slider',
         'fields' => array(
             array(
                 'key' => 'field_686033bca1657',
@@ -63,7 +63,7 @@ add_action( 'acf/include_fields', function() {
                 array(
                     'param' => 'block',
                     'operator' => '==',
-                    'value' => 'acf/partners',
+                    'value' => 'acf/logos-slider',
                 ),
             ),
         ),

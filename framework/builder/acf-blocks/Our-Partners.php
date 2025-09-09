@@ -6,7 +6,7 @@ add_action( 'acf/include_fields', function() {
 
 	acf_add_local_field_group( array(
 	'key' => 'group_68ab08c96aef2',
-	'title' => 'Our-Partners',
+	'title' => 'Our-partners',
 	'fields' => array(
 		array(
 			'key' => 'field_68ab08ca31b20',
