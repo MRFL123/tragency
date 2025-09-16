@@ -128,4 +128,11 @@
             </span>
         </div>
     </div>
+
+    <div class="vector">
+        <svg class="svg-arrow" width="855" height="1082" viewBox="0 0 855 1082" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M243.178 952.382L218.123 980.113L-5.08335 1227.76L-65 1172.3L133.171 952.382L-65 732.463L-5.08335 677L218.123 924.651L243.178 952.382Z" fill="white" fill-opacity="0.35"/>
+            <path opacity="0.1" d="M855 952.5L730.445 1090.31L-379.146 2321L-677 2045.38L308.139 952.5L-677 -140.381L-379.146 -416L730.445 814.691L855 952.5Z" fill="#C7D447"/>
+        </svg>
+    </div>
 </section>
