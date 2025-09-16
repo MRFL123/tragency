@@ -52,6 +52,10 @@
     min-width: 100px;
     overflow-y: auto;
     scrollbar-width: none;
+
+    @include media-breakpoint-down(lg) {
+      min-width: 120px;
+    }
   }
 
   .timeline-years::-webkit-scrollbar {
@@ -75,6 +79,11 @@
       width: 5px;
       background: rgba(248, 249, 238, 1);
       transition: all 0.3s;
+
+      @include media-breakpoint-down(lg) {
+        right: 20px;
+        width: 3px;
+      }
     }
 
     .dot {
@@ -89,8 +98,9 @@
       transform: translate(0%, -50%);
 
       @include media-breakpoint-down(lg) {
-        width: 20px;
-        height: 20px;
+        width: 15px;
+        height: 15px;
+        right: 15px;
       }
     }
 
@@ -101,6 +111,12 @@
       top: 50%;
       transform: translateY(-50%);
       font-weight: 400;
+
+      @include media-breakpoint-down(lg) {
+        right: 40%;
+        top: 50%;
+        transform: translate(0%, -50%);
+      }
     }
 
     &.active {
@@ -126,6 +142,12 @@
           height: 90px;
           border-radius: 50%;
           border: 5px solid #c3cc6f;
+
+          @include media-breakpoint-down(lg) {
+            width: 45px;
+            height: 45px;
+            border: 3px solid #c3cc6f;
+          }
         }
       }
     }
@@ -140,6 +162,10 @@
       flex-direction: column;
       justify-content: center;
       position: relative;
+
+      @include media-breakpoint-down(lg) {
+        margin: 20px 0;
+      }
 
       .wrraper {
         background: rgba(255, 255, 255, 0.15);
@@ -165,7 +191,15 @@
             height: 170px;
             width: 100%;
             object-fit: cover;
+
+            @include media-breakpoint-down(md) {
+              height: 120px;
+            }
           }
+        }
+
+        @include media-breakpoint-down(lg) {
+          padding: 15px;
         }
       }
 

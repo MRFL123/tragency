@@ -5,12 +5,12 @@
 $background = (get_field('background')) ? get_field('background')['url'] : '';
 $logo       = get_field('logo');
 ?>
-
+<div class="spacer-50"></div>
 <section class="success-journey position-relative bg-img" style="background-image: url('<?= $background ?>');">
     <!-- <div class="overlay"></div> -->
     <div class="container position-relative z-index-99">
         <div class="timeline-container row" id="timeline">
-        <div class="timeline-years col-lg-3">
+        <div class="timeline-years col-2 col-lg-3">
             <?php
                 if(have_rows('success_journey')):
                     while(have_rows('success_journey')): the_row();
@@ -26,7 +26,7 @@ $logo       = get_field('logo');
             ?>
         </div>
 
-        <div class="timeline-content col-lg-9">
+        <div class="timeline-content col-10 col-lg-9">
             <?php if(have_rows('success_journey')): ?>
             <?php while(have_rows('success_journey')): the_row();
                 $year = get_sub_field('year');
@@ -41,7 +41,7 @@ $logo       = get_field('logo');
                         <?php if($images): ?>
                             <div class="images row">
                                 <?php foreach( $images as $image ): ?>
-                                    <div class="col-md-4 px-2">
+                                    <div class="col-md-4 px-2 py-2 py-md-0">
                                         <img class="img" src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>">
                                     </div>
                                 <?php endforeach; ?>
@@ -55,6 +55,7 @@ $logo       = get_field('logo');
         </div>
     </div>
 </section>
+<div class="spacer-50"></div>
 
 <script>
 const years = document.querySelectorAll('.year');
