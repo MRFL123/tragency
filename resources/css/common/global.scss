@@ -379,7 +379,7 @@ hr {
 }
 
 .svg-arrow {
-  [dir='ltr'] & {
+  [dir='rtl'] & {
     transform: rotate(180deg);
   }
 }

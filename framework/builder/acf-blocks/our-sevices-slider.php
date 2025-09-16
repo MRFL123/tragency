@@ -53,7 +53,7 @@ add_action('acf/include_fields', function () {
                 'type' => 'relationship',
                 'post_type' => array('services'),
                 'post_status' => array('publish'),
-                'return_format' => 'object',
+                'return_format' => 'id',
                 'filters' => array('search', 'post_type', 'taxonomy'),
                 'elements' => array('featured_image'),
                 'conditional_logic' => array(

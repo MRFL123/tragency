@@ -1,5 +1,9 @@
+//Developer : Ahmed Mostafa
 .video-block {
-  height: 90vh; // full screen
+  height: 90vh;
+  @include media-breakpoint-down(md){
+    height: auto;
+  }
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -8,11 +12,14 @@
     position: relative;
     width: 100%;
     height: 100%;
+    @include media-breakpoint-down(md){
+      height: auto;
+    }
 
     video {
       width: 100%;
       height: 100%;
-      object-fit: cover; // fills area properly
+      object-fit: cover;
       cursor: pointer;
     }
 

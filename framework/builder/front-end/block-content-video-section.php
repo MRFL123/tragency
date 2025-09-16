@@ -4,7 +4,7 @@
  * Block Name : Video
  */
 $heading = get_field('heading');
-$video   = get_field('video'); // ACF File field (MP4 upload)
+$video   = get_field('video');
 ?>
 <section class="video-block">
         <h2 class="video-heading d-block"><?= $heading; ?></h2>

@@ -44,7 +44,7 @@
                                     $is_last = get_row_index() === count(get_field('links', 'option'));
                                 @endphp
 
-                                <li class="breadcrumb-item  font-18 text-primary fw-400 {{ $is_last ? 'active' : '' }}"
+                                <li class="breadcrumb-item font-18 text-primary fw-400 {{ $is_last ? 'active' : '' }}"
                                     @if ($is_last) aria-current="page" @endif>
 
                                     @if ($is_last)
@@ -76,44 +76,43 @@
             {!! $page_title !!}
         </div>
 
-<form method="get" action="{{ home_url('/') }}" class="search-form d-flex align-items-center">
-    <input type="hidden" name="post_type" value="services">
+        <form method="get" action="{{ home_url('/') }}" class="search-form d-flex align-items-center">
+            <input type="hidden" name="post_type" value="services">
 
-    <div class="search-input-wrapper position-relative w-100">
-        <span class="search-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-                      stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M22 22L20 20" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </span>
-        <input type="text" name="s" class="form-control search-input"
-              placeholder="{{ get_field('service_search_placeholder', 'option') }}">
+            <div class="search-input-wrapper position-relative w-100">
+                <span class="search-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                              stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 22L20 20" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                <input type="text" name="s" class="form-control search-input"
+                      placeholder="{{ get_field('service_search_placeholder', 'option') }}">
+            </div>
+        </form>
     </div>
-</form>
+</div>
 
 <div class="spacer-20"></div>
 
-
-<div class="posts mt-5 mt-md-3 ng-white">
+<div class="posts mt-5 mt-md-3 bg-white">
     <div class="container">
         <div class="row g-4">
             @if ($all_services->have_posts())
                 @while ($all_services->have_posts())
                     @php $all_services->the_post() @endphp
                     <div class="col-12 col-md-6 col-lg-4">
-                    <a class="card-services position-relative d-block overflow-hidden" href="{{ get_permalink() }}">
-  <img class="w-100 h-100 image-back"
-       src="{{ get_the_post_thumbnail_url(get_the_ID()) }}"
-       alt="">
-  <div class="content">
-    <h2 class="title text-white font-30 fw-600 m-0">
-      {{ get_the_title() }}
-    </h2>
-  </div>
-</a>
-
-
+                        <a class="card-services position-relative d-block overflow-hidden" href="{{ get_permalink() }}">
+                            <img class="w-100 h-100 image-back"
+                                  src="{{ get_the_post_thumbnail_url(get_the_ID()) }}"
+                                  alt="{{ get_the_title() }}">
+                            <div class="content">
+                                <h2 class="title text-white font-30 fw-600 m-0">
+                                    {{ get_the_title() }}
+                                </h2>
+                            </div>
+                        </a>
                     </div>
                 @endwhile
             @endif
@@ -121,6 +120,5 @@
         </div>
     </div>
 </div>
-
 
 <div class="spacer-50"></div>

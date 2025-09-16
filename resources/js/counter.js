@@ -1,19 +1,23 @@
 (function () {
   function animateCounter(el, target, duration) {
     let start = 0;
-    let startTime = null;
-    target = parseInt(target, 10);
+    target = parseFloat(target);
     if (isNaN(target)) return;
+
+    const startTime = performance.now();
+
     function step(timestamp) {
-      if (!startTime) startTime = timestamp;
       let progress = Math.min((timestamp - startTime) / duration, 1);
-      el.textContent = Math.floor(progress * (target - start) + start);
+      let value = Math.floor(progress * target);
+      el.textContent = value;
+
       if (progress < 1) {
         window.requestAnimationFrame(step);
       } else {
-        el.textContent = target;
+        el.textContent = target; // ensure exact final value
       }
     }
+
     window.requestAnimationFrame(step);
   }
 
@@ -28,7 +32,7 @@
   let animatedSections = new Set();
 
   function onScroll() {
-    const sections = document.querySelectorAll('.block-section-counter, .goals-in-numbers');
+    const sections = document.querySelectorAll('.counter-section'); // updated class
 
     sections.forEach(section => {
       if (animatedSections.has(section)) return;
