@@ -9,7 +9,6 @@ add_action('acf/init', function () {
 	));
 });
 
-// Register the fields
 add_action('acf/include_fields', function () {
 	if (! function_exists('acf_add_local_field_group')) {
 		return;
@@ -72,7 +71,6 @@ add_action('acf/include_fields', function () {
 				'type' => 'text',
 				'wrapper' => array('width' => '50'),
 			),
-			// ✅ New field for Search
 			array(
 				'key' => 'field_68bf0800fff63',
 				'label' => 'Search Placeholder',

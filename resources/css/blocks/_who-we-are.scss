@@ -1,6 +1,10 @@
 .who-we-are {
   padding: 80px 0;
 
+  p {
+    @extend .font-16;
+  }
+
   .who-we-are-images {
     position: relative;
     display: flex;
@@ -34,17 +38,43 @@
 
     .vector {
       position: absolute;
-      top: -20px;
-      right: -20px;
+      top: -2%;
+      right: -2%;
       z-index: 20;
+      @include media-breakpoint-down(md){
+        right: 0;
+      }
 
       img {
-        width: 60px;
+        width: 8vw;
+        max-width: 60px;
+        min-width: 30px;
+        height: auto;
       }
     }
   }
 
   .who-we-are-text {
     padding-left: 40px;
+  }
+}
+
+[dir="rtl"] .who-we-are {
+  .who-we-are-text {
+    padding-left: 0;
+  }
+
+  .who-we-are-images {
+    transform: scaleX(-1);
+
+
+    .image-left {
+      transform: scaleX(-1) translateY(-50%);
+    }
+  }
+  .vector {
+    right: auto;
+    left: -2%;
+    transform: scaleX(-1);
   }
 }
