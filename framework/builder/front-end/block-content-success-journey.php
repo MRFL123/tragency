@@ -7,8 +7,7 @@ $logo       = get_field('logo');
 ?>
 <div class="spacer-50"></div>
 <section class="success-journey position-relative bg-img" style="background-image: url('<?= $background ?>');">
-    <!-- <div class="overlay"></div> -->
-    <div class="container position-relative z-index-99">
+    <div class="container">
         <div class="timeline-container row" id="timeline">
         <div class="timeline-years col-2 col-lg-3">
             <?php
@@ -26,7 +25,7 @@ $logo       = get_field('logo');
             ?>
         </div>
 
-        <div class="timeline-content col-10 col-lg-9">
+        <div class="timeline-content col-10 col-lg-9 position-relative z-index-99">
             <?php if(have_rows('success_journey')): ?>
             <?php while(have_rows('success_journey')): the_row();
                 $year = get_sub_field('year');
