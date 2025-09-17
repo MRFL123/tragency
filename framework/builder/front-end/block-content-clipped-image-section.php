@@ -13,7 +13,7 @@ $secondary_button = get_field('secondary_button');
 <section class="clipped-image-section">
     <?php if ($image): ?>
         <div class="image-box">
-            <img src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>" class="img-fluid w-100">
+            <img src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>" class="w-100">
         </div>
     <?php endif; ?>
 

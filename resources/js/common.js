@@ -62,10 +62,7 @@ jQuery( document ).ready(function($) {
 
 
   // ===== Services Slider =====
-  jQuery(document).ready(function($){
-    var check_rtl = $('html').attr('dir') === 'rtl';
-
-    var $slider = $('.services-slider');
+    var $sevice = $('.services-slider');
     var $progressLine = $('.services-slider-progress span');
 
     $slider.slick({
@@ -273,4 +270,4 @@ jQuery( document ).ready(function($) {
   $(window).on('resize', function () {
     equalizeSlickSlideHeights();
   });
-});
+;
