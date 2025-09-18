@@ -100,7 +100,7 @@
 
         <div class="slick-arrows justify-content-center dots d-flex gap-2">
             <span class="prev-btn pointer">
-                <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="62" height="62" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <foreignObject x="-13.4" y="-13.4" width="98.8" height="98.8"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(6.7px);clip-path:url(#bgblur_0_998_29_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="13.4">
                     <rect x="71.5" y="71.5" width="71" height="71" rx="35.5" transform="rotate(180 71.5 71.5)" fill="#878787" fill-opacity="0.01"/>
                     <rect x="71.5" y="71.5" width="71" height="71" rx="35.5" transform="rotate(180 71.5 71.5)" stroke="#DFE0E4"/>
@@ -115,7 +115,7 @@
             <span class="custom-dots pointer"></span>
 
             <span class="next-btn pointer">
-                <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="62" height="62" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <foreignObject x="-13.4" y="-13.4" width="98.8" height="98.8"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(6.7px);clip-path:url(#bgblur_0_998_36_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="13.4">
                     <rect x="0.5" y="0.5" width="71" height="71" rx="35.5" fill="#878787" fill-opacity="0.01"/>
                     <rect x="0.5" y="0.5" width="71" height="71" rx="35.5" stroke="#DFE0E4"/>

@@ -17,7 +17,7 @@ add_action('acf/include_fields', function () {
                 'toolbar' => 'full',
                 'media_upload' => 0,
                 'wrapper' => array(
-                    'width' => '50',
+                    'width' => '',
                 ),
             ),
             array(
@@ -27,7 +27,7 @@ add_action('acf/include_fields', function () {
                 'type' => 'link',
                 'return_format' => 'array',
                 'wrapper' => array(
-                    'width' => '50',
+                    'width' => '',
                 ),
             ),
             array(

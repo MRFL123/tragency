@@ -360,6 +360,18 @@ hr {
   }
 }
 
+.prev-btn,
+.next-btn {
+  cursor: pointer;
+
+  svg {
+    @include media-breakpoint-down(lg) {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
 .pointer {
   cursor: pointer !important;
 
@@ -470,9 +482,9 @@ hr {
 .main-btn {
   background-color: $brand-secondary;
   color: $brand-white;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
-  padding: 20px 30px;
+  padding: 16px 26px;
   transition: all 0.3s ease-in-out;
   border-radius: 78px;
   backdrop-filter: blur(15px);
@@ -481,13 +493,13 @@ hr {
   line-height: normal !important;
 
   @media (min-width: 991px) and (max-width: 1320px) {
-    font-size: 16px;
-    padding: 16px 20px;
+    font-size: 15px;
+    padding: 14px 18px;
   }
 
   @include media-breakpoint-down(lg) {
     font-size: 14px;
-    padding: 12px 20px;
+    padding: 12px 18px;
   }
 
   &:hover {
@@ -498,6 +510,18 @@ hr {
   &.transparent {
     background: #FFFFFF1F;
     border: 1px solid #F8F9EE21;
+
+    &:hover {
+      background-color: $brand-secondary;
+      color: $brand-white;
+      border: 1px solid $brand-secondary;
+    }
+  }
+
+  &.blue {
+    background-color: $brand-blue700;
+    border: 1px solid $brand-blue700;
+    color: $brand-white;
 
     &:hover {
       background-color: $brand-secondary;

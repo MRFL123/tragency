@@ -11,10 +11,10 @@ jQuery( document ).ready(function($) {
   // ===== Slick Slider =====
 
   // related news slider
-    var $slider = $('.post-slider-single');
+    var $postsSlider = $('.post-slider-single');
     var $dotsContainer = $('.related-news-slider .slider-dots');
 
-    $slider.on('init', function(event, slick) {
+    $postsSlider.on('init', function(event, slick) {
       if (slick.slideCount < 5) {
         $dotsContainer.hide();
       } else {
@@ -22,7 +22,7 @@ jQuery( document ).ready(function($) {
       }
     });
 
-    $slider.slick({
+    $postsSlider.slick({
       dots: true,
       appendDots: $dotsContainer,
       arrows: true,
@@ -31,7 +31,7 @@ jQuery( document ).ready(function($) {
       infinite: true,
       speed: 200,
       autoplay: true,
-      rtl: typeof check_rtl !== 'undefined' ? check_rtl : false,
+      rtl: check_rtl,
       slidesToShow: 3,
       slidesToScroll: 1,
       responsive: [
@@ -59,20 +59,27 @@ jQuery( document ).ready(function($) {
       ]
     });
 
-
-
   // ===== Services Slider =====
-    var $sevice = $('.services-slider');
-    var $progressLine = $('.services-slider-progress span');
-
-    $slider.slick({
+    var $serviceSlider = $('.our_services_slider .services-slider');
+    var $ServicesprogressLine = $('.our_services_slider .slick-progress .progress-line span');
+    $serviceSlider.slick({
       slidesToShow: 3,
       slidesToScroll: 1,
       infinite: true,
       centerMode: true,
+      centerPadding: '0px',
+      autoplay: true,
+      autoplaySpeed: 2000,
+      speed: 1000,
+      pauseOnHover: false,
+      pauseOnFocus: false,
+      swipe: true,
+      swipeToSlide: true,
+      touchMove: true,
+      speed: 1000,
       arrows: true,
-      prevArrow: $('.services-prev'),
-      nextArrow: $('.services-next'),
+      prevArrow: $('.our_services_slider .prev-btn'),
+      nextArrow: $('.our_services_slider .next-btn'),
       rtl: check_rtl,
       responsive: [
         { breakpoint: 992, settings: { slidesToShow: 2 } },
@@ -80,48 +87,51 @@ jQuery( document ).ready(function($) {
       ]
     });
 
-    // Function to handle center slide
-    function updateCenterSlide() {
-      $slider.find('.slider-item').each(function(){
-        var $slide = $(this);
-        if ($slide.hasClass('slick-center')) {
-          // Show second image if exists
-          var secondImg = $slide.find('.second-img');
-          if (secondImg.length) {
-            $slide.find('.default-img').hide();
-            secondImg.show();
-          }
+    $serviceSlider.find('.slick-slide').not('.slick-current').find('.second-img').hide();
+    $serviceSlider.find('.slick-slide.slick-current').find('.default-img').hide();
+    // $current.find('.second-img').stop(true,true).fadeOut(100);
 
-          // Show button if set
-          var showBtn = $slide.data('show-button') === 1;
-          $slide.find('.service-request-btn').toggle(showBtn);
+    $serviceSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+      var $current = $(slick.$slides[currentSlide]);
+      $current.find('.default-img').stop(true,true).fadeIn(100);
+      $current.find('.second-img').stop(true,true).fadeOut(0);
 
-        } else {
-          // Reset: show default image and hide second image & button
-          $slide.find('.default-img').show();
-          $slide.find('.second-img').hide();
-          $slide.find('.service-request-btn').hide();
-        }
-      });
+      var $next = $(slick.$slides[nextSlide]);
+      $next.find('.default-img').stop(true,true).fadeOut(0);
+      $next.find('.second-img').stop(true,true).fadeIn(100);
+    });
 
-      // Update progress bar
-      var current = $slider.slick('slickCurrentSlide') + 1;
-      var total   = $slider.slick('getSlick').slideCount;
+    // Function to handle progress bar
+    function serviceUpdateCenterSlide(slick, index) {
+      var current = index + 1;
+      var total   = slick.slideCount;
       var percent = (current / total) * 100;
-      $progressLine.css('width', percent + '%');
+      $ServicesprogressLine.css('width', percent + '%');
     }
 
-    $slider.on('init reInit afterChange', updateCenterSlide);
-  });
+    $serviceSlider.on('init', function(event, slick){
+      serviceUpdateCenterSlide(slick, slick.currentSlide);
+    });
 
+     $serviceSlider.on('init', function(event, slick){
+      for (var i = 0; i < slick.slideCount; i++){
+        setSlideState(slick, i, false);
+      }
+      setSlideState(slick, slick.currentSlide, true);
+      updateCenterSlide(slick, slick.currentSlide);
+      console.log('slick init, currentSlide=', slick.currentSlide);
+    });
 
+    $serviceSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+      serviceUpdateCenterSlide(slick, nextSlide);
+    });
 
   // ===== Partners Slider =====
 
   var $logossSlider = $('.logos-slider .slick-slider');
   var $logosProgressLine = $('.logos-slider .slick-progress .progress-line span');
 
-  $('.logos-slider .slick-slider').slick({
+  $logossSlider.slick({
     slidesToShow: 5,
     slidesToScroll: 1,
     infinite: true,
@@ -154,11 +164,20 @@ jQuery( document ).ready(function($) {
     ],
   });
 
-  // Progress bar update
-  $logossSlider.on('init reInit afterChange', function (event, slick, currentSlide) {
-    var i = (currentSlide ? currentSlide : 0) + 1;
-    var percent = (i / slick.slideCount) * 100;
+  // Function to handle progress bar
+  function logosUpdateCenterSlide(slick, index) {
+    var current = index + 1;
+    var total   = slick.slideCount;
+    var percent = (current / total) * 100;
     $logosProgressLine.css('width', percent + '%');
+  }
+
+  $logossSlider.on('init', function(event, slick){
+    logosUpdateCenterSlide(slick, slick.currentSlide);
+  });
+
+  $logossSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+    logosUpdateCenterSlide(slick, nextSlide);
   });
 
   // Hero Slider
@@ -184,64 +203,65 @@ jQuery( document ).ready(function($) {
     swipeToSlide: true,
     touchMove: true
   });
-/**
-  // Services Slider
-  $('.services-slider .slider-cards').slick({
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    infinite: true,
-    autoplay: true,
-    speed: 1000,
-    prevArrow: $('.services-slider .prev-btn'),
-    nextArrow: $('.services-slider .next-btn'),
-    dots: true,
-    appendDots: $('.services-slider .custom-dots'),
-    rtl: check_rtl,
-    pauseOnHover: true,
-    pauseOnFocus: true,
-    swipe: true,
-    swipeToSlide: false,
-    touchMove: true,
-    responsive: [
-      {
-        breakpoint: 991,
-        settings: {
-          slidesToShow: 2,
-          centerPadding: '60px',
+
+  /**
+    // Services Slider
+    $('.services-slider .slider-cards').slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      infinite: true,
+      autoplay: true,
+      speed: 1000,
+      prevArrow: $('.services-slider .prev-btn'),
+      nextArrow: $('.services-slider .next-btn'),
+      dots: true,
+      appendDots: $('.services-slider .custom-dots'),
+      rtl: check_rtl,
+      pauseOnHover: true,
+      pauseOnFocus: true,
+      swipe: true,
+      swipeToSlide: false,
+      touchMove: true,
+      responsive: [
+        {
+          breakpoint: 991,
+          settings: {
+            slidesToShow: 2,
+            centerPadding: '60px',
+          },
         },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          centerPadding: '30px',
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 1,
+            centerPadding: '30px',
+          },
         },
+      ],
+    });
+
+    $('.services-slider .slider-cards .item .wrapper, .posts-archive__list .card').hover(
+      function () {
+        let shortText = $(this).find('.desc').attr('data-short');
+        let fullText = $(this).find('.desc').attr('data-full');
+        let extraText = fullText.replace(shortText, '').trim();
+        let $short = $(this).find('.short');
+
+        $short.html(shortText + ' ' + extraText);
+
+        let fullHeight = $short.prop('scrollHeight');
+        $short.css('max-height', fullHeight + 'px');
       },
-    ],
-  });
-
-  $('.services-slider .slider-cards .item .wrapper, .posts-archive__list .card').hover(
-    function () {
-      let shortText = $(this).find('.desc').attr('data-short');
-      let fullText = $(this).find('.desc').attr('data-full');
-      let extraText = fullText.replace(shortText, '').trim();
-      let $short = $(this).find('.short');
-
-      $short.html(shortText + ' ' + extraText);
-
-      let fullHeight = $short.prop('scrollHeight');
-      $short.css('max-height', fullHeight + 'px');
-    },
-    function () {
-      let $short = $(this).find('.short');
-      let shortText = $(this).find('.desc').attr('data-short');
-      $short.css('max-height', '95px');
-      setTimeout(function () {
-        $short.html(shortText + '');
-      }, 200);
-    }
-  );
-   */
+      function () {
+        let $short = $(this).find('.short');
+        let shortText = $(this).find('.desc').attr('data-short');
+        $short.css('max-height', '95px');
+        setTimeout(function () {
+          $short.html(shortText + '');
+        }, 200);
+      }
+    );
+    */
 
   // Slick equal height
   // ===== Equal Heights for Slick Slides =====
@@ -270,4 +290,4 @@ jQuery( document ).ready(function($) {
   $(window).on('resize', function () {
     equalizeSlickSlideHeights();
   });
-;
+});

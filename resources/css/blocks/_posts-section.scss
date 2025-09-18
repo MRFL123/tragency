@@ -117,11 +117,13 @@
       }
 
       &.small {
-        background-color: $brand-white;
         box-shadow: 4px 3px 46.5px 0px #0000000D;
 
         .wrapper {
           height: 170px;
+          background-color: $brand-white;
+          border: 1px solid $brand-white;
+          transition: border 0.5s ease-in-out;
 
           .img {
             width: 170px;
@@ -156,6 +158,8 @@
           }
 
           &:hover {
+            border: 1px solid $brand-primary;
+
             .img {
               img {
                 width: 115%;
