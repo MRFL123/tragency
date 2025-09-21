@@ -1,6 +1,5 @@
 <?php
 /**
- * Developer : Ahmed Mostafa
  * Block Name : Gallery
  */
 

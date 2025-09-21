@@ -126,6 +126,59 @@ jQuery( document ).ready(function($) {
       serviceUpdateCenterSlide(slick, nextSlide);
     });
 
+
+    // ===== products Slider =====
+    var $productslider = $('.our_products_slider .products-slider');
+    var $productsprogressLine = $('.our_products_slider .slick-progress .progress-line span');
+    $productslider.slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      infinite: true,
+      centerMode: false,
+      centerPadding: '0px',
+      autoplay: true,
+      autoplaySpeed: 2000,
+      speed: 1000,
+      pauseOnHover: false,
+      pauseOnFocus: false,
+      swipe: true,
+      swipeToSlide: true,
+      touchMove: true,
+      speed: 1000,
+      arrows: true,
+      prevArrow: $('.our_products_slider .prev-btn'),
+      nextArrow: $('.our_products_slider .next-btn'),
+      rtl: check_rtl,
+      responsive: [
+        { breakpoint: 992, settings: { slidesToShow: 2 } },
+        { breakpoint: 576, settings: { slidesToShow: 1 } }
+      ]
+    });
+
+    // Function to handle progress bar
+    function productsUpdateCenterSlide(slick, index) {
+      var current = index + 1;
+      var total   = slick.slideCount;
+      var percent = (current / total) * 100;
+      $productsprogressLine.css('width', percent + '%');
+    }
+
+    $productslider.on('init', function(event, slick){
+      productsUpdateCenterSlide(slick, slick.currentSlide);
+    });
+
+     $productslider.on('init', function(event, slick){
+      for (var i = 0; i < slick.slideCount; i++){
+        setSlideState(slick, i, false);
+      }
+      setSlideState(slick, slick.currentSlide, true);
+      updateCenterSlide(slick, slick.currentSlide);
+    });
+
+    $productslider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+      productsUpdateCenterSlide(slick, nextSlide);
+    });
+
   // ===== Partners Slider =====
 
   var $logossSlider = $('.logos-slider .slick-slider');

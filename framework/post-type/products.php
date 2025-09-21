@@ -36,10 +36,11 @@ add_action( 'init', function() {
 	'show_in_rest' => true,
 	'menu_icon' => 'dashicons-admin-post',
 	'supports' => array(
-		0 => 'title',
-		1 => 'editor',
-		2 => 'thumbnail',
-		3 => 'custom-fields',
+        0 => 'title',
+        1 => 'editor',
+        2 => 'excerpt',
+        3 => 'thumbnail',
+        4 => 'custom-fields',
 	),
 	'delete_with_user' => false,
 ) );

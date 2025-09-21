@@ -1,7 +1,7 @@
 <?php
 /**
  * Block Name: Counter Section
- * Developer : Ahmed Mostafa
+
  */
 $text = get_field('text');
 ?>

@@ -1,6 +1,5 @@
 <?php
 /**
- * Developer : Ahmed Mostafa
  * Block Name : tragency values
  */
 $background_image = get_field('background_image');

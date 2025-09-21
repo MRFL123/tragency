@@ -1,6 +1,5 @@
 <?php
 /**
- * Developer : Ahmed Mostafa
  * Block Name : Video
  */
 $heading = get_field('heading');

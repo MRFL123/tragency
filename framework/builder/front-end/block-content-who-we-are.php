@@ -1,6 +1,5 @@
 <?php
 /**
- * Developer : Ahmed Mostafa
  * Block Name : Who We Are
  */
 $left_image  = get_field('left_image');

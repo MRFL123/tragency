@@ -1,6 +1,5 @@
 <?php
 /**
- * Developer : Ahmed Mostafa
  * Block Name : Our Services Slider
  */
 
@@ -42,7 +41,7 @@ if ($service_selection === 'latest') {
 
 <section class="our_services_slider py-5">
     <div class="container">
-        <div class="row mb-4 align-items-center">
+        <div class="row mb-4 align-items-center justify-content-between">
         <div class="col-md-4">
             <div class="services-text">
             <?= $text ?>
@@ -81,11 +80,11 @@ if ($service_selection === 'latest') {
             </div>
         </div>
 
-        <div class="col-md-3 text-center">
             <?php if ($button): ?>
-                <a href="<?= $button['url']; ?>" target="<?= $button['target']; ?>" class="main-btn blue"><?= $button['title']; ?></a>
+                <div class="col-md-3 text-center">
+                    <a href="<?= $button['url']; ?>" target="<?= $button['target']; ?>" class="main-btn blue"><?= $button['title']; ?></a>
+                </div>
             <?php endif; ?>
-        </div>
         </div>
 
         <?php if (!empty($services)): ?>
