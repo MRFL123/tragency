@@ -49,7 +49,7 @@ $after_year           = get_field('after_year', 'option');
               $locations = get_nav_menu_locations();
               $menu = ($locations['footer_navigation']) ? wp_get_nav_menu_object( $locations['footer_navigation'] ) : '';
             @endphp
-            <h3 class="font-22 text-white fw-500">{{ wp_kses_post( $menu->name ) }}</h3>
+            <h3 class="font-22 text-white primary-font fw-400">{{ wp_kses_post( $menu->name ) }}</h3>
             <div class="spacer-30"></div>
             {!!
               wp_nav_menu([
@@ -71,7 +71,7 @@ $after_year           = get_field('after_year', 'option');
               $locations = get_nav_menu_locations();
               $menu = ($locations['footer_navigation_2']) ? wp_get_nav_menu_object( $locations['footer_navigation_2'] ) : '';
             @endphp
-            <h3 class="font-22 text-white fw-500">{{ wp_kses_post( $menu->name ) }}</h3>
+            <h3 class="font-22 text-white primary-font fw-400">{{ wp_kses_post( $menu->name ) }}</h3>
             <div class="spacer-30"></div>
             {!!
               wp_nav_menu([

@@ -47,7 +47,7 @@
                                     <a class="d-block h-100" href="<?= the_permalink($single) ?>">
                                         <div class="h-100 wrapper" style="background-image:url('<?= Utilities::global_thumbnails($single, 'large') ?>');">
                                             <div class="content position-relative z-index-9">
-                                                <h3 class="title fw-500 mb-0 pointer text-white">
+                                                <h3 class="title primary-font fw-400 mb-0 pointer text-white">
                                                     <?= get_the_title($single); ?>
                                                 </h3>
                                                 <div class="spacer-25"></div>
@@ -108,7 +108,7 @@
                                                 <?php endif; ?>
                                             </div>
                                             <div class="content">
-                                                <h3 class="title font-20 text-blue400  fw-400 mb-0 pointer">
+                                                <h3 class="title font-20 text-blue400 primary-font fw-400 mb-0 pointer">
                                                     <?= get_the_title($single) ?>
                                                 </h3>
                                                 <div class="spacer-20"></div>
@@ -190,7 +190,7 @@
                                     <a class="d-block h-100" href="<?= the_permalink(get_the_ID()) ?>">
                                         <div class="h-100 wrapper" style="background-image:url('<?= Utilities::global_thumbnails(get_the_ID(), 'large') ?>');">
                                             <div class="content position-relative z-index-9">
-                                                <h3 class="title fw-500 mb-0 pointer text-white">
+                                                <h3 class="title primary-font fw-400 mb-0 pointer text-white">
                                                     <?= get_the_title(get_the_ID()); ?>
                                                 </h3>
                                                 <div class="spacer-25"></div>
@@ -250,7 +250,7 @@
                                                 <?php endif; ?>
                                             </div>
                                             <div class="content">
-                                                <h3 class="title font-20 text-blue400  fw-400 mb-0 pointer">
+                                                <h3 class="title font-20 text-blue400 primary-font fw-400 mb-0 pointer">
                                                     <?= get_the_title(get_the_ID()) ?>
                                                 </h3>
                                                 <div class="spacer-20"></div>

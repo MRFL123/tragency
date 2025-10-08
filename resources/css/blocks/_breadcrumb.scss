@@ -1,7 +1,11 @@
-.breadcrumb-section{
-  .breadcrumb .links a.d-link {
-    color: $brand-white !important;
+.breadcrumb-section {
+  min-height: 250px;
+
+  h1 {
+    font-family: $primary-font;
+    font-weight: 400 !important;
   }
+
   svg{
     [dir="rtl"] & {
       transform: scaleX(-1);

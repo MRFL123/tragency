@@ -12,11 +12,13 @@ $counter          = 0;
 ?>
 
 <section
-    class="breadcrumb-section bg-img"
+    class="breadcrumb-section position-relative bg-img"
     <?php if ($background_url): ?>
         style="background-image: url('<?= $background_url ?>');"
     <?php endif; ?>
 >
+    <div class="overlay gradient"></div>
+    <div class="spacer-100"></div>
     <div class="spacer-40 d-none d-md-block"></div>
     <div class="container position-relative z-index-9">
         <?php if ($page_name): ?>
@@ -31,7 +33,7 @@ $counter          = 0;
                         <?php $link = $link_row['link']; ?>
                         <?php if ($link): ?>
                             <a
-                                class="font-20 text-primary <?= ($links_count == $counter) ? 'active d-link' : 'normal' ?>"
+                                class="font-20 <?= ($links_count == $counter) ? 'active d-link text-primary' : 'normal text-gray' ?>"
                                 href="<?= ($link['url']) ?>"
                             >
                                 <?= $link['title'] ?>
@@ -50,5 +52,5 @@ $counter          = 0;
             </div>
         <?php endif; ?>
     </div>
-    <div class="spacer-40 d-none d-md-block"></div>
+    <div class="spacer-20"></div>
 </section>
