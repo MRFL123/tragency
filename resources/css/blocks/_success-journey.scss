@@ -111,6 +111,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-weight: 400;
+      font-family: $primary-font;
 
       @include media-breakpoint-down(lg) {
         right: 40%;
@@ -126,6 +127,7 @@
 
       .text {
         color: #c3cc6f;
+        font-family: $font-bold;
         font-weight: 700;
       }
 
