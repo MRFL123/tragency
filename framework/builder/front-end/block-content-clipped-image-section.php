@@ -9,7 +9,7 @@ $primary_button   = get_field('primary_button');
 $secondary_button = get_field('secondary_button');
 ?>
 
-<section class="clipped-image-section">
+<section class="clipped-image-section d-flex align-items-center">
     <?php if ($image): ?>
         <div class="image-box">
             <img src="<?= $image['url'] ?>" alt="<?= $image['alt'] ?>" class="w-100">
@@ -17,7 +17,7 @@ $secondary_button = get_field('secondary_button');
     <?php endif; ?>
 
     <div class="container">
-        <div class="row align-items-center min-vh-100">
+        <div class="row align-items-center">
             <div class="col-lg-6">
                 <div class="content-box bg-white p-3 p-md-4 rounded shadow">
                     <?php if ($text): ?>
