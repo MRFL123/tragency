@@ -43,8 +43,16 @@
                             $location = get_the_terms( $single, 'category' );
                             if($count_posts == 1) :
             ?>
-                                <div class="item item-<?=$count_posts?> big">
-                                    <a class="d-block h-100" href="<?= the_permalink($single) ?>">
+                                <div
+                                    class="item item-<?=$count_posts?> big pointer"
+                                    data-bs-toggle="modal" data-bs-target="#postModal"
+                                    data-title="<?= get_the_title($single); ?>"
+                                    data-image="<?= Utilities::global_thumbnails($single , 'large') ?>"
+                                    data-content="<?= htmlspecialchars( wp_kses_post( get_the_content($single) ) ); ?>"
+                                    data-date="<?= get_the_date('F j, Y') ?>"
+                                    data-cat="<?= $location[0]->name ?>"
+                                >
+                                    <div class="d-block h-100">
                                         <div class="h-100 wrapper" style="background-image:url('<?= Utilities::global_thumbnails($single, 'large') ?>');">
                                             <div class="content position-relative z-index-9">
                                                 <h3 class="title primary-font fw-400 mb-0 pointer text-white">
@@ -92,11 +100,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                             <?php else : ?>
-                                <div class="item item-<?=$count_posts?> small">
-                                    <a class="d-block h-100" href="<?= the_permalink($single) ?>">
+                                <div
+                                    class="item item-<?=$count_posts?> small pointer"
+                                    data-bs-toggle="modal" data-bs-target="#postModal"
+                                    data-title="<?= get_the_title($single); ?>"
+                                    data-image="<?= Utilities::global_thumbnails($single , 'large') ?>"
+                                    data-content="<?= htmlspecialchars( wp_kses_post( get_the_content($single) ) ); ?>"
+                                    data-date="<?= get_the_date('F j, Y') ?>"
+                                    data-cat="<?= $location[0]->name ?>"
+                                >
+                                    <div class="d-block h-100">
                                         <div class="wrapper row align-items-center justify-content-center">
                                             <div class="img h-100 p-0">
                                                 <?php if(has_post_thumbnail($single)) : ?>
@@ -142,7 +158,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
             <?php
                             endif;
@@ -186,8 +202,16 @@
                             $location = get_the_terms( get_the_ID(), 'category' );
                             if($count_posts == 1) :
             ?>
-                                <div class="item item-<?=$count_posts?> big">
-                                    <a class="d-block h-100" href="<?= the_permalink(get_the_ID()) ?>">
+                                <div
+                                    class="item item-<?=$count_posts?> big pointer"
+                                    data-bs-toggle="modal" data-bs-target="#postModal"
+                                    data-title="<?= get_the_title(); ?>"
+                                    data-image="<?= Utilities::global_thumbnails(get_the_ID(), 'large') ?>"
+                                    data-content="<?= htmlspecialchars( wp_kses_post( get_the_content() ) ); ?>"
+                                    data-date="<?= get_the_date('F j, Y') ?>"
+                                    data-cat="<?= $location[0]->name ?>"
+                                >
+                                    <div class="d-block h-100 open-popup-btn">
                                         <div class="h-100 wrapper" style="background-image:url('<?= Utilities::global_thumbnails(get_the_ID(), 'large') ?>');">
                                             <div class="content position-relative z-index-9">
                                                 <h3 class="title primary-font fw-400 mb-0 pointer text-white">
@@ -234,11 +258,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                             <?php else : ?>
-                                <div class="item item-<?=$count_posts?> small">
-                                    <a class="d-block h-100" href="<?= the_permalink(get_the_ID()) ?>">
+                                <div
+                                    class="item item-<?=$count_posts?> small pointer"
+                                    data-bs-toggle="modal" data-bs-target="#postModal"
+                                    data-title="<?= get_the_title(); ?>"
+                                    data-image="<?= Utilities::global_thumbnails(get_the_ID(), 'large') ?>"
+                                    data-content="<?= htmlspecialchars( wp_kses_post( get_the_content() ) ); ?>"
+                                    data-date="<?= get_the_date('F j, Y') ?>"
+                                    data-cat="<?= $location[0]->name ?>"
+                                >
+                                    <div class="d-block h-100">
                                         <div class="wrapper row align-items-center justify-content-center">
                                             <div class="img h-100 p-0">
                                                 <?php if(has_post_thumbnail(get_the_ID())) : ?>
@@ -250,7 +282,7 @@
                                                 <?php endif; ?>
                                             </div>
                                             <div class="content">
-                                                <h3 class="title font-20 text-blue400 primary-font fw-400 mb-0 pointer">
+                                                <h3 class="font-20 text-blue400 primary-font fw-400 mb-0 pointer">
                                                     <?= get_the_title(get_the_ID()) ?>
                                                 </h3>
                                                 <div class="spacer-20"></div>
@@ -284,7 +316,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
             <?php
                             endif;
@@ -295,7 +327,93 @@
                     endif;
                 endif;
             ?>
+
+            <!-- Bootstrap Modal -->
+            <div class="modal fade z-index-9999" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header p-0">
+                            <button
+                                type="button"
+                                class="btn-close pointer"
+                                data-bs-dismiss="modal"
+                                style="
+                                    all: unset;
+                                    position: absolute;
+                                    right: 26px;
+                                    top: 26px;
+                                    z-index: 9;
+                                "
+                            >
+                                <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="40" height="40" rx="12" fill="white"/>
+                                    <path d="M17.5304 16.4697C17.2375 16.1768 16.7626 16.1768 16.4697 16.4696C16.1768 16.7625 16.1768 17.2374 16.4696 17.5303L18.9394 20.0003L16.4703 22.4697C16.1774 22.7626 16.1774 23.2375 16.4703 23.5304C16.7632 23.8232 17.2381 23.8232 17.531 23.5303L20 21.061L22.469 23.5303C22.7619 23.8232 23.2368 23.8232 23.5297 23.5304C23.8226 23.2375 23.8226 22.7626 23.5297 22.4697L21.0606 20.0003L23.5304 17.5303C23.8232 17.2374 23.8232 16.7625 23.5303 16.4696C23.2374 16.1768 22.7625 16.1768 22.4696 16.4697L20 18.9396L17.5304 16.4697Z" fill="#8E1808"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 30.75C14.0629 30.75 9.25 25.9371 9.25 20C9.25 14.0629 14.0629 9.25 20 9.25C25.9371 9.25 30.75 14.0629 30.75 20C30.75 25.9371 25.9371 30.75 20 30.75ZM10.75 20C10.75 25.1086 14.8914 29.25 20 29.25C25.1086 29.25 29.25 25.1086 29.25 20C29.25 14.8914 25.1086 10.75 20 10.75C14.8914 10.75 10.75 14.8914 10.75 20Z" fill="#8E1808"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="modalImage" src="" alt="" class="img-fluid rounded mb-3">
+                            <h2 class="modal-title font-22 primary-font fw-400" id="postModalLabel"></h2>
+                            <div id="modalText" class="font-16-deep mt-2"></div>
+                            <div class="d-flex align-items-lg-center gap-2 gap-md-3">
+                                <div class="cat d-flex align-items-center gap-2">
+                                    <div class="icon">
+                                        <svg width="23" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.25C9.65279 7.25 7.75 9.15279 7.75 11.5C7.75 13.8472 9.65279 15.75 12 15.75C14.3472 15.75 16.25 13.8472 16.25 11.5C16.25 9.15279 14.3472 7.25 12 7.25ZM9.25 11.5C9.25 9.98122 10.4812 8.75 12 8.75C13.5188 8.75 14.75 9.98122 14.75 11.5C14.75 13.0188 13.5188 14.25 12 14.25C10.4812 14.25 9.25 13.0188 9.25 11.5Z" fill="#808839"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.75C6.72451 1.75 2.25 6.10954 2.25 11.4258C2.25 14.1482 3.40187 16.4241 5.01689 18.3025C6.62496 20.1728 8.71834 21.6811 10.6782 22.8944L10.6911 22.9024L10.7043 22.9098C11.0996 23.1329 11.546 23.25 12 23.25C12.454 23.25 12.9004 23.1329 13.2957 22.9098L13.3072 22.9033L13.3185 22.8964C15.2855 21.6928 17.3793 20.1796 18.9866 18.3038C20.6003 16.4206 21.75 14.1392 21.75 11.4258C21.75 6.10954 17.2755 1.75 12 1.75ZM3.75 11.4258C3.75 6.95641 7.53437 3.25 12 3.25C16.4656 3.25 20.25 6.95641 20.25 11.4258C20.25 13.683 19.3014 15.6311 17.8476 17.3277C16.3908 19.0279 14.4534 20.4424 12.5482 21.6092C12.3809 21.7014 12.1922 21.75 12 21.75C11.8083 21.75 11.6202 21.7017 11.4533 21.61C9.54874 20.43 7.61175 19.0197 6.15428 17.3246C4.70008 15.6332 3.75 13.6912 3.75 11.4258Z" fill="#808839"/>
+                                        </svg>
+                                    </div>
+                                    <div class="name text-primary font-16" id="modalDate">
+                                    </div>
+                                </div>
+                                <div class="date d-flex align-items-center gap-2">
+                                    <div class="icon">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8 12C7.44772 12 7 12.4477 7 13C7 13.5523 7.44772 14 8 14H8.00897C8.56126 14 9.00897 13.5523 9.00897 13C9.00897 12.4477 8.56126 12 8.00897 12H8Z" fill="#B7C251"/>
+                                            <path d="M11.9955 12C11.4432 12 10.9955 12.4477 10.9955 13C10.9955 13.5523 11.4432 14 11.9955 14H12.0045C12.5568 14 13.0045 13.5523 13.0045 13C13.0045 12.4477 12.5568 12 12.0045 12H11.9955Z" fill="#B7C251"/>
+                                            <path d="M15.991 12C15.4387 12 14.991 12.4477 14.991 13C14.991 13.5523 15.4387 14 15.991 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H15.991Z" fill="#B7C251"/>
+                                            <path d="M8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18H8.00897C8.56126 18 9.00897 17.5523 9.00897 17C9.00897 16.4477 8.56126 16 8.00897 16H8Z" fill="#B7C251"/>
+                                            <path d="M11.9955 16C11.4432 16 10.9955 16.4477 10.9955 17C10.9955 17.5523 11.4432 18 11.9955 18H12.0045C12.5568 18 13.0045 17.5523 13.0045 17C13.0045 16.4477 12.5568 16 12.0045 16H11.9955Z" fill="#B7C251"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.75 2C6.75 1.58579 6.41421 1.25 6 1.25C5.58579 1.25 5.25 1.58579 5.25 2V2.63479C4.44524 2.86288 3.7665 3.2336 3.20154 3.84436C2.42363 4.68535 2.07785 5.74792 1.91225 7.07951C1.74998 8.3843 1.74999 10.0565 1.75 12.19V12.81C1.74999 14.9435 1.74998 16.6157 1.91225 17.9205C2.07785 19.2521 2.42363 20.3147 3.20154 21.1556C3.98714 22.0049 4.99276 22.3901 6.25129 22.573C7.46932 22.75 9.02555 22.75 10.9892 22.75H13.0108C14.9745 22.75 16.5307 22.75 17.7487 22.573C19.0072 22.3901 20.0129 22.0049 20.7985 21.1556C21.5764 20.3147 21.9222 19.2521 22.0878 17.9205C22.25 16.6157 22.25 14.9435 22.25 12.8099V12.1901C22.25 10.0565 22.25 8.38431 22.0878 7.07951C21.9222 5.74792 21.5764 4.68535 20.7985 3.84436C20.2335 3.2336 19.5548 2.86288 18.75 2.63479V2C18.75 1.58579 18.4142 1.25 18 1.25C17.5858 1.25 17.25 1.58579 17.25 2V2.36589C16.1139 2.24997 14.716 2.24998 13.0108 2.25H10.9892C9.28402 2.24998 7.88606 2.24997 6.75 2.36589V2ZM5.2786 4.20584C5.36806 4.51998 5.65717 4.75 6 4.75C6.41421 4.75 6.75 4.41421 6.75 4V3.87459C7.81101 3.75156 9.18237 3.75 11.05 3.75H12.95C14.8176 3.75 16.189 3.75156 17.25 3.87459V4C17.25 4.41421 17.5858 4.75 18 4.75C18.3428 4.75 18.6319 4.51998 18.7214 4.20585C19.1287 4.36791 19.438 4.58256 19.6973 4.86292C20.1704 5.37439 20.4505 6.07588 20.5982 7.25637C20.5661 7.25217 20.5333 7.25 20.5 7.25H3.5C3.46672 7.25 3.43395 7.25217 3.40181 7.25637C3.54952 6.07588 3.82959 5.37439 4.30269 4.86292C4.56203 4.58256 4.87129 4.36791 5.2786 4.20584ZM3.29013 8.72024C3.25056 9.68315 3.25 10.8363 3.25 12.2432V12.7568C3.25 14.9551 3.25137 16.5339 3.40078 17.7354C3.54821 18.9208 3.82849 19.6244 4.30269 20.1371C4.76921 20.6414 5.39728 20.9331 6.46704 21.0886C7.56476 21.2481 9.01188 21.25 11.05 21.25H12.95C14.9881 21.25 16.4352 21.2481 17.533 21.0886C18.6027 20.9331 19.2308 20.6414 19.6973 20.1371C20.1715 19.6244 20.4518 18.9208 20.5992 17.7354C20.7486 16.5339 20.75 14.9551 20.75 12.7568V12.2432C20.75 10.8363 20.7494 9.68315 20.7099 8.72024C20.6433 8.73961 20.5728 8.75 20.5 8.75H3.5C3.42715 8.75 3.35673 8.73961 3.29013 8.72024Z" fill="#B7C251"/>
+                                        </svg>
+                                    </div>
+                                    <div class="name text-primary font-16 fw-400" id="modalCat">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="spacer-80"></div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('postModal');
+    const modalTitle = document.getElementById('postModalLabel');
+    const modalImage = document.getElementById('modalImage');
+    const modalDate = document.getElementById('modalDate');
+    const modalCat = document.getElementById('modalCat');
+    const modalText = document.getElementById('modalText');
+
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(item => {
+        item.addEventListener('click', () => {
+        const title = item.getAttribute('data-title');
+        const image = item.getAttribute('data-image');
+        const content = item.getAttribute('data-content');
+        const date = item.getAttribute('data-date');
+        const cat = item.getAttribute('data-cat');
+
+        modalTitle.textContent = title;
+        modalImage.src = image;
+        modalDate.textContent = date;
+        modalCat.textContent = cat;
+        modalText.innerHTML = content;
+        });
+    });
+    });
+</script>

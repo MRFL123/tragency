@@ -171,6 +171,18 @@
       }
     }
   }
+
+  .modal {
+    #modalImage {
+      height: 400px;
+      width: 100%;
+      object-fit: cover;
+
+      @include media-breakpoint-down(lg) {
+        height: 250px;
+      }
+    }
+  }
 }
 
 @keyframes toOpacity {
