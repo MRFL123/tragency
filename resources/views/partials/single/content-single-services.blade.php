@@ -1,1 +1,3 @@
-<div class="single services">{!! the_content() !!}</div>
+<div class="single services">
+    {!! the_content() !!}
+</div>

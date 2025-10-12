@@ -65,6 +65,15 @@
       }
     }
   }
+
+  &.services {
+    background-image: url(@images/page-bg.png);
+    background-repeat: no-repeat;
+
+    [dir="rtl"] & {
+      background-image: url(@images/page-bg-ar.png);
+    }
+  }
 }
 
 /* Latest News Section */

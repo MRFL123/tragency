@@ -1,6 +1,10 @@
 .breadcrumb-section {
   min-height: 250px;
 
+  @include media-breakpoint-down(md) {
+    min-height: auto;
+  }
+
   h1 {
     font-family: $primary-font;
     font-weight: 400 !important;
