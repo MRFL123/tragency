@@ -180,58 +180,62 @@ jQuery( document ).ready(function($) {
     });
 
   // ===== Partners Slider =====
+  $('.logos-slider').each(function() {
+    var $this = $(this);
+    if (!$this.find('.slick-slider').hasClass('slick-initialized')) {
+      var $logosProgressLine = $this.find('.slick-progress .progress-line span');
 
-  var $logossSlider = $('.logos-slider .slick-slider');
-  var $logosProgressLine = $('.logos-slider .slick-progress .progress-line span');
+      $this.find('.slick-slider').slick({
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        infinite: true,
+        autoplay: true,
+        speed: 1000,
+        arrows: true,
+        appendArrows: $this.find('.slick-progress'),
+        prevArrow: $this.find('.prev-btn'),
+        nextArrow: $this.find('.next-btn'),
+        dots: false,
+        rtl: check_rtl,
+        swipe: true,
+        swipeToSlide: false,
+        touchMove: true,
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 4,
+              slidesToScroll: 4,
+            },
+          },
+          {
+            breakpoint: 800,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+            },
+          },
+        ],
+      });
 
-  $logossSlider.slick({
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    infinite: true,
-    autoplay: true,
-    speed: 1000,
-    arrows: true,
-    appendArrows: $('.logos-slider .slick-progress'), // keep arrows in progress bar
-    prevArrow: $('.logos-slider .prev-btn'),
-    nextArrow: $('.logos-slider .next-btn'),
-    dots: false,
-    rtl: check_rtl,
-    swipe: true,
-    swipeToSlide: false,
-    touchMove: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-    ],
+        // Function to handle progress bar
+      function logosUpdateCenterSlide(slick, index) {
+        var current = index + 1;
+        var total   = slick.slideCount;
+        var percent = (current / total) * 100;
+        $logosProgressLine.css('width', percent + '%');
+      }
+
+      $this.find('.slick-slider').on('init', function(event, slick){
+        logosUpdateCenterSlide(slick, slick.currentSlide);
+      });
+
+      $this.find('.slick-slider').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+        logosUpdateCenterSlide(slick, nextSlide);
+      });
+    }
   });
 
-  // Function to handle progress bar
-  function logosUpdateCenterSlide(slick, index) {
-    var current = index + 1;
-    var total   = slick.slideCount;
-    var percent = (current / total) * 100;
-    $logosProgressLine.css('width', percent + '%');
-  }
-
-  $logossSlider.on('init', function(event, slick){
-    logosUpdateCenterSlide(slick, slick.currentSlide);
-  });
-
-  $logossSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
-    logosUpdateCenterSlide(slick, nextSlide);
-  });
 
   // Hero Slider
   var $heroSlider = $('.main-slider .slide-wrapper')
