@@ -167,7 +167,7 @@ jQuery( document ).ready(function($) {
       productsUpdateCenterSlide(slick, slick.currentSlide);
     });
 
-     $productslider.on('init', function(event, slick){
+    $productslider.on('init', function(event, slick){
       for (var i = 0; i < slick.slideCount; i++){
         setSlideState(slick, i, false);
       }
@@ -178,6 +178,60 @@ jQuery( document ).ready(function($) {
     $productslider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
       productsUpdateCenterSlide(slick, nextSlide);
     });
+
+
+    // ===== Testimonials Slider =====
+    var $testimonialsSlider = $('.our-testimonials .testimonials-slider');
+    var $testimonialsProgressLine = $('.our-testimonials .slick-progress .progress-line span');
+    $testimonialsSlider.slick({
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      infinite: true,
+      centerMode: false,
+      centerPadding: '0px',
+      autoplay: true,
+      autoplaySpeed: 2000,
+      speed: 1000,
+      pauseOnHover: false,
+      pauseOnFocus: false,
+      swipe: true,
+      swipeToSlide: true,
+      touchMove: true,
+      speed: 1000,
+      arrows: true,
+      prevArrow: $('.our-testimonials .prev-btn'),
+      nextArrow: $('.our-testimonials .next-btn'),
+      rtl: check_rtl,
+      responsive: [
+        { breakpoint: 992, settings: { slidesToShow: 2 } },
+        { breakpoint: 576, settings: { slidesToShow: 1 } }
+      ]
+    });
+
+    // Function to handle progress bar
+    function testimonialsUpdateCenterSlide(slick, index) {
+      var current = index + 1;
+      var total   = slick.slideCount;
+      var percent = (current / total) * 100;
+      $testimonialsProgressLine.css('width', percent + '%');
+    }
+
+    $testimonialsSlider.on('init', function(event, slick){
+      testimonialsUpdateCenterSlide(slick, slick.currentSlide);
+    });
+
+    $testimonialsSlider.on('init', function(event, slick){
+      for (var i = 0; i < slick.slideCount; i++){
+        setSlideState(slick, i, false);
+      }
+      setSlideState(slick, slick.currentSlide, true);
+      updateCenterSlide(slick, slick.currentSlide);
+    });
+
+    $testimonialsSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+      testimonialsUpdateCenterSlide(slick, nextSlide);
+    });
+
 
   // ===== Partners Slider =====
   $('.logos-slider').each(function() {
@@ -261,64 +315,6 @@ jQuery( document ).ready(function($) {
     touchMove: true
   });
 
-  /**
-    // Services Slider
-    $('.services-slider .slider-cards').slick({
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      infinite: true,
-      autoplay: true,
-      speed: 1000,
-      prevArrow: $('.services-slider .prev-btn'),
-      nextArrow: $('.services-slider .next-btn'),
-      dots: true,
-      appendDots: $('.services-slider .custom-dots'),
-      rtl: check_rtl,
-      pauseOnHover: true,
-      pauseOnFocus: true,
-      swipe: true,
-      swipeToSlide: false,
-      touchMove: true,
-      responsive: [
-        {
-          breakpoint: 991,
-          settings: {
-            slidesToShow: 2,
-            centerPadding: '60px',
-          },
-        },
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 1,
-            centerPadding: '30px',
-          },
-        },
-      ],
-    });
-
-    $('.services-slider .slider-cards .item .wrapper, .posts-archive__list .card').hover(
-      function () {
-        let shortText = $(this).find('.desc').attr('data-short');
-        let fullText = $(this).find('.desc').attr('data-full');
-        let extraText = fullText.replace(shortText, '').trim();
-        let $short = $(this).find('.short');
-
-        $short.html(shortText + ' ' + extraText);
-
-        let fullHeight = $short.prop('scrollHeight');
-        $short.css('max-height', fullHeight + 'px');
-      },
-      function () {
-        let $short = $(this).find('.short');
-        let shortText = $(this).find('.desc').attr('data-short');
-        $short.css('max-height', '95px');
-        setTimeout(function () {
-          $short.html(shortText + '');
-        }, 200);
-      }
-    );
-    */
 
   // Slick equal height
   // ===== Equal Heights for Slick Slides =====

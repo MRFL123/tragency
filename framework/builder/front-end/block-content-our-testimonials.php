@@ -1,53 +1,20 @@
 <?php
 /**
- * Block Name : Our products Slider
+ * Block Name: Our Testimonials
  */
 
-$text              = get_field('text');
-$button            = get_field('button');
-$products_selection = get_field('products_selection');
-$selected_products = get_field('selected_products');
-
-$products = [];
-
-if ($products_selection === 'latest') {
-    $query = new WP_Query([
-        'post_type'      => 'product',
-        'posts_per_page' => 6,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-    ]);
-    $products = $query->posts;
-
-} elseif ($products_selection === 'random') {
-    $query = new WP_Query([
-        'post_type'      => 'product',
-        'posts_per_page' => 6,
-        'orderby'        => 'rand',
-    ]);
-    $products = $query->posts;
-
-} elseif ($products_selection === 'select' && !empty($selected_products)) {
-    $args = [
-        'post_type'      => 'product',
-        'posts_per_page' => -1,
-        'post__in'       => $selected_products,
-        'orderby'        => 'post__in',
-    ];
-    $query    = new WP_Query($args);
-    $products = $query->posts;
-}
+$header = get_field('header');
+$sub_heading = get_field('sub_heading');
 ?>
-
-<section class="our_products_slider py-5">
+<section class="our-testimonials">
+    <div class="spacer-100"></div>
     <div class="container">
-        <div class="row mb-4 align-items-center justify-content-between">
+        <div class="row">
             <div class="col-md-6">
-                <div class="products-text">
-                    <?= $text ?>
+                <div class="head">
+                    <?= $header ?>
                 </div>
             </div>
-
             <div class="col-md-6 d-flex align-items-center justify-content-between gap-3">
                 <div class="prev-btn pointer">
                     <svg class="svg-arrow" width="62" height="62" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,44 +46,45 @@ if ($products_selection === 'latest') {
                     </svg>
                 </div>
             </div>
-            <?php if ($button): ?>
-                <div class="col-md-3 text-center">
-                    <a href="<?= $button['url']; ?>" target="<?= $button['target']; ?>" class="main-btn blue"><?= $button['title']; ?></a>
+        </div>
+    </div>
+    <div class="spacer-50"></div>
+    <div class="row justify-content-center justify-content-md-end">
+        <div class="col-md-11">
+            <?php if (have_rows('testimonials')) : ?>
+                <div class="testimonials-slider">
+                    <?php while (have_rows('testimonials')) :
+                        the_row();
+                        $title   = get_sub_field('title');
+                        $image   = get_sub_field('image');
+                        $content = get_sub_field('content');
+                        $logo    = get_sub_field('logo');
+                    ?>
+                        <div class="item">
+                            <div class="position-relative px-3">
+                                <?php if ($image) : ?>
+                                    <div class="img">
+                                        <img class="w-100 h-100" src="<?= $image['url'] ?>" alt="<?= $title ?>">
+                                    </div>
+                                <?php endif; ?>
+                                <div class="content text-white px-5 py-4">
+                                    <div class="title">
+                                        <h3 class="font-26"><?= $title ?></h3>
+                                    </div>
+                                    <div class="desc text-white-deep">
+                                        <?= $content ?>
+                                    </div>
+                                    <div class="logo">
+                                        <?php if ($logo) : ?>
+                                            <img src="<?= $logo['url'] ?>" alt="<?= $title ?>">
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
                 </div>
             <?php endif; ?>
         </div>
-
-        <?php if (!empty($products)): ?>
-            <div class="products-slider">
-                <?php foreach ($products as $product): ?>
-                <?php
-                    $post_id     = is_object($product) ? $product->ID : $product;
-                    $post        = get_post($post_id);
-                    if (!$post) continue;
-
-                    $thumbnail   = get_the_post_thumbnail_url($post_id, 'large');
-                    $title       = get_the_title($post_id);
-                    $excerpt     = get_the_excerpt($post_id);
-                    $permalink   = get_permalink($post_id);
-                ?>
-                    <div>
-                        <div class="slider-item">
-                            <div class="slider-image mb-3">
-                                <a href="<?= $permalink; ?>">
-                                    <img src="<?= $thumbnail; ?>" alt="<?= $title; ?>" class="default-img">
-                                </a>
-                            </div>
-                            <div class="slider-content">
-                                <a href="<?= $permalink; ?>">
-                                    <h5 class="slider-title text-blue800"><?= $title ?></h5>
-                                </a>
-
-                                <p class="slider-excerpt font-20 text-blue100"><?= $excerpt ?></p>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
     </div>
 </section>

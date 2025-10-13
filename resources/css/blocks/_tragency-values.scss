@@ -24,8 +24,9 @@
     );
     z-index: 1;
   }
+
   p{
-    @extend .font-15 ;
+    @extend .font-16;
     @extend .lh-20;
     color: $brand-white;
   }

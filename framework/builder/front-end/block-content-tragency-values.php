@@ -22,10 +22,10 @@ $our_policy       = get_field('our_policy');
             <div class="tragency-divider mb-4"></div>
 
             <div class="tragency-columns row g-1">
-                <div class="tragency-col col-lg-4 mb-3 mb-lg-0">
+                <div class="tragency-col col-lg-4">
                     <?= $our_vision ?>
                 </div>
-                <div class="tragency-col col-lg-4 mb-3 mb-lg-0">
+                <div class="tragency-col col-lg-4">
                     <?= $our_mission ?>
                 </div>
                 <div class="tragency-col col-lg-4">
