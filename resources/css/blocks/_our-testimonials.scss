@@ -38,6 +38,10 @@
         align-content: end;
         transition: all 1s ease-in-out;
 
+        @include media-breakpoint-down(md) {
+          top: 85%;
+        }
+
         .desc {
           opacity: 0;
           transition: all 0.5s ease-in-out;
