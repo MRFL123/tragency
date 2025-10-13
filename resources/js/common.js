@@ -190,7 +190,7 @@ jQuery( document ).ready(function($) {
         slidesToScroll: 5,
         infinite: true,
         autoplay: true,
-        speed: 1000,
+        speed: 4000,
         arrows: true,
         appendArrows: $this.find('.slick-progress'),
         prevArrow: $this.find('.prev-btn'),
