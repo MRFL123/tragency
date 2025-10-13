@@ -187,7 +187,7 @@ jQuery( document ).ready(function($) {
 
       $this.find('.slick-slider').slick({
         slidesToShow: 5,
-        slidesToScroll: 1,
+        slidesToScroll: 5,
         infinite: true,
         autoplay: true,
         speed: 1000,
