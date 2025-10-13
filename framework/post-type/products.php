@@ -32,8 +32,10 @@ add_action( 'init', function() {
 		'item_link' => 'Product Link',
 		'item_link_description' => 'A link to a product.',
 	),
-	'public' => true,
-	'show_in_rest' => true,
+    'public' => true,
+    'has_archive' => true,
+    'hierarchical' => true,
+    'show_in_rest' => true,
 	'menu_icon' => 'dashicons-admin-post',
 	'supports' => array(
         0 => 'title',

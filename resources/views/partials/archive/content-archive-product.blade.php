@@ -1,15 +1,15 @@
 @php
     // Get settings from options
-    $bg         = get_field('background_image', 'option');
-    $banner_title = get_field('banner_title', 'option');
-    $page_title = get_field('page_title', 'option');
-    $mode       = get_field('service_selection', 'option');
-    $links      = get_field('links', 'option');
+    $bg         = get_field('product_background_image', 'option');
+    $page_title = get_field('product_page_title', 'option');
+    $banner_title = get_field('banner_product_title', 'option');
+    $mode       = get_field('product_selection', 'option');
+    $links      = get_field('product_links', 'option');
     $links_count      = $links ? count($links) : 0;
     $counter          = 0;
 
     $args = [
-        'post_type'      => 'services',
+        'post_type'      => 'product',
         'post_status'    => 'publish',
         'posts_per_page' => -1,
     ];
@@ -24,7 +24,7 @@
     $all_services = new WP_Query($args);
 @endphp
 
-<section class="services archive">
+<section class="services product archive">
   <div
     class="breadcrumb-section position-relative bg-img"
     <?php if ($bg): ?>
@@ -90,7 +90,7 @@
                     class="search-field form-control search-input"
                     type="text"
                     name="search_value"
-                    placeholder="{{ get_field('service_search_placeholder', 'option') }}"
+                    placeholder="{{ get_field('product_search_placeholder', 'option') }}"
                   >
               </div>
           </div>
