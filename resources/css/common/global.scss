@@ -595,40 +595,36 @@ video {
 }
 
 .pagination {
-  .page-item {
-    .page-link {
-      border: 0;
-      background-color: #3a3a3a;
-      color: #a7a7a7;
-      border-radius: 16px;
-      width: 49px;
-      height: 49px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  .page-numbers {
+    border: 1px solid #EBECEE;
+    background-color: $brand-white;
+    color: $brand-black;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    transition: all 0.4s ease-in-out;
+    @extend .font-16;
 
-      @include media-breakpoint-down(md) {
-        border-radius: 12px;
-        width: 36px;
-        height: 36px;
-        padding: 6px;
-      }
+    svg {
+      margin-top: 2px;
     }
 
-    &:hover,
-    &.active {
-      .page-link {
-        border: 0;
-        background-color: $brand-white;
-        color: #262626;
+    &:hover {
+      border: 1px solid $brand-primary;
+    }
+
+    &.current {
+        background-color: $brand-primary;
+        color: $brand-white;
 
         svg {
           path {
-            stroke: #262626;
+            fill: $brand-white;
           }
         }
-      }
     }
   }
 }

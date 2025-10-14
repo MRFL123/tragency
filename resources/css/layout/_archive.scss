@@ -74,6 +74,32 @@
       background-image: url(@images/page-bg-ar.png);
     }
   }
+
+  &.product {
+    .card-services {
+      .content {
+        min-height: 120px;
+
+        .title {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+
+        .desc {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+      }
+    }
+  }
 }
 
 /* Latest News Section */

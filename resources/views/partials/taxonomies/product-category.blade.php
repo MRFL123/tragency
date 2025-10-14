@@ -14,23 +14,22 @@
     $text        = get_field('text', 'option');
 
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-    $per_page = 6;
 
     $args = [
-        'taxonomy'   => 'product-category',
-        'hide_empty' => false,
-        'number'     => $per_page,
-        'offset'     => ($paged - 1) * $per_page,
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => 6,
+        'paged'          => $paged,
+        'tax_query'      => [
+            [
+                'taxonomy' => 'product-category',
+                'field'    => 'slug',
+                'terms'    => get_queried_object()->slug,
+            ],
+        ],
     ];
 
-    $all_categories = get_terms($args);
-
-    $total_terms = wp_count_terms([
-        'taxonomy'   => 'product-category',
-        'hide_empty' => false,
-    ]);
-
-    $total_pages = ceil($total_terms / $per_page);
+    $products_query = new WP_Query($args);
 @endphp
 
 <section class="services product archive">
@@ -112,7 +111,7 @@
     </div>
   </div>
 
-  <div class="posts mt-md-5 mt-md-3" id="posts">
+  <div class="posts mt-md-5 mt-md-3">
       <div class="spacer-80"></div>
       <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -139,49 +138,58 @@
           </div>
         </div>
         <div class="spacer-50"></div>
-
         <div class="row g-4">
-            @if (!empty($all_categories) && !is_wp_error($all_categories))
-                @foreach ($all_categories as $category)
-                    @php
-                        $image = get_field('category_image', 'product-category_' . $category->term_id);
-                    @endphp
+          @if ($products_query->have_posts())
+            @while ($products_query->have_posts())
+              @php $products_query->the_post(); @endphp
 
-                    <div class="card-services col-12 col-md-6 col-lg-4">
-                        <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_term_link($category) }}">
-                            @if (!empty($image['url']))
-                                <img class="w-100 h-100 image-back" src="{{ $image['url'] }}" alt="{{ $category->name }}">
-                            @endif
-                            <div class="content">
-                                <h2 class="title text-white font-30 fw-600 m-0">
-                                    {{ $category->name }}
-                                </h2>
-                                @if ($category->description)
-                                    <p class="desc text-white mt-2 mb-0">
-                                        {{ wp_trim_words($category->description, 15, '...') }}
-                                    </p>
-                                @endif
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            @endif
+              <div class="card-services col-12 col-md-6 col-lg-4">
+                <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_permalink() }}">
+                  @if (has_post_thumbnail())
+                    <img class="w-100 h-100 image-back" src="{{ get_the_post_thumbnail_url(get_the_ID(), 'large') }}" alt="{{ get_the_title() }}">
+                  @endif
+                  <div class="content">
+                    <h2 class="title text-white font-30 fw-600 m-0">
+                      {{ get_the_title() }}
+                    </h2>
+                    <p class="desc text-white mt-2 mb-0">
+                      {{ wp_trim_words(get_the_content(), 15, '...') }}
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+            @endwhile
+          @else
+            <div class="col-12 text-center text-muted">
+              {{ __('No products found in this category.', 'textdomain') }}
+            </div>
+          @endif
         </div>
 
-        @if ($total_pages > 1)
-          <div class="pagination mt-5 d-flex justify-content-center">
-              <?php
-                echo paginate_links([
-                    'base'      => trailingslashit(get_post_type_archive_link('product')) . 'page/%#%/',
-                    'format'    => '',
-                    'current'   => max(1, $paged),
-                    'total'     => $total_pages,
-                    'prev_text' => __('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.57 18.8228C9.76 18.8228 9.95 18.7528 10.1 18.6028C10.39 18.3128 10.39 17.8328 10.1 17.5428L4.56 12.0028L10.1 6.4628C10.39 6.1728 10.39 5.6928 10.1 5.4028C9.81 5.1128 9.33 5.1128 9.04 5.4028L2.97 11.4728C2.68 11.7628 2.68 12.2428 2.97 12.5328L9.04 18.6028C9.19 18.7528 9.38 18.8228 9.57 18.8228Z" fill="black"/><path d="M3.67 12.7528H20.5C20.91 12.7528 21.25 12.4128 21.25 12.0028C21.25 11.5928 20.91 11.2528 20.5 11.2528H3.67C3.26 11.2528 2.92 11.5928 2.92 12.0028C2.92 12.4128 3.26 12.7528 3.67 12.7528Z" fill="black"/></svg>'),
-                    'next_text' => __('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.43 18.8228C14.24 18.8228 14.05 18.7528 13.9 18.6028C13.61 18.3128 13.61 17.8328 13.9 17.5428L19.44 12.0028L13.9 6.4628C13.61 6.1728 13.61 5.6928 13.9 5.4028C14.19 5.1128 14.67 5.1128 14.96 5.4028L21.03 11.4728C21.32 11.7628 21.32 12.2428 21.03 12.5328L14.96 18.6028C14.81 18.7528 14.62 18.8228 14.43 18.8228Z" fill="black"/><path d="M20.33 12.7528H3.5C3.09 12.7528 2.75 12.4128 2.75 12.0028C2.75 11.5928 3.09 11.2528 3.5 11.2528H20.33C20.74 11.2528 21.08 11.5928 21.08 12.0028C21.08 12.4128 20.74 12.7528 20.33 12.7528Z" fill="black"/></svg>'),
-                ]);
-              ?>
-          </div>
-        @endif
+
+    <?php
+      $pagination = paginate_links([
+          'total'     => $products_query->max_num_pages,
+          'current'   => $paged,
+          'mid_size'  => 2,
+          'prev_text' => __('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.57 18.8228C9.76 18.8228 9.95 18.7528 10.1 18.6028C10.39 18.3128 10.39 17.8328 10.1 17.5428L4.56 12.0028L10.1 6.4628C10.39 6.1728 10.39 5.6928 10.1 5.4028C9.81 5.1128 9.33 5.1128 9.04 5.4028L2.97 11.4728C2.68 11.7628 2.68 12.2428 2.97 12.5328L9.04 18.6028C9.19 18.7528 9.38 18.8228 9.57 18.8228Z" fill="black"/><path d="M3.67 12.7528H20.5C20.91 12.7528 21.25 12.4128 21.25 12.0028C21.25 11.5928 20.91 11.2528 20.5 11.2528H3.67C3.26 11.2528 2.92 11.5928 2.92 12.0028C2.92 12.4128 3.26 12.7528 3.67 12.7528Z" fill="black"/></svg>'),
+          'next_text' => __('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.43 18.8228C14.24 18.8228 14.05 18.7528 13.9 18.6028C13.61 18.3128 13.61 17.8328 13.9 17.5428L19.44 12.0028L13.9 6.4628C13.61 6.1728 13.61 5.6928 13.9 5.4028C14.19 5.1128 14.67 5.1128 14.96 5.4028L21.03 11.4728C21.32 11.7628 21.32 12.2428 21.03 12.5328L14.96 18.6028C14.81 18.7528 14.62 18.8228 14.43 18.8228Z" fill="black"/><path d="M20.33 12.7528H3.5C3.09 12.7528 2.75 12.4128 2.75 12.0028C2.75 11.5928 3.09 11.2528 3.5 11.2528H20.33C20.74 11.2528 21.08 11.5928 21.08 12.0028C21.08 12.4128 20.74 12.7528 20.33 12.7528Z" fill="black"/></svg>'),
+      ]);
+
+      if ($pagination) {
+          echo '<div class="pagination mt-5 d-flex justify-content-center">' . $pagination . '</div>';
+      }
+
+      wp_reset_postdata();
+    ?>
+
+
+
+
+
+
+
       </div>
   </div>
   <div class="spacer-50"></div>
@@ -209,11 +217,8 @@
 
     const postsSection = document.querySelector('.posts');
     if (postsSection) {
-      const pathSegments = window.location.pathname.split('/').filter(Boolean);
-      const pageIndex = pathSegments.indexOf('page');
-      const hasPage = pageIndex !== -1 && !isNaN(pathSegments[pageIndex + 1]);
-
-      if (hasPage) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('page')) {
         setTimeout(() => {
           postsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 400);
@@ -221,3 +226,4 @@
     }
   });
 </script>
+
