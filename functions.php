@@ -71,3 +71,7 @@ function fix_product_category_pagination() {
     );
 }
 add_action('init', 'fix_product_category_pagination');
+
+add_action('init', function() {
+    flush_rewrite_rules();
+});
