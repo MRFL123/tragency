@@ -70,3 +70,36 @@ collect(['setup', 'filters'])
 //     );
 // });
 
+// 1) add correct rewrite rules for taxonomy pagination and product archive
+add_action('init', function () {
+    // taxonomy product-category pagination -> index.php?taxonomy=product-category&term=slug&paged=#
+    add_rewrite_rule(
+        '^product-category/([^/]+)/page/([0-9]+)/?$',
+        'index.php?taxonomy=product-category&term=$matches[1]&post_type=product&paged=$matches[2]',
+        'top'
+    );
+
+    // taxonomy term base (without page)
+    add_rewrite_rule(
+        '^product-category/([^/]+)/?$',
+        'index.php?taxonomy=product-category&term=$matches[1]&post_type=product',
+        'top'
+    );
+
+    // product archive pagination -> index.php?post_type=product&paged=#
+    add_rewrite_rule(
+        '^product/page/([0-9]+)/?$',
+        'index.php?post_type=product&paged=$matches[1]',
+        'top'
+    );
+});
+
+// 2) fix servers that pass `page` instead of `paged`
+add_filter('request', function ($query_vars) {
+    if (isset($query_vars['page']) && !empty($query_vars['page']) && empty($query_vars['paged'])) {
+        $query_vars['paged'] = $query_vars['page'];
+    }
+    return $query_vars;
+});
+
+

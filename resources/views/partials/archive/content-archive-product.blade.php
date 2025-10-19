@@ -13,7 +13,9 @@
     $vector      = get_field('vector', 'option');
     $text        = get_field('text', 'option');
 
-    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+    // $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+    $paged = max(1, get_query_var('paged', get_query_var('page', 1)));
+
     $per_page = 6;
 
     $args = [
