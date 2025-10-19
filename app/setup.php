@@ -162,12 +162,3 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
-
-add_action('init', function() {
-    // Force the rewrite rule for paged category archives to point correctly
-    add_rewrite_rule(
-        '^product-category/([^/]+)/page/([0-9]+)/?$',
-        'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
-        'top'
-    );
-});
