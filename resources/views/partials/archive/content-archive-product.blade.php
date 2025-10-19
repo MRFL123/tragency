@@ -113,7 +113,7 @@
   </div>
 
   <div class="posts mt-md-5 mt-md-3" id="posts">
-      <div class="spacer-80"></div>
+      <div class="spacer-80 d-none d-md-block"></div>
       <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <div class="title font-44 m-0">
