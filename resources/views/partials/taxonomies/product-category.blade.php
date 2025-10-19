@@ -107,7 +107,7 @@
               @php $products_query->the_post(); @endphp
 
               <div class="service-item col-md-6 my-4 px-3">
-                <a class="item-wrraper position-relative h-100 d-block overflow-hidden bg-white" href="{{ get_permalink() }}">
+                <a class="item-wrraper position-relative d-block overflow-hidden bg-white" href="{{ get_permalink() }}">
                   <div class="row h-100">
                     <div class="col-5 col-lg-4 img">
                       @if (has_post_thumbnail())
