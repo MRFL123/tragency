@@ -83,3 +83,17 @@ add_action('init', function () {
     );
 });
 
+add_action('template_redirect', function () {
+    if (is_tax('product-category')) {
+        error_log('Paged var: ' . get_query_var('paged'));
+    }
+});
+
+add_filter('request', function ($query_vars) {
+    if (isset($query_vars['page']) && !empty($query_vars['page']) && empty($query_vars['paged'])) {
+        $query_vars['paged'] = $query_vars['page'];
+    }
+    return $query_vars;
+});
+
+
