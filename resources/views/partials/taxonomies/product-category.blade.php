@@ -1,4 +1,6 @@
 @php
+    global $wp_query;
+
     // Get settings from options
     $bg         = get_field('product_list_background_image', 'option');
     $page_title = get_field('product_page_list_title', 'option');
