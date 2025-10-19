@@ -72,14 +72,6 @@ function fix_product_category_pagination() {
 }
 add_action('init', 'fix_product_category_pagination');
 
-add_action('template_redirect', function() {
-    $request_uri = $_SERVER['REQUEST_URI'];
-    if (preg_match('#^/product-category/([^/]+)/page/([0-9]+)/?#', $request_uri, $matches)) {
-        $redirect_url = add_query_arg([
-            'product-category' => $matches[1],
-            'paged' => $matches[2]
-        ], home_url('/index.php'));
-        include get_home_path() . 'index.php';
-        exit;
-    }
+add_action('init', function() {
+    flush_rewrite_rules();
 });
