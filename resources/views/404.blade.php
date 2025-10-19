@@ -12,7 +12,7 @@
       </h1>
       <p>{{ __('ERROR, sorry something went wrong. this page is not found Please go back.', 'fkgroup') }}</p>
       <div class="spacer-30"></div>
-      <a href="{{ home_url('/') }}" class="main-btn">{{ __('Go Back To Home Page', 'fkgroup') }}</a>
+      <a href="{{ home_url('/') }}" class="btn btn-primary border-primary">{{ __('Go Back To Home Page', 'fkgroup') }}</a>
     </div>
   </div>
 </section>
