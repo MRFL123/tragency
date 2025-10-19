@@ -65,15 +65,21 @@ collect(['setup', 'filters'])
 
 function fix_product_category_pagination() {
     add_rewrite_rule(
-        '^product-category/([^/]+)/page/([0-9]+)/?$',
+        '^product-category/([^/]+)/page/([0-9]+)/?',
         'index.php?product-category=$matches[1]&paged=$matches[2]',
         'top'
     );
 }
 add_action('init', 'fix_product_category_pagination');
 
-function allow_product_category_paged_query_var($vars) {
-    $vars[] = 'paged';
-    return $vars;
-}
-add_filter('query_vars', 'allow_product_category_paged_query_var');
+add_action('template_redirect', function() {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    if (preg_match('#^/product-category/([^/]+)/page/([0-9]+)/?#', $request_uri, $matches)) {
+        $redirect_url = add_query_arg([
+            'product-category' => $matches[1],
+            'paged' => $matches[2]
+        ], home_url('/index.php'));
+        include get_home_path() . 'index.php';
+        exit;
+    }
+});
