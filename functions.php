@@ -70,14 +70,18 @@ collect(['setup', 'filters'])
 //     );
 // });
 
-add_action('init', function() {
+
+
+add_action('init', function () {
     add_rewrite_rule(
         '^product-category/([^/]+)/page/([0-9]+)/?$',
-        'index.php?post_type=product&product-category=$matches[1]&paged=$matches[2]',
+        'index.php?product-category=$matches[1]&paged=$matches[2]',
         'top'
     );
-});
 
-add_action('init', function() {
-    flush_rewrite_rules(false);
+    add_rewrite_rule(
+        '^product-category/([^/]+)/?$',
+        'index.php?product-category=$matches[1]',
+        'top'
+    );
 });
