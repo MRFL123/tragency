@@ -171,6 +171,10 @@
           box-shadow: 4px 3px 46.5px 0px #0000000D;
           height: 220px;
 
+          @include media-breakpoint-down(md) {
+            height: auto;
+          }
+
           .img {
             img {
               width: 100%;

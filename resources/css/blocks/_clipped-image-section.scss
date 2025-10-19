@@ -3,6 +3,10 @@
   min-height: 60vh;
   z-index: 9;
 
+  @include media-breakpoint-down(md){
+    min-height: 50vh;
+  }
+
   .image-box {
     position: absolute;
     top: -3rem;
