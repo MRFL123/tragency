@@ -70,30 +70,3 @@ collect(['setup', 'filters'])
 //     );
 // });
 
-add_action('init', function () {
-    add_rewrite_rule(
-        '^product-category/([^/]+)/page/([0-9]+)/?$',
-        'index.php?product-category=$matches[1]&paged=$matches[2]',
-        'top'
-    );
-    add_rewrite_rule(
-        '^product-category/([^/]+)/?$',
-        'index.php?product-category=$matches[1]',
-        'top'
-    );
-});
-
-add_action('template_redirect', function () {
-    if (is_tax('product-category')) {
-        error_log('Paged var: ' . get_query_var('paged'));
-    }
-});
-
-add_filter('request', function ($query_vars) {
-    if (isset($query_vars['page']) && !empty($query_vars['page']) && empty($query_vars['paged'])) {
-        $query_vars['paged'] = $query_vars['page'];
-    }
-    return $query_vars;
-});
-
-
