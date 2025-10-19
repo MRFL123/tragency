@@ -117,7 +117,7 @@
 
                     <div class="col-7 col-lg-8 content">
                       <h2 class="title font-28 fw-600 m-0">
-                        {{ get_the_title() }}
+                        {!! get_the_title() !!}
                       </h2>
                       <p class="desc mt-2 mb-0 font-21 lh-28">
                         {{ wp_trim_words(get_the_excerpt(), 24, '...') }}

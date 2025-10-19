@@ -172,7 +172,7 @@
                             @endif
                             <div class="content">
                               <h2 class="title text-white font-30 fw-600">
-                                  {{ $category->name }}
+                                  {!! $category->name !!}
                               </h2>
                               @if ($category->description)
                                   <p class="desc text-white mt-2">
