@@ -17,8 +17,8 @@ $gallery             = get_field('gallery');
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <?php if ($heading): ?>
                     <div class="heading"><?= $heading ?></div>
+                    <div class="spacer-5"></div>
                 <?php endif; ?>
-                <div class="spacer-5"></div>
                 <?php if ($first_text_section): ?>
                 <div class="bg-white p-4 mb-4 shadow-sm">
                     <p><?= $first_text_section ?></p>
