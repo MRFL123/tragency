@@ -33,7 +33,7 @@
       margin-left: 10px;
       width: 12px;
       height: 6px;
-      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='6' viewBox='0 0 12 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.322928 0.38394C0.525103 0.148069 0.88021 0.120753 1.11608 0.322928L6.00001 4.50915L10.8839 0.322929C11.1198 0.120754 11.4749 0.14807 11.6771 0.383941C11.8793 0.619811 11.8519 0.974918 11.6161 1.17709L6.36608 5.67709C6.15543 5.85765 5.84459 5.85765 5.63394 5.67709L0.38394 1.17709C0.148069 0.974917 0.120753 0.619811 0.322928 0.38394Z' fill='%23838383'/%3E %3C/svg%3E");
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='6' viewBox='0 0 12 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.322928 0.38394C0.525103 0.148069 0.88021 0.120753 1.11608 0.322928L6.00001 4.50915L10.8839 0.322929C11.1198 0.120754 11.4749 0.14807 11.6771 0.383941C11.8793 0.619811 11.8519 0.974918 11.6161 1.17709L6.36608 5.67709C6.15543 5.85765 5.84459 5.85765 5.63394 5.67709L0.38394 1.17709C0.148069 0.974917 0.120753 0.619811 0.322928 0.38394Z' fill='%23c5c4c4'/%3E %3C/svg%3E");
       background-repeat: no-repeat;
 
       [dir="rtl"] & {
@@ -87,7 +87,7 @@
           }
 
           .caret {
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='6' viewBox='0 0 12 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.322928 0.38394C0.525103 0.148069 0.88021 0.120753 1.11608 0.322928L6.00001 4.50915L10.8839 0.322929C11.1198 0.120754 11.4749 0.14807 11.6771 0.383941C11.8793 0.619811 11.8519 0.974918 11.6161 1.17709L6.36608 5.67709C6.15543 5.85765 5.84459 5.85765 5.63394 5.67709L0.38394 1.17709C0.148069 0.974917 0.120753 0.619811 0.322928 0.38394Z' fill='%23152946'/%3E %3C/svg%3E ");
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='6' viewBox='0 0 12 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.322928 0.38394C0.525103 0.148069 0.88021 0.120753 1.11608 0.322928L6.00001 4.50915L10.8839 0.322929C11.1198 0.120754 11.4749 0.14807 11.6771 0.383941C11.8793 0.619811 11.8519 0.974918 11.6161 1.17709L6.36608 5.67709C6.15543 5.85765 5.84459 5.85765 5.63394 5.67709L0.38394 1.17709C0.148069 0.974917 0.120753 0.619811 0.322928 0.38394Z' fill='%23ffffff'/%3E %3C/svg%3E ")
           }
         }
       }
@@ -113,18 +113,24 @@
       }
 
       li.dropdown {
+        position: unset;
+
         .dropdown-menu {
           position: absolute;
-          top: -500px;
+          top: 90px;
           right: 50%;
           transform: translate(50%, 0%);
           background: transparent;
-          padding-top: 90px;
           border: 0;
           display: block;
-          transition: top 0.5s ease-in-out;
-          min-width: 140px;
+          min-width: 100vw;
+          padding: 0;
+          border-radius: 0;
           z-index: 1;
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transition: all 0.5s ease-in-out;
 
           [dir="ltr"] & {
             right: auto;
@@ -132,23 +138,28 @@
           }
 
           .dropdown-inner {
-            background: $brand-white;
-            border-radius: 8px;
-            padding: 2px;
-            min-width: 180px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid #FFFFFF6B;
+            background: linear-gradient(0deg, rgba(60, 60, 60, 0.8), rgba(60, 60, 60, 0.8)),
+            linear-gradient(90deg, rgba(132, 132, 132, 0.35) 0%, rgba(30, 30, 30, 0.35) 100%);
 
             li {
-              width: 100%;
+              // width: 100%;
               margin: 0;
 
               a {
-                padding: 10px 15px !important;
+                padding: 12px 35px !important;
+                color: $brand-white;
+                position: relative;
+                top: 0;
+                transition: all 0.3s ease-in-out;
               }
 
               &:hover,
               &.active {
                 a {
-                  &::after {
+                  &::before {
                     display: none;
                   }
                 }
@@ -157,6 +168,7 @@
               &:hover  {
                 a {
                   color: $brand-primary;
+                  top: 1px;
                 }
               }
 
@@ -169,9 +181,10 @@
           }
 
           @include media-breakpoint-down(lg) {
+            position: unset;
             transform: unset !important;
             padding-top: 0 !important;
-            width: 60%;
+            min-width: 60vw;
             right: 20%;
 
             [dir="ltr"] & {
@@ -189,10 +202,10 @@
 
         &:hover {
           & > .dropdown-menu {
-            top: 0;
+            max-height: 500px;
+            opacity: 1;
 
             @include media-breakpoint-down(lg) {
-              top: 35px;
               z-index: 99;
             }
           }

@@ -108,7 +108,7 @@
                       <div class="card-services col-12 col-md-6 col-lg-4">
                           <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_permalink() }}">
                               <img class="w-100 h-100 image-back"
-                                    src="{{ get_the_post_thumbnail_url(get_the_ID()) }}"
+                                    src="{{ Utilities::global_thumbnails(get_the_ID(), 'large') }}"
                                     alt="{{ get_the_title() }}">
                               <div class="content">
                                   <h2 class="title text-white font-30 fw-600 m-0">

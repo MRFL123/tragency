@@ -77,8 +77,45 @@
 
   &.product {
     .card-services {
+      .product-count {
+        position: absolute;
+        top: -100%;
+        right: 25px;
+        z-index: 9;
+        transition: all 0.5s ease-in-out;
+
+        [dir="rtl"] & {
+          right: auto;
+          left: 25px;
+        }
+
+        .bg {
+          @include media-breakpoint-down(md) {
+            svg {
+              height: 95px;
+            }
+          }
+        }
+
+        .counter {
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          top: 40%;
+          text-align: center;
+        }
+      }
+
       .content {
+        height: 120px;
         min-height: 120px;
+        border-top: 0px solid $brand-primary;
+        transition: all 0.5s ease-in-out;
+
+        @include media-breakpoint-down(md) {
+          height: 100px;
+          min-height: 100px;
+        }
 
         .title {
           display: -webkit-box;
@@ -96,6 +133,94 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: normal;
+        }
+
+        .cta {
+          opacity: 0;
+          transition: all 0.5s ease-in-out;
+        }
+      }
+
+      &:hover {
+        .product-count {
+          top: 0;
+        }
+
+        .content {
+          height: 170px;
+          min-height: 170px;
+          border-top: 7px solid $brand-primary;
+
+          @include media-breakpoint-down(md) {
+            height: 140px;
+            min-height: 140px;
+          }
+
+          .cta {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .product-category {
+    .services {
+      .service-item {
+        .item-wrraper {
+          box-shadow: 4px 3px 46.5px 0px #0000000D;
+
+          .img {
+            img {
+              width: 100%;
+              transform: scale(1.1);
+              transition: all 0.3s ease-in-out;
+            }
+          }
+
+          .content {
+            padding: 34px 24px 10px;
+            transform: translate(0px, 0px);
+            transition: all 0.3s ease-in-out;
+
+            @include media-breakpoint-down(md) {
+              padding: 14px;
+            }
+
+            .cta {
+              position: relative;
+              right: -100%;
+              opacity: 0;
+              transition: all 0.5s ease-in-out;
+
+              [dir="rtl"] & {
+                right: auto;
+                left: -100%;
+              }
+            }
+          }
+
+          &:hover {
+            .img {
+              img {
+                transform: scale(1);
+                width: 80%;
+              }
+            }
+
+            .content {
+              transform: translate(-30px, -10px);
+
+              .cta {
+                right: 0;
+                opacity: 1;
+
+                [dir="rtl"] & {
+                  left: 0;
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -1,17 +1,11 @@
 @php
     // Get settings from options
-    $bg         = get_field('product_background_image', 'option');
-    $page_title = get_field('product_page_title', 'option');
-    $banner_title = get_field('banner_product_title', 'option');
-    $links      = get_field('product_links', 'option');
+    $bg         = get_field('product_list_background_image', 'option');
+    $page_title = get_field('product_page_list_title', 'option');
+    $banner_title = get_field('banner_product_list_title', 'option');
+    $links      = get_field('product_list_links', 'option');
     $links_count      = $links ? count($links) : 0;
     $counter          = 0;
-
-    // Brief About Our Products
-    $left_image  = get_field('left_image', 'option');
-    $right_image = get_field('right_image', 'option');
-    $vector      = get_field('vector', 'option');
-    $text        = get_field('text', 'option');
 
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
@@ -20,6 +14,8 @@
         'post_status'    => 'publish',
         'posts_per_page' => 6,
         'paged'          => $paged,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
         'tax_query'      => [
             [
                 'taxonomy' => 'product-category',
@@ -32,7 +28,8 @@
     $products_query = new WP_Query($args);
 @endphp
 
-<section class="services product archive">
+
+<section class="archive product-category">
   <div
     class="breadcrumb-section position-relative bg-img"
     <?php if ($bg): ?>
@@ -52,7 +49,7 @@
               <div class="breadcrumb">
                   <div class="links">
                       <?php foreach ($links as $link_row): $counter++; ?>
-                          <?php $link = $link_row['link']; ?>
+                          <?php $link = $link_row['product_list_link']; ?>
                           <?php if ($link): ?>
                               <a
                                   class="font-20 <?= ($links_count == $counter) ? 'active d-link text-primary' : 'normal text-gray' ?>"
@@ -77,41 +74,7 @@
       <div class="spacer-20"></div>
   </div>
 
-  <div class="who-we-are py-5">
-    <div class="container">
-        <div class="row align-items-center">
-
-        <div class="col-md-6 who-we-are-images d-flex">
-            <?php if ($left_image): ?>
-            <div class="image-left align-items-center justify-content-center">
-                <img src="<?= $left_image['url']; ?>" alt="<?= $left_image['alt']; ?>">
-            </div>
-            <?php endif; ?>
-
-            <?php if ($right_image): ?>
-            <div class="image-right">
-                <img src="<?= $right_image['url']; ?>" alt="<?= $right_image['alt']; ?>">
-            </div>
-            <?php endif; ?>
-
-            <?php if ($vector): ?>
-            <div class="vector">
-                <img src="<?= $vector['url']; ?>" alt="vector">
-            </div>
-            <?php endif; ?>
-        </div>
-
-        <div class="col-md-6 who-we-are-text">
-            <div class="description">
-                <?= $text; ?>
-            </div>
-        </div>
-
-        </div>
-    </div>
-  </div>
-
-  <div class="posts mt-md-5 mt-md-3">
+  <div class="services posts mt-md-5 mt-md-3">
       <div class="spacer-80"></div>
       <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -132,29 +95,43 @@
                     class="search-field form-control search-input"
                     type="text"
                     name="search_value"
-                    placeholder="{{ get_field('product_search_placeholder', 'option') }}"
+                    placeholder="{{ get_field('product_search_list_placeholder', 'option') }}"
                   >
               </div>
           </div>
         </div>
         <div class="spacer-50"></div>
-        <div class="row g-4">
+        <div class="row g-md-5 g-4">
           @if ($products_query->have_posts())
             @while ($products_query->have_posts())
               @php $products_query->the_post(); @endphp
 
-              <div class="card-services col-12 col-md-6 col-lg-4">
-                <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_permalink() }}">
-                  @if (has_post_thumbnail())
-                    <img class="w-100 h-100 image-back" src="{{ get_the_post_thumbnail_url(get_the_ID(), 'large') }}" alt="{{ get_the_title() }}">
-                  @endif
-                  <div class="content">
-                    <h2 class="title text-white font-30 fw-600 m-0">
-                      {{ get_the_title() }}
-                    </h2>
-                    <p class="desc text-white mt-2 mb-0">
-                      {{ wp_trim_words(get_the_content(), 15, '...') }}
-                    </p>
+              <div class="service-item col-md-6 my-4 px-3">
+                <a class="item-wrraper position-relative h-100 d-block overflow-hidden bg-white" href="{{ get_permalink() }}">
+                  <div class="row h-100">
+                    <div class="col-5 col-lg-4 img">
+                      @if (has_post_thumbnail())
+                        <img class="h-100 object-fit-cover" src="{{ Utilities::global_thumbnails(get_the_ID(), 'large') }}" alt="{{ get_the_title() }}">
+                      @endif
+                    </div>
+
+                    <div class="col-7 col-lg-8 content">
+                      <h2 class="title font-28 fw-600 m-0">
+                        {{ get_the_title() }}
+                      </h2>
+                      <p class="desc mt-2 mb-0 font-21 lh-28">
+                        {{ wp_trim_words(get_the_excerpt(), 24, '...') }}
+                      </p>
+                      <div class="cta d-flex align-items-center justify-content-end gap-1">
+                        <span class="text font-22 text-primary"><?= __('Learn more', 'tragency') ?></span>
+                        <span class="icon">
+                            <svg class="svg-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M14.43 18.823C14.24 18.823 14.05 18.753 13.9 18.603C13.61 18.313 13.61 17.833 13.9 17.543L19.44 12.003L13.9 6.46305C13.61 6.17305 13.61 5.69305 13.9 5.40305C14.19 5.11305 14.67 5.11305 14.96 5.40305L21.03 11.473C21.32 11.763 21.32 12.243 21.03 12.533L14.96 18.603C14.81 18.753 14.62 18.823 14.43 18.823Z" fill="#B7C251"/>
+                              <path d="M20.33 12.753H3.5C3.09 12.753 2.75 12.413 2.75 12.003C2.75 11.593 3.09 11.253 3.5 11.253H20.33C20.74 11.253 21.08 11.593 21.08 12.003C21.08 12.413 20.74 12.753 20.33 12.753Z" fill="#B7C251"/>
+                            </svg>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </a>
               </div>
@@ -162,7 +139,7 @@
             @endwhile
           @else
             <div class="col-12 text-center text-muted">
-              {{ __('No products found in this category.', 'textdomain') }}
+              {{ __('No products found in this category.', 'tragency') }}
             </div>
           @endif
         </div>
@@ -198,7 +175,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector('.search-input');
-    const cards = document.querySelectorAll('.card-services');
+    const cards = document.querySelectorAll('.service-item');
 
     searchInput.addEventListener('input', () => {
       const searchTerm = searchInput.value.toLowerCase().trim();

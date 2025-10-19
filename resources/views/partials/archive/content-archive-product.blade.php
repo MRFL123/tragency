@@ -53,7 +53,7 @@
               <div class="breadcrumb">
                   <div class="links">
                       <?php foreach ($links as $link_row): $counter++; ?>
-                          <?php $link = $link_row['link']; ?>
+                          <?php $link = $link_row['product_link'];?>
                           <?php if ($link): ?>
                               <a
                                   class="font-20 <?= ($links_count == $counter) ? 'active d-link text-primary' : 'normal text-gray' ?>"
@@ -149,18 +149,45 @@
 
                     <div class="card-services col-12 col-md-6 col-lg-4">
                         <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_term_link($category) }}">
+                            <div class="product-count">
+                                <div class="bg">
+                                  <svg width="100" height="142" viewBox="0 0 100 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0H100V142L50 118.5L0 142V0Z" fill="url(#paint0_linear_337_2558)"/>
+                                    <defs>
+                                    <linearGradient id="paint0_linear_337_2558" x1="50" y1="0" x2="50" y2="142" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#ACB83E"/>
+                                    <stop offset="1" stop-color="#A4AD4E"/>
+                                    </linearGradient>
+                                    </defs>
+                                  </svg>
+                                </div>
+                                <div class="counter text-white">
+                                  <span class="count font-36 lh-30 font-bold "> {{ $category->count }} </span>
+                                  <span class="text font-22"> {{ __('Product', 'Products') }} </span>
+                                </div>
+                            </div>
                             @if (!empty($image['url']))
                                 <img class="w-100 h-100 image-back" src="{{ $image['url'] }}" alt="{{ $category->name }}">
                             @endif
                             <div class="content">
-                                <h2 class="title text-white font-30 fw-600 m-0">
-                                    {{ $category->name }}
-                                </h2>
-                                @if ($category->description)
-                                    <p class="desc text-white mt-2 mb-0">
-                                        {{ wp_trim_words($category->description, 15, '...') }}
-                                    </p>
-                                @endif
+                              <h2 class="title text-white font-30 fw-600">
+                                  {{ $category->name }}
+                              </h2>
+                              @if ($category->description)
+                                  <p class="desc text-white mt-2">
+                                      {{ wp_trim_words($category->description, 15, '...') }}
+                                  </p>
+                              @endif
+                              <div class="cta d-flex align-items-center justify-content-end gap-1">
+                                  <span class="text font-22 text-primary"><?= __('Learn more', 'tragency') ?></span>
+                                  <span class="icon">
+                                      <svg class="svg-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M14.43 18.823C14.24 18.823 14.05 18.753 13.9 18.603C13.61 18.313 13.61 17.833 13.9 17.543L19.44 12.003L13.9 6.46305C13.61 6.17305 13.61 5.69305 13.9 5.40305C14.19 5.11305 14.67 5.11305 14.96 5.40305L21.03 11.473C21.32 11.763 21.32 12.243 21.03 12.533L14.96 18.603C14.81 18.753 14.62 18.823 14.43 18.823Z" fill="#B7C251"/>
+                                        <path d="M20.33 12.753H3.5C3.09 12.753 2.75 12.413 2.75 12.003C2.75 11.593 3.09 11.253 3.5 11.253H20.33C20.74 11.253 21.08 11.593 21.08 12.003C21.08 12.413 20.74 12.753 20.33 12.753Z" fill="#B7C251"/>
+                                      </svg>
+
+                                  </span>
+                              </div>
                             </div>
                         </a>
                     </div>
