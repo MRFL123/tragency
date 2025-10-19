@@ -78,3 +78,13 @@ add_action('init', function() {
     );
     flush_rewrite_rules(false);
 });
+
+add_action('pre_get_posts', function($query) {
+    if (!is_admin() && $query->is_main_query() && is_tax('product-category')) {
+        $paged = max( 1, get_query_var('paged'), get_query_var('page') );
+        $query->set('posts_per_page', 6);
+        $query->set('paged', $paged);
+        $query->set('orderby', 'date');
+        $query->set('order', 'DESC');
+    }
+});

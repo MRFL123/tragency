@@ -8,7 +8,7 @@
     $counter          = 0;
 
     // $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-    $paged = get_query_var('paged') ? get_query_var('paged') : (isset($_GET['paged']) ? intval($_GET['paged']) : 1);
+    $paged = max( 1, get_query_var('paged'), get_query_var('page'), isset($_GET['paged']) ? intval($_GET['paged']) : 1 );
 
     $args = [
         'post_type'      => 'product',
