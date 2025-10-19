@@ -65,13 +65,15 @@ collect(['setup', 'filters'])
 
 function fix_product_category_pagination() {
     add_rewrite_rule(
-        '^product-category/([^/]+)/page/([0-9]+)/?',
-        'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
+        '^product-category/([^/]+)/page/([0-9]+)/?$',
+        'index.php?product-category=$matches[1]&paged=$matches[2]',
         'top'
     );
 }
 add_action('init', 'fix_product_category_pagination');
 
-add_action('init', function() {
-    flush_rewrite_rules();
-});
+function allow_product_category_paged_query_var($vars) {
+    $vars[] = 'paged';
+    return $vars;
+}
+add_filter('query_vars', 'allow_product_category_paged_query_var');
