@@ -62,29 +62,10 @@ collect(['setup', 'filters'])
         }
     });
 
-// add_action('init', function() {
-//     add_rewrite_rule(
-//         '^product-category/([^/]+)/page/([0-9]+)/?',
-//         'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
-//         'top'
-//     );
-// });
-
 add_action('init', function() {
     add_rewrite_rule(
         '^product-category/([^/]+)/page/([0-9]+)/?',
         'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
         'top'
     );
-    flush_rewrite_rules(false);
-});
-
-add_action('pre_get_posts', function($query) {
-    if (!is_admin() && $query->is_main_query() && is_tax('product-category')) {
-        $paged = max( 1, get_query_var('paged'), get_query_var('page') );
-        $query->set('posts_per_page', 6);
-        $query->set('paged', $paged);
-        $query->set('orderby', 'date');
-        $query->set('order', 'DESC');
-    }
 });
