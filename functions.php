@@ -62,26 +62,22 @@ collect(['setup', 'filters'])
         }
     });
 
+// add_action('init', function() {
+//     add_rewrite_rule(
+//         '^product-category/([^/]+)/page/([0-9]+)/?',
+//         'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
+//         'top'
+//     );
+// });
 
-function fix_product_category_pagination() {
-    add_rewrite_tag('%product-category%', '([^&]+)');
-    add_rewrite_tag('%paged%', '([0-9]+)');
-
+add_action('init', function() {
     add_rewrite_rule(
         '^product-category/([^/]+)/page/([0-9]+)/?$',
-        'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
+        'index.php?post_type=product&product-category=$matches[1]&paged=$matches[2]',
         'top'
     );
+});
 
-    add_rewrite_rule(
-        '^product-category/([^/]+)/?$',
-        'index.php?taxonomy=product-category&term=$matches[1]',
-        'top'
-    );
-}
-add_action('init', 'fix_product_category_pagination');
-
-register_activation_hook(__FILE__, function() {
-    fix_product_category_pagination();
-    flush_rewrite_rules();
+add_action('init', function() {
+    flush_rewrite_rules(false);
 });
