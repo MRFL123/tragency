@@ -66,9 +66,8 @@ collect(['setup', 'filters'])
 function fix_product_category_pagination() {
     add_rewrite_rule(
         '^product-category/([^/]+)/page/([0-9]+)/?',
-        'index.php?product-category=$matches[1]&paged=$matches[2]',
+        'index.php?taxonomy=product-category&term=$matches[1]&paged=$matches[2]',
         'top'
     );
 }
 add_action('init', 'fix_product_category_pagination');
-
