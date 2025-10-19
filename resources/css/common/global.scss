@@ -556,6 +556,11 @@ hr {
     // background: linear-gradient(0deg, #D9D9D9, #D9D9D9),linear-gradient(180deg, rgba(48, 48, 48, 0) 0%, #141504 100%);
     background: linear-gradient(180deg, rgba(48, 48, 48, 0) 0%, rgba(20, 21, 4, 1) 100%);
   }
+
+  &.product-overlay {
+    background: linear-gradient(180deg, rgba(22, 27, 19, 0) 0%, #060606 100%);
+    z-index: 1;
+  }
 }
 
 iframe,

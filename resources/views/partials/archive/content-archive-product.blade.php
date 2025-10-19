@@ -149,6 +149,7 @@
 
                     <div class="card-services col-12 col-md-6 col-lg-4">
                         <a class="position-relative h-100 d-block overflow-hidden" href="{{ get_term_link($category) }}">
+                            <div class="overlay product-overlay"></div>
                             <div class="product-count">
                                 <div class="bg">
                                   <svg width="100" height="142" viewBox="0 0 100 142" fill="none" xmlns="http://www.w3.org/2000/svg">
