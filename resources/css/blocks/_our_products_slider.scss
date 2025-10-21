@@ -50,6 +50,10 @@
         transform: scale(1.05, 1);
         transform-origin: left center;
 
+        [dir="rtl"] & {
+          transform-origin: right center;
+        }
+
         @include media-breakpoint-down(lg) {
           transform: scale(1);
         }
@@ -57,6 +61,11 @@
         .slider-item {
           @include media-breakpoint-up(lg) {
             margin-right: 20px;
+
+            [dir="rtl"] & {
+              margin-right: 0;
+              margin-left: 20px;
+            }
           }
 
           .slider-image img {
