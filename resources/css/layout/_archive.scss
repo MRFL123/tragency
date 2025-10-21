@@ -112,6 +112,11 @@
         border-top: 0px solid $brand-primary;
         transition: all 0.5s ease-in-out;
 
+        [dir="rtl"] & {
+          height: 140px;
+          min-height: 140px;
+        }
+
         @include media-breakpoint-down(md) {
           height: 100px;
           min-height: 100px;
@@ -150,6 +155,11 @@
           height: 170px;
           min-height: 170px;
           border-top: 7px solid $brand-primary;
+
+          [dir="rtl"] & {
+            height: 190px;
+            min-height: 190px;
+          }
 
           @include media-breakpoint-down(md) {
             height: 140px;
