@@ -226,6 +226,10 @@
             .content {
               transform: translate(-30px, -10px);
 
+              [dir="rtl"] & {
+                transform: translate(30px, -10px);
+              }
+
               .cta {
                 right: 0;
                 opacity: 1;
