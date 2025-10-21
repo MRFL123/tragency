@@ -113,6 +113,10 @@
       font-weight: 400;
       font-family: $primary-font;
 
+      [dir="rtl"] & {
+        font-family: $primary-font-ar;
+      }
+
       @include media-breakpoint-down(lg) {
         right: 40%;
         top: 50%;

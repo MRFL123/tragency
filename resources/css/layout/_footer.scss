@@ -19,6 +19,10 @@ footer {
         font-size: 16px !important;
         font-family: $primary-font;
 
+        [dir="rtl"] & {
+          font-family: $primary-font-ar;
+        }
+
         @include media-breakpoint-down(lg) {
           font-size: 12px !important;
         }

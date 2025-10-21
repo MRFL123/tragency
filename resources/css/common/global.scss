@@ -9,6 +9,10 @@
 
     &:not(.ab-icon, .lg-icon, .sb-icon, b) {
       font-family: $primary-font;
+
+      [dir="rtl"] & {
+        font-family: $primary-font-ar;
+      }
     }
   }
 }
@@ -26,7 +30,7 @@ html {
 
   [dir='rtl'] & {
     direction: rtl;
-    font-family: $primary-font;
+    font-family: $primary-font-ar;
   }
 }
 
@@ -127,6 +131,10 @@ p {
 
 .primary-font {
   font-family: $primary-font;
+
+  [dir="rtl"] & {
+    font-family: $primary-font-ar;
+  }
 }
 
 b,

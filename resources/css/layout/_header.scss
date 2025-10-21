@@ -404,5 +404,9 @@
 
   a {
     font-family: $primary-font;
+
+    [dir="rtl"] & {
+      font-family: $primary-font-ar;
+    }
   }
 }
