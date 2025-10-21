@@ -6,7 +6,7 @@ $heading = get_field('heading');
 $video   = get_field('video');
 ?>
 <section class="video-block">
-        <h2 class="video-heading d-block"><?= $heading; ?></h2>
+        <h2 class="video-heading d-block mb-4"><?= $heading; ?></h2>
 
     <?php if ($video): ?>
         <div class="video-wrapper d-flex">

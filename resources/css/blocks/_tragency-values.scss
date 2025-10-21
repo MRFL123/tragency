@@ -41,6 +41,11 @@
     max-width: 1450px;
     margin-left: auto;
 
+    [dir="rtl"] & {
+      margin-left: unset;
+      margin-right: auto;
+    }
+
     .tragency-header {
       margin-bottom: 20px;
       width: 50%;
