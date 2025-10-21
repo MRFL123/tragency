@@ -87,9 +87,9 @@
   .font-#{$name} {
     font-size: $value * 1px !important;
 
-    // @media (min-width: 991px) and (max-width: 1320px) {
-    //   font-size: $value * 0.70px !important;
-    // }
+    @media (min-width: 991px) and (max-width: 1550px) {
+      font-size: $value * 0.70px !important;
+    }
 
     @include media-breakpoint-down(lg) {
       font-size: $value * 0.70px !important;
@@ -99,7 +99,7 @@
   .font-#{$name}-deep {
     font-size: $value * 1px !important;
 
-    // @media (min-width: 991px) and (max-width: 1320px) {
+    // @media (min-width: 991px) and (max-width: 1550px) {
     //   font-size: $value * 0.80px !important;
     // }
 
@@ -110,7 +110,7 @@
     * {
       font-size: $value * 1px !important;
 
-      @media (min-width: 991px) and (max-width: 1320px) {
+      @media (min-width: 991px) and (max-width: 1550px) {
         font-size: $value * 0.80px !important;
       }
 
@@ -123,7 +123,7 @@
   .lh-#{$name} {
     line-height: $value * 1px;
 
-    @media (min-width: 991px) and (max-width: 1320px) {
+    @media (min-width: 991px) and (max-width: 1550px) {
       line-height: $value * 0.80px !important;
     }
 
@@ -135,7 +135,7 @@
   .lh-#{$name}-deep {
     line-height: $value * 1px;
 
-    @media (min-width: 991px) and (max-width: 1320px) {
+    @media (min-width: 991px) and (max-width: 1550px) {
       line-height: $value * 0.80px !important;
     }
 
@@ -146,7 +146,7 @@
     * {
       line-height: $value * 1px;
 
-      @media (min-width: 991px) and (max-width: 1320px) {
+      @media (min-width: 991px) and (max-width: 1550px) {
         line-height: $value * 0.70px !important;
       }
 
@@ -197,7 +197,7 @@
     width: 100%;
     display: block;
 
-    @media (max-width: 1320px) {
+    @media (max-width: 1550px) {
       height: $value * 0.6px;
     }
   }
