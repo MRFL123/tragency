@@ -7,7 +7,7 @@
   [dir='rtl'] & {
     letter-spacing: 0 !important;
 
-    &:not(.ab-icon, .lg-icon, .sb-icon, b) {
+    &:not(.ab-icon, .lg-icon, .sb-icon, b, i) {
       font-family: $primary-font-ar;
     }
   }
