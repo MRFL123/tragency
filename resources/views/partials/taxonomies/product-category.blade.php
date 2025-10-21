@@ -122,7 +122,7 @@
                       <p class="desc mt-2 mb-0 font-21 lh-28">
                         {{ wp_trim_words(get_the_excerpt(), 24, '...') }}
                       </p>
-                      <div class="cta d-flex align-items-center justify-content-end gap-1">
+                      <div class="cta d-flex align-items-center justify-content-end gap-1 mt-1">
                         <span class="text font-22 text-primary"><?= __('Learn more', 'tragency') ?></span>
                         <span class="icon">
                             <svg class="svg-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

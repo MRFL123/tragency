@@ -181,6 +181,10 @@
           box-shadow: 4px 3px 46.5px 0px #0000000D;
           height: 220px;
 
+          [dir="rtl"] & {
+            height: 240px;
+          }
+
           @include media-breakpoint-down(md) {
             height: auto;
           }
