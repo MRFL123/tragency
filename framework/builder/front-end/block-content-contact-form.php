@@ -103,19 +103,19 @@ $address_label = get_field('address_label');
       </div>
       <div class="modal-body text-center p-0">
         <div class="row g-2 g-md-4">
-            <div class="col-md-6 text-start">
+            <div class="col-md-6 <?= (ICL_LANGUAGE_CODE == 'ar')? 'text-end' : 'text-start'?>">
                 <label class="font-18 d-block text-blue800"><?= esc_html($phone_number_label); ?></label>
                 <a class="text-blue800" href="#" id="modal-phone" target="_blank"></a>
             </div>
-            <div class="col-md-6 text-start">
+            <div class="col-md-6 <?= (ICL_LANGUAGE_CODE == 'ar')? 'text-end' : 'text-start'?>">
                 <label class="font-18 d-block text-blue800"><?= esc_html($fax_label); ?></label>
                 <a class="text-blue800" href="#" id="modal-fax" target="_blank"></a>
             </div>
-            <div class="col-md-6 text-start">
+            <div class="col-md-6 <?= (ICL_LANGUAGE_CODE == 'ar')? 'text-end' : 'text-start'?>">
                 <label class="font-18 d-block text-blue800"><?= esc_html($email_label); ?></label>
                 <a class="text-blue800" href="#" id="modal-email" target="_blank"></a>
             </div>
-            <div class="col-md-6 text-start">
+            <div class="col-md-6 <?= (ICL_LANGUAGE_CODE == 'ar')? 'text-end' : 'text-start'?>">
                 <label class="font-18 d-block text-blue800"><?= esc_html($address_label); ?></label>
                 <a class="text-decoration-underline" style="color: #1647A4" href="#" id="modal-address" target="_blank"></a>
             </div>
