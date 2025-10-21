@@ -118,8 +118,8 @@ if ($service_selection === 'latest') {
                                 <div class="slider-buttons d-flex align-items-center justify-content-between">
                                     <?php if ($permalink): ?>
                                         <a href="<?= $permalink; ?>" class="service-details text-blue700 font-20"><?= __('Service details', 'tragency'); ?></a>
-                                    <?php endif; if ($show_button == 'yes'): ?>
-                                        <a href="<?= $permalink; ?>" class="main-btn blue service-request-btn"><?= __('Request the service', 'tragency'); ?></a>
+                                    <?php endif; if ($show_button == 'yes' && $button): ?>
+                                        <a href="<?= $button['url'] ?>" class="main-btn blue service-request-btn"><?= __('Request the service', 'tragency'); ?></a>
                                     <?php endif; ?>
                                 </div>
                             </div>

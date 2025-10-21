@@ -1,34 +1,48 @@
 .contact-form {
-  position: relative;
-  background-color: #F2F7F6;
+  margin-top: -80px;
 
-  .info {
-    .content {
-      h4, h5, h6 {
-        font-weight: 700 !important;
-        font-family: $font-bold;
-        margin-bottom: 20px;
+  .wrraper {
+    position: relative;
+
+    @include media-breakpoint-down(md) {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .form-wrraper {
+      width: 100%;
+
+      @include media-breakpoint-up(md) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 80px;
       }
 
-      img {
-        margin-right: 10px;
+      .form {
+        z-index: 9;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 4px 3px 46.5px 0px rgba(0, 0, 0, 0.05);
+        padding: 28px;
+      }
+    }
 
-        [dir="rtl"] & {
-          margin-left: 5px;
-          margin-right: 0px;
+    .map {
+      .acf-map {
+        overflow: hidden;
+        min-height: 100vh;
+        clip-path: polygon(6% 0%, 100% 0, 100% 100%, 0% 100%);
+
+        @include media-breakpoint-down(md) {
+          min-height: 70vh;
+          clip-path: unset;
         }
       }
     }
   }
+}
 
-  .victor {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-    [dir="rtl"] & {
-      left: auto;
-      right: 0;
-    }
-  }
+.modal.show .modal-dialog {
+    transform: none;
+    z-index: 9999;
 }
