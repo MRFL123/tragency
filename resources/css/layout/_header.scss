@@ -144,6 +144,10 @@
             background: linear-gradient(0deg, rgba(60, 60, 60, 0.8), rgba(60, 60, 60, 0.8)),
             linear-gradient(90deg, rgba(132, 132, 132, 0.35) 0%, rgba(30, 30, 30, 0.35) 100%);
 
+            [dir="rtl"] & {
+              text-align: right;
+            }
+
             li {
               min-width: 19%;
               margin: 0;
