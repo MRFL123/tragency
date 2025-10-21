@@ -90,7 +90,7 @@ class Utilities{
             if(!empty($languages)){
             ?>
                 <div class="languages-wrapper">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav p-0">
                         <li class="nav-item lang-item">
                             <?php foreach($languages as $l) : ?>
                                 <?php if($l['active'] != 1) : ?>
