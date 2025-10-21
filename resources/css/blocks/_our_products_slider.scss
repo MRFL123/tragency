@@ -15,6 +15,11 @@
 
         @include media-breakpoint-up(lg) {
           margin-right: -44px;
+
+          [dir="rtl"] & {
+            margin-right: 0;
+            margin-left: -44px;
+          }
         }
 
         .slider-image img {
