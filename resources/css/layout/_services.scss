@@ -57,6 +57,11 @@
       align-items: center;
       justify-content: center;
 
+      [dir='rtl'] & {
+        left: auto;
+        right: 16px;
+      }
+
       svg {
         width: 24px;
         height: 24px;
@@ -73,6 +78,10 @@
       color: $brand-black;
       outline: none;
       transition: all 0.3s ease;
+
+      [dir='rtl'] & {
+        padding: 12px 50px 12px 15px;
+      }
 
       &::placeholder {
         color: #23232387;
