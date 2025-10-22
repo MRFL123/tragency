@@ -8,11 +8,10 @@
   src: url('@fonts/TwCenMTStdBold.otf') format("opentype"),
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap');
 
 //fonts
 $primary-font: 'Tw Cen MT', sans-serif;
 $font-bold: 'Tw Cen MT Bold', sans-serif;
 
-
-$primary-font-ar: 'Noto Sans Arabic', sans-serif;
+$primary-font-ar: 'Almarai', sans-serif;
