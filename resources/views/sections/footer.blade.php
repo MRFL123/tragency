@@ -30,7 +30,7 @@ $after_year           = get_field('after_year', 'option');
                   $single_socialmedia_icon = get_sub_field('icon', 'option');
                   $single_socialmedia_url = get_sub_field('icon_url', 'option');
                 @endphp
-                <li class="me-2 p-2">
+                <li class="<?= (ICL_LANGUAGE_CODE == 'ar')? 'ms-2 ' : 'me-2'?> p-2">
                   <a href="{{$single_socialmedia_url}}" target="_blank">
                     <?= $single_socialmedia_icon ?>
                   </a>
