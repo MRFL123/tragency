@@ -30,7 +30,7 @@
                 </svg>
               </button>
             </span>
-            <input class="search-field form-control search-input" value="{{ get_search_query() }}" type="text" name="s" placeholder="{{ __('Search by name of the service or the product...') }}">
+            <input class="search-field form-control search-input" value="{{ get_search_query() }}" type="text" name="s" placeholder="{{ __('Search by keywords, name of the service or the product...') }}">
         </div>
       </form>
 
