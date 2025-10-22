@@ -40,6 +40,10 @@
         @include media-breakpoint-down(md) {
           min-height: 70vh;
           clip-path: unset;
+
+          [dir="rtl"] & {
+            clip-path: polygon(0% 0%, 100% 0, 100% 100%, 0% 100%);
+          }
         }
       }
     }
