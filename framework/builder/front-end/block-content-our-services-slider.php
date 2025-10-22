@@ -113,7 +113,9 @@ if ($service_selection === 'latest') {
                             </a>
                             </div>
                             <div class="slider-content">
-                                <h5 class="slider-title lh-28 text-blue800"><?= $title ?></h5>
+                                <a href="<?= $permalink; ?>">
+                                    <h5 class="slider-title lh-28 text-blue800"><?= $title ?></h5>
+                                </a>
                                 <p class="slider-excerpt font-16 text-blue100"><?= $excerpt ?></p>
                                 <div class="slider-buttons d-flex align-items-center justify-content-between">
                                     <?php if ($permalink): ?>
