@@ -69,3 +69,8 @@ add_action('init', function() {
         'top'
     );
 });
+
+add_action('init', function() {
+    add_rewrite_rule('^search/?$', 'index.php?s=', 'top');
+    add_rewrite_rule('^search/([^/]*)/?', 'index.php?s=$matches[1]', 'top');
+});

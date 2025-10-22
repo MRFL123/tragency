@@ -1,15 +1,9 @@
-<article @php(post_class())>
-  <header>
-    <h2 class="entry-title">
-      <a href="{{ get_permalink() }}">
-        {!! $title !!}
-      </a>
-    </h2>
-
-    @includeWhen(get_post_type() === 'post', 'partials.entry-meta')
-  </header>
-
-  <div class="entry-summary">
-    @php(the_excerpt())
-  </div>
+<article @php(post_class('mb-4 pb-3 border-bottom'))>
+  <h2 class="h5">
+    <a href="{{ get_permalink() }}" class="text-dark text-decoration-none">
+      {{ get_the_title() }}
+    </a>
+  </h2>
+  {{-- <p class="text-muted small mb-2">{{ get_the_date() }}</p> --}}
+  <div class="excerpt">{{ get_the_excerpt() }}</div>
 </article>
