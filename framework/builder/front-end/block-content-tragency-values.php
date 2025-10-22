@@ -13,7 +13,7 @@ $our_policy       = get_field('our_policy');
         style="background-image: url('<?= $background_image['url']; ?>'); background-size: cover; background-position: center;"
     <?php endif; ?>>
 
-    <div class="tragency-overlay w-100 p-5">
+    <div class="tragency-overlay col-md-10 p-5">
         <div class="container">
             <div class="tragency-header mb-4">
                 <?= $tragency_values ?>

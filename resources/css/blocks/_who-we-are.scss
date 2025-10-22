@@ -37,6 +37,11 @@
 
       @include media-breakpoint-down(md){
         left: 10px;
+
+        [dir="rtl"] & {
+          left: auto;
+          right: 10px;
+        }
       }
     }
 
@@ -73,14 +78,13 @@
   .who-we-are-images {
     transform: scaleX(-1);
 
-
     .image-left {
       transform: scaleX(-1) translateY(-50%);
     }
   }
   .vector {
     right: auto;
-    left: -2%;
+    left: 2%;
     transform: scaleX(-1);
   }
 }

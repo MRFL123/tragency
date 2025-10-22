@@ -8,7 +8,7 @@ $text = get_field('text');
 
 <section class="counter-section py-5">
     <div class="container">
-            <div class="counter-text text-center mb-5">
+            <div class="counter-text text-center mb-md-5">
                 <?= $text ?>
             </div>
 
@@ -20,7 +20,7 @@ $text = get_field('text');
                     $number = get_sub_field('number');
                     $text_goal   = get_sub_field('text');
                 ?>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-md-6 col-6">
                         <div class="goal-card d-flex h-100 align-items-center justify-content-center gap-3">
                             <?php if ($icon) : ?>
                                 <img src="<?= $icon['url'] ?>" alt="<?= $text_goal ?>" class="goal-icon">

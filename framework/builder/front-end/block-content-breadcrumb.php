@@ -19,7 +19,7 @@ $counter          = 0;
 >
     <div class="overlay gradient"></div>
     <div class="spacer-100"></div>
-    <div class="spacer-40 d-none d-md-block"></div>
+    <div class="spacer-60 d-none d-md-block"></div>
     <div class="container position-relative z-index-9">
         <?php if ($page_name): ?>
             <h1 class="text-white font-40 mb-0"><?= $page_name ?></h1>

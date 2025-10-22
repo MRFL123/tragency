@@ -1,0 +1,12 @@
+.counter-section {
+  .goal-card {
+    img {
+      width: 70px;
+
+      @include media-breakpoint-down(md){
+        width: 40px;
+      }
+    }
+
+  }
+}

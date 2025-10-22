@@ -17,6 +17,7 @@
 
     h2 {
       font-size: 28px;
+      margin-bottom: 12px;
 
       @include media-breakpoint-down(lg) {
         font-size: 22px;

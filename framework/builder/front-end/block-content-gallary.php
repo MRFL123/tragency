@@ -13,7 +13,7 @@ $gallery             = get_field('gallery');
 <section class="custom-gallery py-4 overflow-hidden" >
     <div class="container">
 
-        <div class="row g-md-5">
+        <div class="row g-md-4">
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <?php if ($heading): ?>
                     <div class="heading"><?= $heading ?></div>

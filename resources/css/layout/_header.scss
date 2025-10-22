@@ -339,6 +339,12 @@
                   &::before {
                     left: 24px;
                     bottom: 8px;
+
+                    [dir="rtl"] & {
+                      left: auto;
+                      right: 0;
+                      bottom: 4px;
+                    }
                   }
                 }
               }
