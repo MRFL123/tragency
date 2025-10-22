@@ -48,6 +48,7 @@ footer {
 
         @include media-breakpoint-down(lg) {
           width: 40%;
+          margin: 5px;
         }
       }
 
