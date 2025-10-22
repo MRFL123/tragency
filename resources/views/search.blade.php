@@ -16,7 +16,7 @@
   @endphp
 
   <div class="container my-5">
-    <div class="spacer-100 d-none d-lg-none"></div>
+    <div class="spacer-100 d-none d-lg-block"></div>
     <div class="spacer-50 d-md-none"></div>
 
     <div class="col-md-8 m-auto">
