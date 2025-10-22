@@ -20,7 +20,7 @@ $text = get_field('text');
                     $number = get_sub_field('number');
                     $text_goal   = get_sub_field('text');
                 ?>
-                    <div class="col-md-6 col-6">
+                    <div class="col-md-3 col-6">
                         <div class="goal-card d-flex h-100 align-items-center justify-content-center gap-3">
                             <?php if ($icon) : ?>
                                 <img src="<?= $icon['url'] ?>" alt="<?= $text_goal ?>" class="goal-icon">
