@@ -16,7 +16,8 @@
   @endphp
 
   <div class="container my-5">
-    <div class="spacer-100"></div>
+    <div class="spacer-100 d-none d-lg-none"></div>
+    <div class="spacer-50 d-md-none"></div>
 
     <div class="col-md-8 m-auto">
       <form role="search" method="get" action="{{ home_url('/') }}" class="search-form mw-100 gap-2 mb-5 mx-0">
