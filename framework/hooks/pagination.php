@@ -50,7 +50,7 @@ function Mirrorful_pagination( $args = array() ) {
   $firstpage = esc_attr( get_pagenum_link(1) );
 
   if ( $firstpage && (1 != $page) )
-  $echo .= '<li class="page-item mx-1 mx-md-2"><a class="page-link fa fa-angle-left" aria-label="Previous" href="' . $previous . '" title="' . __( 'previous', 'Mirrorful') . '"><svg class="rotate-180 svg-arrow" width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+  $echo .= '<li class="page-item mx-1 mx-md-2"><a class="page-link fa fa-angle-left" aria-label="Previous" href="' . $previous . '" title="' . __( 'previous', 'Mirrorful') . '"><svg class="rotate-180 svg-arrow" width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="https://www.w3.org/2000/svg">
 <path d="M1 0.999999L8 8.5L1 16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>' . '</a></li>';
 
@@ -69,7 +69,7 @@ function Mirrorful_pagination( $args = array() ) {
   $lastpage = esc_attr( get_pagenum_link($count) );
 
   if ( $lastpage && ($count != $page) ) {
-    $echo .= '<li class="page-item mx-1 mx-md-2"><a class="page-link" href="' . $next . '" title="' . __( 'next', 'Mirrorful') . '"><svg class="svg-arrow" width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    $echo .= '<li class="page-item mx-1 mx-md-2"><a class="page-link" href="' . $next . '" title="' . __( 'next', 'Mirrorful') . '"><svg class="svg-arrow" width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="https://www.w3.org/2000/svg">
 <path d="M1 0.999999L8 8.5L1 16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>' . '</a>
     </li>';

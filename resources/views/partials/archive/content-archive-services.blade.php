@@ -55,7 +55,7 @@
                               <?php if ($links_count != $counter): ?>
                                   <span>
                                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                          xmlns="http://www.w3.org/2000/svg">
+                                          xmlns="https://www.w3.org/2000/svg">
                                           <path d="M5.19752 12.0575C5.08668 12.0575 4.97585 12.0167 4.88835 11.9292C4.71918 11.76 4.71918 11.48 4.88835 11.3108L8.69168 7.5075C8.97168 7.2275 8.97168 6.7725 8.69168 6.4925L4.88835 2.68916C4.71918 2.52 4.71918 2.24 4.88835 2.07083C5.05752 1.90166 5.33752 1.90166 5.50668 2.07083L9.31002 5.87416C9.60752 6.17166 9.77668 6.57416 9.77668 7C9.77668 7.42583 9.61335 7.82833 9.31002 8.12583L5.50668 11.9292C5.41918 12.0108 5.30835 12.0575 5.19752 12.0575Z" fill="#C1C4CB"/>
                                       </svg>
                                   </span>
@@ -80,7 +80,7 @@
           <div class="search-form d-flex align-items-center">
               <div class="search-input-wrapper position-relative w-100">
                   <span class="search-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="https://www.w3.org/2000/svg">
                           <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
                                 stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                           <path d="M22 22L20 20" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

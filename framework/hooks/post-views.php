@@ -60,7 +60,7 @@ function scrap_facebook_url($postID) {
     echo "
     <script>
         jQuery(document).ready(function ($) {
-            var fb_scrape_url = 'http://graph.facebook.com/?id=' + encodeURIComponent('$permalink') + '&scrape=true';
+            var fb_scrape_url = 'https://graph.facebook.com/?id=' + encodeURIComponent('$permalink') + '&scrape=true';
             var scrapping = $.post(fb_scrape_url);
             scrapping.done(function (data) {
                 console.log(data.url + ' scraped with ID ' + data.id);

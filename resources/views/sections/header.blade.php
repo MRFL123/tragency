@@ -24,7 +24,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#PrimaryMenu"
                   aria-controls="PrimaryMenu" aria-expanded="false" aria-label="Toggle navigation">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
+                      xmlns="https://www.w3.org/2000/svg">
                       <path
                           d="M16 14H2C0.897 14 0 14.897 0 16C0 17.103 0.897 18 2 18H16C17.103 18 18 17.103 18 16C18 14.897 17.103 14 16 14ZM16 7H2C0.897 7 0 7.897 0 9C0 10.103 0.897 11 2 11H16C17.103 11 18 10.103 18 9C18 7.897 17.103 7 16 7ZM16 0H2C0.897 0 0 0.897 0 2C0 3.103 0.897 4 2 4H16C17.103 4 18 3.103 18 2C18 0.897 17.103 0 16 0Z"
                           fill="#fff" />
@@ -64,7 +64,7 @@
 
                 <div class="search mx-1">
                   <a href="{{ home_url('/?s=') }}" class="icon pointer" aria-label="Search">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="https://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M11 1.25C5.61522 1.25 1.25 5.61522 1.25 11C1.25 16.3848 5.61522 20.75 11 20.75C13.4224 20.75 15.6385 19.8666 17.3437 18.4043L21.4697 22.5303C21.7626 22.8232 22.2374 22.8232 22.5303 22.5303C22.8232 22.2374 22.8232 21.7626 22.5303 21.4697L18.4043 17.3437C19.8666 15.6385 20.75 13.4224 20.75 11C20.75 5.61522 16.3848 1.25 11 1.25ZM2.75 11C2.75 6.44365 6.44365 2.75 11 2.75C15.5563 2.75 19.25 6.44365 19.25 11C19.25 15.5563 15.5563 19.25 11 19.25C6.44365 19.25 2.75 15.5563 2.75 11Z" fill="white"/>
                     </svg>
                   </a>

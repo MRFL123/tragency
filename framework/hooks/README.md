@@ -6,7 +6,7 @@ Hooks Folder
 Mirrorful-Pagination
 ==============================
 
-**A custom WordPress numbered pagination function to fully implement the [Bootstrap 4.x](http://getbootstrap.com/) /pagination/ style in a custom theme.**
+**A custom WordPress numbered pagination function to fully implement the [Bootstrap 4.x](https://getbootstrap.com/) /pagination/ style in a custom theme.**
 
 Featured
 --------
@@ -20,7 +20,7 @@ How it Looks
 ------------
 
 Below is the example of the Bootstrap WordPress Pagination. You can customize it with your own CSS styling.
-![Extras](http://3.bp.blogspot.com/-XULxjp0E4uQ/U3Dyph_GJ9I/AAAAAAAABto/4rrOgV_D_Zw/s1600/pagination-wordpress-bootstrap.png)
+![Extras](https://3.bp.blogspot.com/-XULxjp0E4uQ/U3Dyph_GJ9I/AAAAAAAABto/4rrOgV_D_Zw/s1600/pagination-wordpress-bootstrap.png)
 
 ------------
 Place **pagination.php** in your WordPress Framework folder `/framework/hooks/`

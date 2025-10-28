@@ -10,7 +10,7 @@
  * in conjuction with Bootstrap (benefit for fields types such as Address).
  *
  * @see  gform_field_content
- * @link http://www.gravityhelp.com/documentation/page/Gform_field_content
+ * @link https://www.gravityhelp.com/documentation/page/Gform_field_content
  * @link https://www.gravityhelp.com/documentation/gravity-forms/extending-gravity-forms/hooks/filters/gform_field_content/
  * @link https://github.com/5t3ph/gravity-forms-snippets/blob/master/gravity-forms-bootstrap-styles.php
  *
