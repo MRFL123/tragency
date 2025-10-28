@@ -52,6 +52,7 @@
     min-width: 100px;
     overflow-y: auto;
     scrollbar-width: none;
+    z-index: 99;
 
     @include media-breakpoint-down(lg) {
       min-width: 120px;
@@ -161,6 +162,13 @@
 
   .timeline-content {
     flex: 1;
+    height: 75vh;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     .event {
       min-height: 75vh;

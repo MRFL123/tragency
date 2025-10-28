@@ -1,9 +1,6 @@
 //Developer : Ahmed Mostafa
 .video-block {
-  height: 90vh;
-  @include media-breakpoint-down(md){
-    height: auto;
-  }
+  height: auto;
   justify-content: center;
   align-items: center;
   text-align: center;

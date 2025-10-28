@@ -189,7 +189,7 @@ jQuery( document ).ready(function($) {
       infinite: true,
       centerMode: false,
       centerPadding: '0px',
-      // autoplay: true,
+      autoplay: true,
       autoplaySpeed: 3000,
       speed: 1000,
       pauseOnHover: false,

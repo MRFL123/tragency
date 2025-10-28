@@ -39,16 +39,16 @@ if ($products_selection === 'latest') {
 }
 ?>
 
-<section class="our_products_slider py-5">
+<section class="our_products_slider">
     <div class="container">
         <div class="row mb-4 align-items-center justify-content-between">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="products-text">
                     <?= $text ?>
                 </div>
             </div>
 
-            <div class="col-md-6 d-flex align-items-center justify-content-between gap-3">
+            <div class="col-md-5 d-flex align-items-center justify-content-between gap-3">
                 <div class="prev-btn pointer">
                     <svg class="svg-arrow" width="62" height="62" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <foreignObject x="-13.4" y="-13.4" width="98.8" height="98.8"><div xmlns="http://www.w3.org/1999/xhtml" style="clip-path:url(#bgblur_0_1042_145_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="13.4">

@@ -41,7 +41,7 @@
         animatedSections.add(section);
         const counters = section.querySelectorAll('.counter[data-count]');
         counters.forEach(counter => {
-          animateCounter(counter, counter.getAttribute('data-count'), 2000);
+          animateCounter(counter, counter.getAttribute('data-count'), 3000);
         });
       }
     });

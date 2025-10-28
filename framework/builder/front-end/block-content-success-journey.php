@@ -4,6 +4,7 @@
  */
 $background = (get_field('background')) ? get_field('background')['url'] : '';
 $logo       = get_field('logo');
+$count      = 0;
 ?>
 <div class="spacer-50"></div>
 <section class="success-journey position-relative bg-img" style="background-image: url('<?= $background ?>');">
@@ -13,10 +14,12 @@ $logo       = get_field('logo');
             <?php
                 if(have_rows('success_journey')):
                     while(have_rows('success_journey')): the_row();
-                $year = get_sub_field('year');
+                    $year = get_sub_field('year');
+                    $count++;
+                    $event_id = "event-{$count}";
             ?>
-                <div class="year w-100" data-target="<?= $year ?>">
-                    <h2 class="text"><?= $year ?></h2>
+                <div class="year w-100" data-target="<?= $event_id ?>">
+                    <h2 class="text"><?= esc_html($year) ?></h2>
                     <span class="dot"></span>
                 </div>
             <?php
@@ -26,13 +29,17 @@ $logo       = get_field('logo');
         </div>
 
         <div class="timeline-content col-10 col-lg-9 position-relative z-index-99">
-            <?php if(have_rows('success_journey')): ?>
-            <?php while(have_rows('success_journey')): the_row();
-                $year = get_sub_field('year');
-                $content = get_sub_field('content');
-                $images = get_sub_field('images');
+            <?php if(have_rows('success_journey')):
+                // reset rows pointer if necessary, or loop separately — here assume same order
+                $count = 0;
+                while(have_rows('success_journey')): the_row();
+                    $count++;
+                    $event_id = "event-{$count}";
+                    $year = get_sub_field('year');
+                    $content = get_sub_field('content');
+                    $images = get_sub_field('images');
             ?>
-                <div class="event" id="<?= $year ?>">
+                <div class="event" id="<?= $event_id ?>">
                     <div class="wrraper">
                         <div class="content text-white">
                             <?= $content ?>
@@ -57,26 +64,18 @@ $logo       = get_field('logo');
 <div class="spacer-50"></div>
 
 <script>
-const years = document.querySelectorAll('.year');
-const yearsContainer = document.querySelector('.timeline-years');
-const events = document.querySelectorAll('.event');
+    const years = document.querySelectorAll('.year');
+    const yearsContainer = document.querySelector('.timeline-years');
+    const events = document.querySelectorAll('.event');
+    const contentContainer = document.querySelector('.timeline-content');
 
-function centerActiveYear(yearEl) {
-  const containerHeight = yearsContainer.clientHeight;
-  const yearOffset = yearEl.offsetTop;
-  const yearHeight = yearEl.clientHeight;
+    let currentIndex = 0;
+    let autoScrollInterval;
 
-  yearsContainer.scrollTo({
-    top: yearOffset - containerHeight / 2 + yearHeight / 2,
-    behavior: 'smooth'
-  });
-}
-
-// Click → scroll to section + make active
-years.forEach(year => {
-  year.addEventListener('click', () => {
+    // ---------- Activate ----------
+    function activateYear(year) {
     const target = document.getElementById(year.dataset.target);
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (!target) return;
 
     years.forEach(y => y.classList.remove('active'));
     year.classList.add('active');
@@ -84,28 +83,87 @@ years.forEach(year => {
     events.forEach(ev => ev.classList.remove('active'));
     target.classList.add('active');
 
-    centerActiveYear(year);
-  });
-});
+    // Scroll years column
+    const containerHeight = yearsContainer.clientHeight;
+    const yearOffset = year.offsetTop;
+    const yearHeight = year.clientHeight;
+    yearsContainer.scrollTo({
+        top: yearOffset - containerHeight / 2 + yearHeight / 2,
+        behavior: 'smooth'
+    });
 
-// Scroll → update active year
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      years.forEach(y => y.classList.remove('active'));
-      events.forEach(ev => ev.classList.remove('active'));
-      const activeYear = document.querySelector(`.year[data-target="${entry.target.id}"]`);
-      if (activeYear) {
-        activeYear.classList.add('active');
-        centerActiveYear(activeYear);
-      }
-      entry.target.classList.add('active'); // add active to event
+    // Scroll content column (this will now work after CSS fix)
+    const eventOffset = target.offsetTop;
+    const eventHeight = target.clientHeight;
+    const contentHeight = contentContainer.clientHeight;
+    contentContainer.scrollTo({
+        top: eventOffset - contentHeight / 2 + eventHeight / 2,
+        behavior: 'smooth'
+    });
     }
-  });
-}, { threshold: 0.5 });
 
-events.forEach(event => observer.observe(event));
+    // ---------- Manual Click ----------
+    years.forEach((year, index) => {
+    year.addEventListener('click', () => {
+        currentIndex = index;
+        activateYear(year);
+        resetAutoScroll();
+    });
+    });
 
-const initialActive = document.querySelector('.year.active');
-if (initialActive) centerActiveYear(initialActive);
+    // ---------- Auto Scroll ----------
+    function autoScroll() {
+    currentIndex = (currentIndex + 1) % years.length;
+    activateYear(years[currentIndex]);
+    }
+
+    function startAutoScroll() {
+    autoScrollInterval = setInterval(autoScroll, 4000);
+    }
+
+    function resetAutoScroll() {
+    clearInterval(autoScrollInterval);
+    startAutoScroll();
+    }
+
+    // ---------- Draggable Scroll ----------
+    let isDown = false;
+    let startY;
+    let scrollTop;
+
+    yearsContainer.addEventListener('mousedown', e => {
+    isDown = true;
+    startY = e.pageY - yearsContainer.offsetTop;
+    scrollTop = yearsContainer.scrollTop;
+    });
+    yearsContainer.addEventListener('mouseleave', () => (isDown = false));
+    yearsContainer.addEventListener('mouseup', () => (isDown = false));
+    yearsContainer.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const y = e.pageY - yearsContainer.offsetTop;
+    const walk = (y - startY) * 2;
+    yearsContainer.scrollTop = scrollTop - walk;
+    });
+
+    // ---------- Touch Support ----------
+    yearsContainer.addEventListener('touchstart', e => {
+    isDown = true;
+    startY = e.touches[0].pageY - yearsContainer.offsetTop;
+    scrollTop = yearsContainer.scrollTop;
+    });
+    yearsContainer.addEventListener('touchend', () => (isDown = false));
+    yearsContainer.addEventListener('touchmove', e => {
+    if (!isDown) return;
+    const y = e.touches[0].pageY - yearsContainer.offsetTop;
+    const walk = (y - startY) * 2;
+    yearsContainer.scrollTop = scrollTop - walk;
+    });
+
+    // ---------- Initialize ----------
+    if (years.length > 0 && events.length > 0) {
+    years[0].classList.add('active');
+    events[0].classList.add('active');
+    startAutoScroll();
+    }
 </script>
