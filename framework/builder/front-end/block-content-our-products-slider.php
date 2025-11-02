@@ -100,7 +100,7 @@ if ($products_selection === 'latest') {
                     $permalink   = get_permalink($post_id);
                 ?>
                     <div>
-                        <div class="slider-item">
+                        <div class="slider-item pb-4">
                             <div class="slider-image mb-3">
                                 <a href="<?= $permalink; ?>">
                                     <img src="<?= $thumbnail; ?>" alt="<?= $title; ?>" class="default-img">
@@ -110,8 +110,12 @@ if ($products_selection === 'latest') {
                                 <a href="<?= $permalink; ?>">
                                     <h5 class="slider-title text-blue800"><?= $title ?></h5>
                                 </a>
-
                                 <p class="slider-excerpt font-20 text-blue100"><?= $excerpt ?></p>
+                                <div class="slider-button">
+                                    <?php if ($permalink): ?>
+                                        <a href="<?= $permalink; ?>" class="product-details text-blue700 font-20"><?= __('Product details', 'tragency'); ?></a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>

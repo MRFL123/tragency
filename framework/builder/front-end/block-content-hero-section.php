@@ -41,7 +41,6 @@
     <?php endif; ?>
 
 
-
     <div class="container position-relative z-index-2 h-100 px-md-5">
         <div class="spacer-100 d-none d-lg-block"></div>
         <div class="spacer-40 d-lg-none"></div>

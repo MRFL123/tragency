@@ -107,9 +107,6 @@ if ($service_selection === 'latest') {
                             <div class="slider-image mb-3">
                             <a href="<?= $permalink; ?>">
                                 <img src="<?= $thumbnail; ?>" alt="<?= $title; ?>" class="default-img">
-                                <?php if ($second_img): ?>
-                                <img src="<?= $second_img; ?>" alt="<?= $title; ?>" class="second-img">
-                                <?php endif; ?>
                             </a>
                             </div>
                             <div class="slider-content">

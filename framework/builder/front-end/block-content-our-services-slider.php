@@ -107,9 +107,6 @@ if ($service_selection === 'latest') {
                             <div class="slider-image mb-3">
                             <a href="<?= $permalink; ?>">
                                 <img src="<?= $thumbnail; ?>" alt="<?= $title; ?>" class="default-img">
-                                <?php if ($second_img): ?>
-                                <img src="<?= $second_img; ?>" alt="<?= $title; ?>" class="second-img">
-                                <?php endif; ?>
                             </a>
                             </div>
                             <div class="slider-content">
@@ -117,11 +114,9 @@ if ($service_selection === 'latest') {
                                     <h5 class="slider-title lh-28 text-blue800"><?= $title ?></h5>
                                 </a>
                                 <p class="slider-excerpt font-16 text-blue100"><?= $excerpt ?></p>
-                                <div class="slider-buttons d-flex align-items-center justify-content-between">
+                                <div class="slider-buttons">
                                     <?php if ($permalink): ?>
                                         <a href="<?= $permalink; ?>" class="service-details text-blue700 font-20"><?= __('Service details', 'tragency'); ?></a>
-                                    <?php endif; if ($show_button == 'yes' && $button): ?>
-                                        <a href="<?= $button['url'] ?>" class="main-btn blue service-request-btn"><?= __('Request the service', 'tragency'); ?></a>
                                     <?php endif; ?>
                                 </div>
                             </div>

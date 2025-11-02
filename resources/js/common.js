@@ -87,19 +87,19 @@ jQuery( document ).ready(function($) {
       ]
     });
 
-    $serviceSlider.find('.slick-slide').not('.slick-current').find('.second-img').hide();
-    $serviceSlider.find('.slick-slide.slick-current').find('.default-img').hide();
+    // $serviceSlider.find('.slick-slide').not('.slick-current').find('.second-img').hide();
+    // $serviceSlider.find('.slick-slide.slick-current').find('.default-img').hide();
     // $current.find('.second-img').stop(true,true).fadeOut(100);
 
-    $serviceSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
-      var $current = $(slick.$slides[currentSlide]);
-      $current.find('.default-img').stop(true,true).fadeIn(100);
-      $current.find('.second-img').stop(true,true).fadeOut(0);
+    // $serviceSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+    //   var $current = $(slick.$slides[currentSlide]);
+    //   $current.find('.default-img').stop(true,true).fadeIn(100);
+    //   $current.find('.second-img').stop(true,true).fadeOut(0);
 
-      var $next = $(slick.$slides[nextSlide]);
-      $next.find('.default-img').stop(true,true).fadeOut(0);
-      $next.find('.second-img').stop(true,true).fadeIn(100);
-    });
+    //   var $next = $(slick.$slides[nextSlide]);
+    //   $next.find('.default-img').stop(true,true).fadeOut(0);
+    //   $next.find('.second-img').stop(true,true).fadeIn(100);
+    // });
 
     // Function to handle progress bar
     function serviceUpdateCenterSlide(slick, index) {

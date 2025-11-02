@@ -4,9 +4,14 @@
  */
 $background = (get_field('background')) ? get_field('background')['url'] : '';
 $logo       = get_field('logo');
+$heading    = get_field('heading');
 $count      = 0;
 ?>
 <div class="spacer-50"></div>
+<div class="success-journey-heading">
+    <?= $heading ?>
+</div>
+<div class="spacer-20"></div>
 <section class="success-journey position-relative bg-img" style="background-image: url('<?= $background ?>');">
     <div class="container">
         <div class="timeline-container row" id="timeline">
@@ -64,16 +69,20 @@ $count      = 0;
 <div class="spacer-50"></div>
 
 <script>
-    const years = document.querySelectorAll('.year');
-    const yearsContainer = document.querySelector('.timeline-years');
-    const events = document.querySelectorAll('.event');
-    const contentContainer = document.querySelector('.timeline-content');
+  const years = document.querySelectorAll('.year');
+  const yearsContainer = document.querySelector('.timeline-years');
+  const events = document.querySelectorAll('.event');
+  const contentContainer = document.querySelector('.timeline-content');
 
-    let currentIndex = 0;
-    let autoScrollInterval;
+  let currentIndex = 0;
+  let autoScrollInterval;
+  let isAnimating = false;
 
-    // ---------- Activate ----------
-    function activateYear(year) {
+  // ---------- Activate ----------
+  function activateYear(year) {
+    if (isAnimating) return;
+    isAnimating = true;
+
     const target = document.getElementById(year.dataset.target);
     if (!target) return;
 
@@ -83,87 +92,91 @@ $count      = 0;
     events.forEach(ev => ev.classList.remove('active'));
     target.classList.add('active');
 
-    // Scroll years column
     const containerHeight = yearsContainer.clientHeight;
     const yearOffset = year.offsetTop;
     const yearHeight = year.clientHeight;
     yearsContainer.scrollTo({
-        top: yearOffset - containerHeight / 2 + yearHeight / 2,
-        behavior: 'smooth'
+      top: yearOffset - containerHeight / 2 + yearHeight / 2,
+      behavior: 'smooth'
     });
 
-    // Scroll content column (this will now work after CSS fix)
     const eventOffset = target.offsetTop;
     const eventHeight = target.clientHeight;
     const contentHeight = contentContainer.clientHeight;
     contentContainer.scrollTo({
-        top: eventOffset - contentHeight / 2 + eventHeight / 2,
-        behavior: 'smooth'
+      top: eventOffset - contentHeight / 2 + eventHeight / 2,
+      behavior: 'smooth'
     });
-    }
 
-    // ---------- Manual Click ----------
-    years.forEach((year, index) => {
+    // اسمح بالأنيميشن التالي بعد 1.2 ثانية (المدة اللي فيها smooth scroll)
+    setTimeout(() => {
+      isAnimating = false;
+    }, 1200);
+  }
+
+  // ---------- Manual Click ----------
+  years.forEach((year, index) => {
     year.addEventListener('click', () => {
-        currentIndex = index;
-        activateYear(year);
-        resetAutoScroll();
+      currentIndex = index;
+      activateYear(year);
+      resetAutoScroll();
     });
-    });
+  });
 
-    // ---------- Auto Scroll ----------
-    function autoScroll() {
+  // ---------- Auto Scroll ----------
+  function autoScroll() {
+    if (isAnimating) return;
     currentIndex = (currentIndex + 1) % years.length;
     activateYear(years[currentIndex]);
-    }
+  }
 
-    function startAutoScroll() {
+  function startAutoScroll() {
     autoScrollInterval = setInterval(autoScroll, 4000);
-    }
+  }
 
-    function resetAutoScroll() {
+  function resetAutoScroll() {
     clearInterval(autoScrollInterval);
     startAutoScroll();
-    }
+  }
 
-    // ---------- Draggable Scroll ----------
-    let isDown = false;
-    let startY;
-    let scrollTop;
+  // ---------- Draggable Scroll ----------
+  let isDown = false;
+  let startY;
+  let scrollTop;
 
-    yearsContainer.addEventListener('mousedown', e => {
+  yearsContainer.addEventListener('mousedown', e => {
     isDown = true;
     startY = e.pageY - yearsContainer.offsetTop;
     scrollTop = yearsContainer.scrollTop;
-    });
-    yearsContainer.addEventListener('mouseleave', () => (isDown = false));
-    yearsContainer.addEventListener('mouseup', () => (isDown = false));
-    yearsContainer.addEventListener('mousemove', e => {
+  });
+  yearsContainer.addEventListener('mouseleave', () => (isDown = false));
+  yearsContainer.addEventListener('mouseup', () => (isDown = false));
+  yearsContainer.addEventListener('mousemove', e => {
     if (!isDown) return;
     e.preventDefault();
     const y = e.pageY - yearsContainer.offsetTop;
     const walk = (y - startY) * 2;
     yearsContainer.scrollTop = scrollTop - walk;
-    });
+  });
 
-    // ---------- Touch Support ----------
-    yearsContainer.addEventListener('touchstart', e => {
+  // ---------- Touch Support ----------
+  yearsContainer.addEventListener('touchstart', e => {
     isDown = true;
     startY = e.touches[0].pageY - yearsContainer.offsetTop;
     scrollTop = yearsContainer.scrollTop;
-    });
-    yearsContainer.addEventListener('touchend', () => (isDown = false));
-    yearsContainer.addEventListener('touchmove', e => {
+  });
+  yearsContainer.addEventListener('touchend', () => (isDown = false));
+  yearsContainer.addEventListener('touchmove', e => {
     if (!isDown) return;
     const y = e.touches[0].pageY - yearsContainer.offsetTop;
     const walk = (y - startY) * 2;
     yearsContainer.scrollTop = scrollTop - walk;
-    });
+  });
 
-    // ---------- Initialize ----------
-    if (years.length > 0 && events.length > 0) {
+  // ---------- Initialize ----------
+  if (years.length > 0 && events.length > 0) {
     years[0].classList.add('active');
     events[0].classList.add('active');
     startAutoScroll();
-    }
+  }
 </script>

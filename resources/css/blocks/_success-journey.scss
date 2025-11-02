@@ -78,8 +78,13 @@
       top: 0;
       bottom: 0;
       width: 5px;
-      background: rgba(248, 249, 238, 1);
-      transition: all 0.3s;
+      // background: rgba(248, 249, 238, 1);
+      background: linear-gradient(
+        to bottom,
+        rgb(248, 249, 238) 100%,
+        rgb(248, 249, 238) 100%
+      );
+      transition: all 0.3s ease-in-out;
 
       @include media-breakpoint-down(lg) {
         right: 20px;
@@ -127,7 +132,14 @@
 
     &.active {
       &::before {
-        background: #c3cc6f;
+        // background: #c3cc6f;
+        background: linear-gradient(
+          to bottom,
+          rgb(248, 249, 238) 0%,
+          #c3cc6f 35%,
+          #c3cc6f 65%,
+          rgb(248, 249, 238) 100%
+        );
       }
 
       .text {
@@ -189,14 +201,10 @@
 
         .content {
           p {
-            font-size: 18px;
-            line-height: 115%;
             color: #FAFAFB;
-
-            @include media-breakpoint-down(lg) {
-              font-size: 15px;
-              line-height: 100%;
-            }
+            @extend.font-24;
+            @extend.mt-2;
+            @extend.mb-2;
           }
         }
 

@@ -9,6 +9,20 @@ add_action( 'acf/include_fields', function() {
         'title' => 'Success Journey',
         'fields' => array(
             array(
+                'key' => 'field_heading_text',
+                'label' => 'Heading',
+                'name' => 'heading',
+                'type' => 'wysiwyg',
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id'    => '',
+                ),
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+            ),
+            array(
                 'key' => 'field_68c2ab472b374',
                 'label' => 'Background',
                 'name' => 'background',
