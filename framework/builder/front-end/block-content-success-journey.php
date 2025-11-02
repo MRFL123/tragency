@@ -210,7 +210,7 @@ $count      = 0;
     const newBg = target.dataset.background;
     if (newBg && successJourney) {
       successJourney.style.backgroundImage = `url('${newBg}')`;
-      successJourney.style.transition = 'background-image 0.8s ease-in-out';
+      successJourney.style.transition = 'background-image 0.3s ease-in-out';
     }
 
     const containerHeight = yearsContainer.clientHeight;
