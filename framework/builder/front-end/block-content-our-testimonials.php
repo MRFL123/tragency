@@ -64,7 +64,7 @@ $sub_heading = get_field('sub_heading');
                             <div class="position-relative px-3">
                                 <?php if ($image) : ?>
                                     <div class="img">
-                                        <img class="w-100 h-100" src="<?= $image['url'] ?>" alt="<?= $title ?>">
+                                        <img class="w-100 h-100 object-fit-cover" src="<?= $image['url'] ?>" alt="<?= $title ?>">
                                     </div>
                                 <?php endif; ?>
                                 <div class="content text-white px-5 py-4">
