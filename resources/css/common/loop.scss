@@ -92,7 +92,7 @@
     }
 
     @include media-breakpoint-down(lg) {
-      font-size: $value * 0.80px !important;
+      font-size: $value * 0.90px !important;
     }
   }
 
@@ -100,22 +100,22 @@
     font-size: $value * 1px !important;
 
     // @media (min-width: 991px) and (max-width: 1550px) {
-    //   font-size: $value * 0.80px !important;
+    //   font-size: $value * 0.90px !important;
     // }
 
     @include media-breakpoint-down(lg) {
-      font-size: $value * 0.80px !important;
+      font-size: $value * 0.90px !important;
     }
 
     * {
       font-size: $value * 1px !important;
 
       @media (min-width: 991px) and (max-width: 1550px) {
-        font-size: $value * 0.80px !important;
+        font-size: $value * 0.90px !important;
       }
 
       @include media-breakpoint-down(lg) {
-        font-size: $value * 0.80px !important;
+        font-size: $value * 0.90px !important;
       }
     }
   }
@@ -124,11 +124,11 @@
     line-height: $value * 1px;
 
     @media (min-width: 991px) and (max-width: 1550px) {
-      line-height: $value * 0.80px !important;
+      line-height: $value * 0.90px !important;
     }
 
     @include media-breakpoint-down(lg) {
-      line-height: $value * 0.80px;
+      line-height: $value * 0.90px;
     }
   }
 
@@ -136,11 +136,11 @@
     line-height: $value * 1px;
 
     @media (min-width: 991px) and (max-width: 1550px) {
-      line-height: $value * 0.80px !important;
+      line-height: $value * 0.90px !important;
     }
 
     @include media-breakpoint-down(lg) {
-      line-height: $value * 0.80px;
+      line-height: $value * 0.90px;
     }
 
     * {
@@ -151,7 +151,7 @@
       }
 
       @include media-breakpoint-down(lg) {
-        line-height: $value * 0.80px;
+        line-height: $value * 0.90px;
       }
     }
   }
