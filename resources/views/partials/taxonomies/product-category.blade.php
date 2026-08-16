@@ -1,7 +1,8 @@
 @php
     // Get settings from options
     $bg         = get_field('product_list_background_image', 'option');
-    $page_title = get_field('product_page_list_title', 'option');
+    $category   = get_queried_object();
+    $page_title = $category->name ?? get_field('product_page_list_title', 'option');
     $banner_title = get_field('banner_product_list_title', 'option');
     $links      = get_field('product_list_links', 'option');
     $links_count      = $links ? count($links) : 0;
@@ -20,7 +21,7 @@
             [
                 'taxonomy' => 'product-category',
                 'field'    => 'slug',
-                'terms'    => get_queried_object()->slug,
+                'terms'    => $category->slug,
             ],
         ],
     ];
