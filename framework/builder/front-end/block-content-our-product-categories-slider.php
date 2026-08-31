@@ -5,7 +5,7 @@
 
 $text                  = get_field('text');
 $button                = get_field('button');
-$categories_selection  = get_field('categories_selection');
+$categories_selection  = get_field('categories_selection') ?: 'latest';
 $selected_categories   = get_field('selected_product_categories');
 
 $categories = [];
@@ -44,7 +44,7 @@ if (is_wp_error($categories) || empty($categories)) {
 }
 ?>
 
-<section class="our_product_categories_slider">
+<section class="our_products_slider">
     <div class="container">
         <div class="row mb-4 align-items-center justify-content-between">
             <div class="col-md-4">
