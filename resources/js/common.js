@@ -180,6 +180,50 @@ jQuery( document ).ready(function($) {
     });
 
 
+    // ===== product categories Slider =====
+    var $productCategoriesSlider = $('.our_product_categories_slider .products-slider');
+    var $productCategoriesProgressLine = $('.our_product_categories_slider .slick-progress .progress-line span');
+
+    function productCategoriesUpdateCenterSlide(slick, index) {
+      var current = index + 1;
+      var total   = slick.slideCount;
+      var percent = (current / total) * 100;
+      $productCategoriesProgressLine.css('width', percent + '%');
+    }
+
+    $productCategoriesSlider.on('init', function(event, slick){
+      productCategoriesUpdateCenterSlide(slick, slick.currentSlide);
+    });
+
+    $productCategoriesSlider.slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      infinite: true,
+      centerMode: false,
+      centerPadding: '0px',
+      autoplay: true,
+      autoplaySpeed: 2000,
+      speed: 1000,
+      pauseOnHover: false,
+      pauseOnFocus: false,
+      swipe: true,
+      swipeToSlide: true,
+      touchMove: true,
+      arrows: true,
+      prevArrow: $('.our_product_categories_slider .prev-btn'),
+      nextArrow: $('.our_product_categories_slider .next-btn'),
+      rtl: check_rtl,
+      responsive: [
+        { breakpoint: 992, settings: { slidesToShow: 2 } },
+        { breakpoint: 576, settings: { slidesToShow: 1 } }
+      ]
+    });
+
+    $productCategoriesSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+      productCategoriesUpdateCenterSlide(slick, nextSlide);
+    });
+
+
     // ===== Testimonials Slider =====
     var $testimonialsSlider = $('.our-testimonials .testimonials-slider');
     var $testimonialsProgressLine = $('.our-testimonials .slick-progress .progress-line span');
