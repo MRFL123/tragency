@@ -22,6 +22,12 @@ add_filter('block_categories', function ($categories, $post) {
 
 // Initialize ACF blocks
 add_action('acf/init', 'my_acf_init');
+
+// Prefer ACF Blocks v3 when the installed ACF version supports it.
+add_filter('acf/blocks/default_block_version', function ($version) {
+  return 3;
+});
+
 if (!function_exists('my_acf_init')) {
 function my_acf_init()
 {
@@ -203,22 +209,23 @@ function my_acf_init()
     ],
   ];
 
-  // Register blocks
+  // Register blocks as WordPress API v3 + ACF Blocks v3.
   foreach ($blocks as $block) {
     $args = array_merge($block, [
-      'render_callback' => 'my_acf_block_render_callback',
-      'category'        => 'Mirrorful-builder',
-      // WP Block API v3 + preview-only: fields edit in sidebar (TinyMCE cannot
-      // run inside the Gutenberg iframe). See ACF guidance for iframe editors.
-      'api_version'     => 3,
-      'mode'            => 'preview',
-      'supports'        => [
-        'mode'  => false,
+      'render_callback'   => 'my_acf_block_render_callback',
+      'category'          => 'Mirrorful-builder',
+      // Block API v3 (iframe editor) + ACF Blocks v3.
+      'api_version'       => 3,
+      'acf_block_version' => 3,
+      // Default preview in canvas; pencil/edit icon toggles field editing.
+      'mode'              => 'preview',
+      'supports'          => [
+        'mode'  => true,
         'align' => false,
+        'jsx'   => true,
       ],
     ]);
 
-    // Prefer acf_register_block_type when available.
     if (function_exists('acf_register_block_type')) {
       acf_register_block_type($args);
     } else {
