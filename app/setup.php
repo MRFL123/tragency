@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Vite;
 
 /**
  * Inject styles into the block editor canvas.
+ * Only accept real .css URLs — never .js (avoids production MIME errors).
  *
  * @return array
  */
 add_filter('block_editor_settings_all', function ($settings) {
     try {
         $style = Vite::asset('resources/css/editor.scss');
-        if (is_string($style) && str_contains($style, '.css')) {
+        if (is_string($style) && str_contains($style, '.css') && !str_contains($style, '.js')) {
             $settings['styles'][] = [
                 'css' => "@import url('{$style}')",
             ];

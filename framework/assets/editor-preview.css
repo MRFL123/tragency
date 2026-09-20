@@ -1,5 +1,6 @@
 /* Gutenberg canvas: match the front-end block layout. */
-.editor-styles-wrapper {
+.editor-styles-wrapper,
+.block-editor-iframe__body {
   padding: 0 !important;
   max-width: none !important;
 }
@@ -25,13 +26,16 @@
   overflow: hidden;
 }
 
+.editor-styles-wrapper img,
+.editor-styles-wrapper iframe,
+.editor-styles-wrapper video,
 .editor-styles-wrapper .acf-block-preview img,
 .editor-styles-wrapper .acf-block-preview video {
   max-width: 100%;
   height: auto;
 }
 
-/* Keep ACF field panels readable */
+/* Keep ACF field UI readable inside the iframe / sidebar. */
 .acf-block-fields,
 .acf-fields,
 .acf-block-component .acf-fields,
@@ -64,8 +68,8 @@
 }
 
 /*
- * TinyMCE requires content-box. Bootstrap sets border-box on * which
- * breaks Visual/Text switching and the formatting toolbar.
+ * TinyMCE requires content-box. Bootstrap (from app.css) sets border-box on *
+ * which breaks Visual/Text switching and the formatting toolbar.
  * Do NOT restyle icons, buttons, or toolbar chrome beyond box-sizing.
  */
 .acf-field-wysiwyg .mce-container,

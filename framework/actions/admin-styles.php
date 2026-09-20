@@ -121,7 +121,8 @@ function custom_styles_admin() {
 add_action('admin_head', 'custom_styles_admin');
 
 /**
- * Resolve a Vite-built CSS URL (must be a real .css file).
+ * Resolve a Vite-built CSS URL (must be a real .css file — never .js).
+ * Prevents production MIME errors when Vite entry resolves to JS.
  */
 function tragency_vite_css_url($entry) {
   try {
@@ -129,7 +130,7 @@ function tragency_vite_css_url($entry) {
       return null;
     }
     $url = \Illuminate\Support\Facades\Vite::asset($entry);
-    if (is_string($url) && str_contains($url, '.css')) {
+    if (is_string($url) && str_contains($url, '.css') && !str_contains($url, '.js')) {
       return $url;
     }
   } catch (\Throwable $e) {
@@ -140,10 +141,10 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * Static theme assets for the editor (no Bootstrap / app.css).
- * app.css must NOT load on the editor chrome — it breaks TinyMCE (Visual/Text, bold, etc).
+ * CSS URLs for ACF block previews in the Gutenberg canvas iframe.
+ * Same approach as mefic: theme CSS + ACF input CSS + editor-preview fixes.
  */
-function tragency_block_editor_safe_css_urls() {
+function tragency_block_editor_css_urls() {
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
@@ -152,8 +153,17 @@ function tragency_block_editor_safe_css_urls() {
   $theme_dir = get_template_directory();
   $urls = [];
 
+  // Front-end theme CSS (Bootstrap + components) via Vite — must be .css
+  $app_css = tragency_vite_css_url('resources/css/app.scss');
+  if ($app_css) {
+    $urls[] = $app_css;
+  }
+
   $static_paths = [
     'framework/assets/custom-classes.css',
+    'framework/assets/slick/slick.css',
+    'framework/assets/slick/slick-theme.css',
+    // Last: TinyMCE content-box + ACF field resets beat Bootstrap border-box
     'framework/assets/editor-preview.css',
   ];
 
@@ -183,56 +193,55 @@ function tragency_block_editor_safe_css_urls() {
 }
 
 /**
- * Full CSS for the Gutenberg canvas iframe only (block previews).
- * editor-preview.css is last so TinyMCE content-box beats Bootstrap.
+ * Enqueue theme + ACF styles for the block editor (mefic pattern).
+ * Uses enqueue_block_assets so styles enter the editor iframe on WP 6.3+.
  */
-function tragency_block_editor_canvas_css_urls() {
+function tragency_enqueue_block_editor_theme_styles() {
+  if (!is_admin()) {
+    return;
+  }
+
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
 
-  $urls = [];
-  $theme_uri = get_template_directory_uri();
-  $theme_dir = get_template_directory();
-
-  $app_css = tragency_vite_css_url('resources/css/app.scss');
-  if ($app_css) {
-    $urls[] = $app_css;
-  }
-
-  foreach ([
-    'framework/assets/custom-classes.css',
-    'framework/assets/slick/slick.css',
-    'framework/assets/slick/slick-theme.css',
-  ] as $relative) {
-    $full = $theme_dir . '/' . $relative;
-    if (!is_readable($full)) {
-      continue;
-    }
-    $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
-  }
-
   foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
-    if (!isset(wp_styles()->registered[$handle])) {
-      continue;
+    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
+      wp_enqueue_style($handle);
     }
-    $src = wp_styles()->registered[$handle]->src;
-    if (!$src) {
-      continue;
-    }
-    if (!preg_match('#^https?://#i', $src)) {
-      $src = site_url($src);
-    }
-    $urls[] = $src;
   }
 
-  $preview = $theme_dir . '/framework/assets/editor-preview.css';
-  if (is_readable($preview)) {
-    $urls[] = $theme_uri . '/framework/assets/editor-preview.css?ver=' . filemtime($preview);
+  foreach (tragency_block_editor_css_urls() as $index => $url) {
+    // Skip non-CSS URLs (guards against Vite returning .js on bad builds)
+    $path = is_string($url) ? (parse_url($url, PHP_URL_PATH) ?: '') : '';
+    if (!$path || !str_ends_with($path, '.css')) {
+      continue;
+    }
+    wp_enqueue_style('tragency-editor-theme-' . $index, $url, [], null);
   }
-
-  return array_values(array_unique($urls));
 }
+add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
+
+/**
+ * Also inject the same CSS into the editor iframe styles list.
+ */
+add_filter('block_editor_settings_all', function ($settings) {
+  if (!isset($settings['styles']) || !is_array($settings['styles'])) {
+    $settings['styles'] = [];
+  }
+
+  foreach (tragency_block_editor_css_urls() as $url) {
+    $path = is_string($url) ? (parse_url($url, PHP_URL_PATH) ?: '') : '';
+    if (!$path || !str_ends_with($path, '.css')) {
+      continue;
+    }
+    $settings['styles'][] = [
+      'css' => '@import url("' . esc_url($url) . '");',
+    ];
+  }
+
+  return $settings;
+}, 20);
 
 /**
  * Whether the current admin screen is the block editor.
@@ -255,38 +264,21 @@ function tragency_is_block_editor_screen() {
 }
 
 /**
- * Enqueue ACF + TinyMCE on the editor chrome (sidebar fields).
- * Do NOT enqueue app.css / Bootstrap here.
+ * Editor chrome scripts for ACF WYSIWYG (TinyMCE / Quicktags).
+ * Styles for the iframe are handled by enqueue_block_assets above.
  */
-function tragency_enqueue_block_editor_theme_styles() {
-  if (!is_admin()) {
-    return;
-  }
-
-  // Seeds #acf-hidden-wp-editor → tinyMCEPreInit.mceInit/qtInit.acf_content
+add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
     acf_enqueue_uploader();
   }
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
-
-  // Ensures switchEditors + TinyMCE scripts are available for ACF WYSIWYG.
   if (function_exists('wp_enqueue_editor')) {
     wp_enqueue_editor();
   }
   wp_enqueue_script('quicktags');
   wp_enqueue_style('editor-buttons');
-
-  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
-    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
-      wp_enqueue_style($handle);
-    }
-  }
-
-  foreach (tragency_block_editor_safe_css_urls() as $index => $url) {
-    wp_enqueue_style('tragency-editor-safe-' . $index, $url, [], null);
-  }
 
   $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
   if (is_readable($js)) {
@@ -298,25 +290,7 @@ function tragency_enqueue_block_editor_theme_styles() {
       true
     );
   }
-}
-add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_styles');
-
-/**
- * Inject theme CSS into the canvas iframe only (block previews look correct).
- */
-add_filter('block_editor_settings_all', function ($settings) {
-  if (!isset($settings['styles']) || !is_array($settings['styles'])) {
-    $settings['styles'] = [];
-  }
-
-  foreach (tragency_block_editor_canvas_css_urls() as $url) {
-    $settings['styles'][] = [
-      'css' => '@import url("' . esc_url($url) . '");',
-    ];
-  }
-
-  return $settings;
-}, 20);
+});
 
 /**
  * After WP prints tinyMCEPreInit, guarantee acf_content defaults exist.
