@@ -1,36 +1,34 @@
 /**
- * Editor iframe styles — loaded via enqueue_block_assets only.
- *
- * 1) .acf-block-preview  → front-end layout for block canvas previews
- * 2) .acf-fields / WYSIWYG → normal WP admin chrome (never inherit dark theme)
+ * Loaded via enqueue_block_assets (handle: theme-editor-preview).
+ * Protects ACF field UI / TinyMCE from front-end theme CSS.
+ * Preview layout styles are scoped under .acf-block-preview only.
  */
 
 /* -------------------------------------------------------------------------
- * Block canvas layout — scoped to preview content only
+ * C) Front-end preview layout — ONLY under .acf-block-preview
  * ------------------------------------------------------------------------- */
-.editor-styles-wrapper .is-root-container,
-.editor-styles-wrapper .block-editor-block-list__layout {
-  padding: 0 !important;
-}
-
-.editor-styles-wrapper .wp-block[data-type^="acf/"],
 .acf-block-preview {
   max-width: none !important;
   width: 100% !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
+  overflow: hidden;
 }
 
-.acf-block-preview,
 .acf-block-preview > section {
   overflow: hidden;
 }
 
 .acf-block-preview img,
-.acf-block-preview iframe,
-.acf-block-preview video {
+.acf-block-preview video,
+.acf-block-preview iframe {
   max-width: 100%;
   height: auto;
+}
+
+.editor-styles-wrapper .wp-block[data-type^="acf/"] {
+  max-width: none !important;
+  width: 100% !important;
 }
 
 .acf-block-preview-error {
@@ -38,25 +36,26 @@
   background: #fff !important;
   color: #1d2327 !important;
   border: 1px solid #dcdcde;
-  border-radius: 2px;
   font-size: 13px;
 }
 
 /* -------------------------------------------------------------------------
- * ACF field UI — white panels, dark text (never inherit preview/theme dark styles)
+ * B) Keep ACF UI admin-like
  * ------------------------------------------------------------------------- */
 .acf-block-fields,
 .acf-fields,
-.acf-block-component .acf-fields,
 .acf-block-body,
-.acf-block-panel {
+.acf-field {
   background: #fff !important;
   color: #1d2327 !important;
 }
 
-.acf-fields > .acf-field,
-.acf-block-fields > .acf-field,
-.acf-field .acf-label label {
+.acf-fields input,
+.acf-fields textarea,
+.acf-fields select,
+.acf-fields label,
+.acf-fields p,
+.acf-fields .acf-label label {
   color: #1d2327 !important;
 }
 
@@ -70,41 +69,59 @@
 .acf-fields input[type="date"],
 .acf-fields select,
 .acf-fields textarea:not(.wp-editor-area) {
-  color: #2c3338 !important;
   background-color: #fff !important;
   border: 1px solid #8c8f94 !important;
   box-shadow: none !important;
   max-width: 100%;
 }
 
-.acf-fields .select2-container {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
 /* -------------------------------------------------------------------------
- * WYSIWYG / TinyMCE — normal WP admin chrome
- * Front-end theme (dark body, button resets, Bootstrap border-box) must not win.
+ * B) WYSIWYG / TinyMCE — must look like WP admin
  * ------------------------------------------------------------------------- */
-.acf-field-wysiwyg,
-.acf-field-wysiwyg .acf-input {
-  background: #fff !important;
-  color: #1d2327 !important;
-}
-
 .acf-field-wysiwyg .wp-editor-wrap,
+.acf-field-wysiwyg .wp-editor-tools,
 .acf-field-wysiwyg .wp-editor-container,
 .acf-field-wysiwyg .mce-tinymce,
 .acf-field-wysiwyg .mce-container,
-.acf-field-wysiwyg .mce-panel,
 .acf-field-wysiwyg .mce-toolbar-grp,
 .acf-field-wysiwyg .mce-toolbar,
+.acf-field-wysiwyg .mce-top-part,
+.acf-field-wysiwyg .mce-edit-area,
 .acf-field-wysiwyg .mce-statusbar,
-.acf-field-wysiwyg .quicktags-toolbar,
-.acf-field-wysiwyg .wp-editor-tools {
+.acf-field-wysiwyg .quicktags-toolbar {
   background: #f6f7f7 !important;
   color: #1d2327 !important;
-  border-color: #dcdcde !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.acf-field-wysiwyg .mce-edit-area,
+.acf-field-wysiwyg .wp-editor-area,
+.acf-field-wysiwyg iframe {
+  background: #fff !important;
+  min-height: 220px !important;
+}
+
+/* Neutralize theme destructive button resets, then restore TinyMCE chrome */
+.acf-field-wysiwyg button {
+  all: revert !important;
+}
+
+.acf-field-wysiwyg .mce-btn,
+.acf-field-wysiwyg .mce-btn button,
+.acf-field-wysiwyg .mce-ico,
+.acf-field-wysiwyg .wp-switch-editor {
+  color: #1d2327 !important;
+  background: #f0f0f1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.acf-field-wysiwyg .mce-container *,
+.acf-field-wysiwyg .mce-container-body * {
+  box-sizing: content-box;
 }
 
 .acf-field-wysiwyg .wp-editor-wrap {
@@ -112,86 +129,7 @@
   max-width: 100%;
 }
 
-.acf-field-wysiwyg .wp-editor-container,
-.acf-field-wysiwyg .mce-tinymce,
-.acf-field-wysiwyg .mce-container-body,
-.acf-field-wysiwyg .mce-edit-area,
-.acf-field-wysiwyg .mce-edit-area iframe {
-  background: #fff !important;
-}
-
-.acf-field-wysiwyg .wp-editor-container {
-  border: 1px solid #dcdcde !important;
-}
-
-.acf-field-wysiwyg .mce-toolbar,
-.acf-field-wysiwyg .mce-toolbar-grp,
-.acf-field-wysiwyg .mce-top-part::before {
-  background: #f6f7f7 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-.acf-field-wysiwyg .mce-btn,
-.acf-field-wysiwyg .mce-btn button,
-.acf-field-wysiwyg .wp-switch-editor,
-.acf-field-wysiwyg .quicktags-toolbar input,
-.acf-field-wysiwyg .quicktags-toolbar .ed_button {
-  display: inline-block !important;
-  visibility: visible !important;
-  background: #f6f7f7 !important;
-  color: #1d2327 !important;
-  border: 1px solid #dcdcde !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-  text-decoration: none !important;
-  opacity: 1 !important;
-}
-
-.acf-field-wysiwyg .mce-btn:hover,
-.acf-field-wysiwyg .mce-btn:hover button,
-.acf-field-wysiwyg .wp-switch-editor:hover {
-  background: #f0f0f1 !important;
-  color: #1d2327 !important;
-}
-
-.acf-field-wysiwyg .mce-ico,
-.acf-field-wysiwyg .mce-caret {
-  color: #1d2327 !important;
-}
-
 .acf-field-wysiwyg textarea.wp-editor-area {
-  background: #fff !important;
   color: #1d2327 !important;
   border: 0 !important;
-}
-
-/* TinyMCE needs content-box; Bootstrap * { box-sizing:border-box } breaks toolbar */
-.acf-field-wysiwyg .mce-container,
-.acf-field-wysiwyg .mce-container *,
-.acf-field-wysiwyg .mce-widget,
-.acf-field-wysiwyg .mce-widget *,
-.acf-field-wysiwyg .mce-toolbar,
-.acf-field-wysiwyg .mce-toolbar *,
-.acf-field-wysiwyg .mce-statusbar,
-.acf-field-wysiwyg .mce-statusbar *,
-.acf-field-wysiwyg .mce-menu,
-.acf-field-wysiwyg .mce-menu *,
-.acf-field-wysiwyg .mce-menubar,
-.acf-field-wysiwyg .mce-menubar *,
-.acf-field-wysiwyg .mce-panel,
-.acf-field-wysiwyg .mce-panel *,
-.acf-field-wysiwyg .mce-floatpanel,
-.acf-field-wysiwyg .mce-floatpanel *,
-.acf-field-wysiwyg .mce-tooltip,
-.acf-field-wysiwyg .mce-tooltip *,
-.acf-field-wysiwyg .mce-btn,
-.acf-field-wysiwyg .mce-btn *,
-.acf-field-wysiwyg .wp-editor-tools,
-.acf-field-wysiwyg .wp-editor-tools *,
-.acf-field-wysiwyg .wp-switch-editor,
-.acf-field-wysiwyg .quicktags-toolbar,
-.acf-field-wysiwyg .quicktags-toolbar * {
-  box-sizing: content-box !important;
 }

@@ -141,20 +141,14 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * CSS URLs for ACF block previews in the Gutenberg canvas iframe.
- * Same approach as mefic: local theme CSS + ACF input CSS + editor-preview last.
- * Never falls back to CDN Bootstrap alone.
+ * Theme CSS for block *preview* canvas only (injected via block_editor_settings_all).
+ * editor-preview.css is last so ACF/WYSIWYG overrides beat Bootstrap/dark theme.
  */
-function tragency_block_editor_css_urls() {
-  if (function_exists('acf_enqueue_scripts')) {
-    acf_enqueue_scripts();
-  }
-
+function tragency_block_preview_css_urls() {
   $theme_uri = get_template_directory_uri();
   $theme_dir = get_template_directory();
   $urls = [];
 
-  // Front-end theme CSS (Bootstrap + components) via Vite — must be .css
   $app_css = tragency_vite_css_url('resources/css/app.scss');
   if ($app_css) {
     $urls[] = $app_css;
@@ -164,6 +158,7 @@ function tragency_block_editor_css_urls() {
     'framework/assets/custom-classes.css',
     'framework/assets/slick/slick.css',
     'framework/assets/slick/slick-theme.css',
+    'framework/assets/editor-preview.css',
   ] as $relative) {
     $full = $theme_dir . '/' . $relative;
     if (!is_readable($full)) {
@@ -172,35 +167,14 @@ function tragency_block_editor_css_urls() {
     $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
   }
 
-  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
-    if (!isset(wp_styles()->registered[$handle])) {
-      continue;
-    }
-    $src = wp_styles()->registered[$handle]->src;
-    if (!$src) {
-      continue;
-    }
-    if (!preg_match('#^https?://#i', $src)) {
-      $src = site_url($src);
-    }
-    $urls[] = $src;
-  }
-
-  // LAST: ACF field + TinyMCE chrome resets beat Bootstrap / dark theme
-  $preview = $theme_dir . '/framework/assets/editor-preview.css';
-  if (is_readable($preview)) {
-    $urls[] = $theme_uri . '/framework/assets/editor-preview.css?ver=' . filemtime($preview);
-  }
-
   return array_values(array_unique($urls));
 }
 
 /**
- * Enqueue theme + ACF styles for the block editor (mefic pattern).
- * Uses enqueue_block_assets so styles enter the editor iframe on WP 6.3+.
- * Do NOT enqueue these via enqueue_block_editor_assets (triggers iframe warnings).
+ * A) Correct enqueue — iframe-safe (WP 6.3+).
+ * Do NOT enqueue these styles via enqueue_block_editor_assets.
  */
-function tragency_enqueue_block_editor_theme_styles() {
+add_action('enqueue_block_assets', function () {
   if (!is_admin()) {
     return;
   }
@@ -209,37 +183,33 @@ function tragency_enqueue_block_editor_theme_styles() {
     acf_enqueue_scripts();
   }
 
-  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
-    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
+  foreach (['acf-global', 'acf-input', 'acf-pro-input', 'editor-buttons', 'wp-edit-blocks'] as $handle) {
+    if (wp_style_is($handle, 'registered')) {
       wp_enqueue_style($handle);
     }
   }
 
-  foreach (tragency_block_editor_css_urls() as $index => $url) {
-    $path = is_string($url) ? (parse_url($url, PHP_URL_PATH) ?: '') : '';
-    if (!$path || !str_ends_with($path, '.css')) {
-      continue;
-    }
-    // Stable handle for editor-preview so it is never double-enqueued elsewhere
-    $handle = str_contains($path, 'editor-preview.css')
-      ? 'tragency-editor-preview'
-      : 'tragency-editor-theme-' . $index;
-    if (!wp_style_is($handle, 'enqueued')) {
-      wp_enqueue_style($handle, $url, [], null);
-    }
+  $preview_path = get_theme_file_path('framework/assets/editor-preview.css');
+  if (is_readable($preview_path)) {
+    wp_enqueue_style(
+      'theme-editor-preview',
+      get_theme_file_uri('framework/assets/editor-preview.css'),
+      ['acf-input'],
+      filemtime($preview_path)
+    );
   }
-}
-add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
+});
 
 /**
- * Also inject the same CSS into the editor iframe styles list.
+ * Inject front-end theme CSS into the canvas for block preview layout.
+ * editor-preview.css is included last for WYSIWYG/field overrides.
  */
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
     $settings['styles'] = [];
   }
 
-  foreach (tragency_block_editor_css_urls() as $url) {
+  foreach (tragency_block_preview_css_urls() as $url) {
     $path = is_string($url) ? (parse_url($url, PHP_URL_PATH) ?: '') : '';
     if (!$path || !str_ends_with($path, '.css')) {
       continue;
@@ -273,7 +243,7 @@ function tragency_is_block_editor_screen() {
 }
 
 /**
- * Editor chrome scripts only (no CSS — CSS goes through enqueue_block_assets).
+ * D) TinyMCE init safety — scripts only (no CSS here).
  */
 add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
@@ -287,11 +257,11 @@ add_action('enqueue_block_editor_assets', function () {
   }
   wp_enqueue_script('quicktags');
 
-  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
+  $js = get_theme_file_path('framework/assets/acf-wysiwyg-defaults.js');
   if (is_readable($js)) {
     wp_enqueue_script(
       'tragency-acf-wysiwyg-defaults',
-      get_template_directory_uri() . '/framework/assets/acf-wysiwyg-defaults.js',
+      get_theme_file_uri('framework/assets/acf-wysiwyg-defaults.js'),
       ['jquery', 'acf-input', 'editor', 'quicktags'],
       filemtime($js),
       true
@@ -300,7 +270,7 @@ add_action('enqueue_block_editor_assets', function () {
 });
 
 /**
- * After WP prints tinyMCEPreInit, guarantee acf_content defaults exist.
+ * Seed tinyMCEPreInit.acf_content so ACF Quicktags/TinyMCE defaults exist.
  */
 add_action('admin_print_footer_scripts', function () {
   if (!tragency_is_block_editor_screen()) {
