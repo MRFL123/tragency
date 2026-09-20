@@ -99,30 +99,12 @@ function my_theme_register_required_plugins() {
         'slug' => 'all-in-one-wp-security-and-firewall',
         'required' => true,
     ),
-    // array(
-    //   'name' => 'Simple Custom Post Order',
-    //   'slug' => 'simple-custom-post-order',
-    //   'required' => true,
-    // ),
-    // array(
-    //   'name' => 'Advanced Editor Tools',
-    //   'slug' => 'tinymce-advanced',
-    //   'required' => false,
-    // ),
     array(
       'name' => 'WPCode – Insert Headers and Footers + Custom Code',
       'slug' => 'insert-headers-and-footers',
       'required' => false,
     ),
   );
-
-  if($current_stage == 'development'){
-    $plugins[] = array(
-      'name' => 'Query Monitor',
-      'slug' => 'query-monitor',
-      'required' => false,
-    );
-  }
   /**
   * Array of configuration settings. Amend each line as needed.
   * If you want the default strings to be available under your own theme domain,

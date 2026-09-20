@@ -79,6 +79,26 @@ class Utilities{
 
 
     /**
+     * Current language code (WPML-safe).
+     * Avoids fatal when WPML is inactive and ICL_LANGUAGE_CODE is undefined.
+     */
+    static function language_code() {
+      if (defined('ICL_LANGUAGE_CODE') && ICL_LANGUAGE_CODE) {
+        return (string) ICL_LANGUAGE_CODE;
+      }
+
+      if (function_exists('apply_filters')) {
+        $code = apply_filters('wpml_current_language', null);
+        if (is_string($code) && $code !== '') {
+          return $code;
+        }
+      }
+
+      $locale = function_exists('determine_locale') ? determine_locale() : get_locale();
+      return strtolower(substr((string) $locale, 0, 2)) ?: 'en';
+    }
+
+    /**
     * Function Name: language selector flags - Utilities::language_selector_flags();
     * This Function can Check for the language selector flags
     * @param ()
