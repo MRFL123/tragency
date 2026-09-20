@@ -26,13 +26,12 @@
 }
 
 .editor-styles-wrapper .acf-block-preview img,
-.editor-styles-wrapper .acf-block-preview iframe,
 .editor-styles-wrapper .acf-block-preview video {
   max-width: 100%;
   height: auto;
 }
 
-/* Keep ACF field panels readable without restyling TinyMCE internals. */
+/* ACF field panels */
 .acf-block-fields,
 .acf-fields,
 .acf-block-component .acf-fields,
@@ -46,7 +45,6 @@
   color: #1d2327 !important;
 }
 
-/* Basic inputs only — leave TinyMCE alone */
 .acf-fields input[type="text"],
 .acf-fields input[type="password"],
 .acf-fields input[type="email"],
@@ -62,102 +60,152 @@
   border: 1px solid #8c8f94 !important;
   box-shadow: none !important;
   max-width: 100%;
+  box-sizing: border-box !important;
 }
 
 /*
- * TinyMCE / WYSIWYG — restore WordPress defaults.
- * Do not override floats, toolbar buttons, or switch tabs;
- * Bootstrap previously broke Visual/Text + formatting.
+ * CRITICAL: Bootstrap sets box-sizing:border-box on ALL elements.
+ * TinyMCE requires content-box — without this, Visual/Text + toolbar break.
  */
 .acf-fields .wp-editor-wrap,
+.acf-fields .wp-editor-wrap *,
+.acf-fields .acf-editor-wrap,
+.acf-fields .acf-editor-wrap *,
+.acf-fields .mce-tinymce,
+.acf-fields .mce-tinymce *,
+.acf-fields .mce-container,
+.acf-fields .mce-container *,
+.acf-fields .mce-widget,
+.acf-fields .mce-widget *,
+.acf-fields .mce-toolbar,
+.acf-fields .mce-toolbar *,
+.acf-fields .mce-statusbar,
+.acf-fields .mce-statusbar *,
+.acf-fields .mce-menu,
+.acf-fields .mce-menu *,
+.acf-fields .mce-panel,
+.acf-fields .mce-panel *,
+.acf-fields .mce-floatpanel,
+.acf-fields .mce-floatpanel *,
+.acf-fields .mce-btn,
+.acf-fields .mce-btn *,
+.acf-fields .mce-ico,
+.acf-fields .quicktags-toolbar,
+.acf-fields .quicktags-toolbar * {
+  box-sizing: content-box !important;
+}
+
+.acf-fields .wp-editor-wrap,
 .acf-fields .acf-editor-wrap {
-  width: 100%;
-  max-width: 100%;
-  background: #fff;
-  color: #1d2327;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: #fff !important;
+  color: #1d2327 !important;
+  clear: both;
+  position: relative;
+  z-index: 2;
 }
 
 .acf-fields .wp-editor-tools {
-  display: block;
-  width: 100%;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 3;
 }
 
 .acf-fields .wp-editor-tabs {
-  float: right;
-  position: relative;
-  z-index: 1;
+  float: right !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
 }
 
-.acf-fields .wp-switch-editor {
-  float: left;
-  box-sizing: content-box;
-  position: relative;
-  top: 1px;
-  margin: 0 0 0 5px;
-  padding: 3px 8px 4px;
-  font-size: 13px;
-  line-height: 1.5;
-  height: auto;
-  color: #646970;
-  background: #dcdcde;
-  border: 1px solid #dcdcde;
-  border-radius: 0;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: none;
-  text-transform: none;
+.acf-fields .wp-switch-editor,
+.acf-fields button.wp-switch-editor,
+.acf-fields a.wp-switch-editor {
+  all: unset !important;
+  float: left !important;
+  box-sizing: content-box !important;
+  position: relative !important;
+  top: 1px !important;
+  display: inline-block !important;
+  margin: 0 0 0 5px !important;
+  padding: 3px 8px 4px !important;
+  font-size: 13px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+  line-height: 19px !important;
+  height: 20px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  color: #646970 !important;
+  background: #dcdcde !important;
+  border: 1px solid #dcdcde !important;
+  border-radius: 0 !important;
+  text-decoration: none !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  z-index: 10 !important;
 }
 
 .acf-fields .html-active .switch-html,
 .acf-fields .tmce-active .switch-tmce {
-  background: #f0f0f1;
-  color: #50575e;
-  border-bottom-color: #f0f0f1;
+  background: #f0f0f1 !important;
+  color: #50575e !important;
+  border-bottom-color: #f0f0f1 !important;
 }
 
 .acf-fields .wp-media-buttons {
-  float: left;
+  float: left !important;
+  position: relative !important;
+  z-index: 5 !important;
 }
 
 .acf-fields .wp-media-buttons .button {
-  display: inline-block;
-  width: auto;
-  height: auto;
-  min-height: 30px;
-  margin: 0 5px 4px 0;
-  padding: 0 10px;
-  font-size: 13px;
-  line-height: 2;
-  color: #2271b1;
-  background: #f6f7f7;
-  border: 1px solid #2271b1;
-  border-radius: 3px;
-  box-shadow: none;
-  text-transform: none;
-  cursor: pointer;
+  box-sizing: border-box !important;
+  display: inline-block !important;
+  width: auto !important;
+  height: 30px !important;
+  margin: 0 5px 4px 0 !important;
+  padding: 0 10px !important;
+  font-size: 13px !important;
+  line-height: 2 !important;
+  color: #2271b1 !important;
+  background: #f6f7f7 !important;
+  border: 1px solid #2271b1 !important;
+  border-radius: 3px !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
 }
 
 .acf-fields .wp-editor-container {
-  clear: both;
-  border: 1px solid #dcdcde;
-  background: #fff;
+  clear: both !important;
+  border: 1px solid #dcdcde !important;
+  background: #fff !important;
 }
 
-.acf-fields .mce-tinymce,
-.acf-fields .mce-container,
-.acf-fields .mce-panel {
-  box-sizing: border-box !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+.acf-fields .mce-toolbar-grp,
+.acf-fields .mce-toolbar,
+.acf-fields .mce-container-body {
+  background: #f6f7f7 !important;
 }
 
 .acf-fields .mce-toolbar .mce-btn,
 .acf-fields .mce-toolbar .mce-btn button {
-  box-sizing: border-box !important;
   cursor: pointer !important;
   pointer-events: auto !important;
   box-shadow: none !important;
   text-shadow: none !important;
+  opacity: 1 !important;
 }
 
 .acf-fields .mce-toolbar .mce-btn button {
@@ -176,12 +224,13 @@
 .acf-fields .mce-toolbar .mce-btn:hover,
 .acf-fields .mce-toolbar .mce-btn:focus,
 .acf-fields .mce-toolbar .mce-btn.mce-active {
-  background: #f0f0f1 !important;
-  border-color: #c3c4c7 !important;
+  background: #c3c4c7 !important;
+  border-color: #8c8f94 !important;
 }
 
 .acf-fields .mce-ico {
   color: #50575e !important;
+  display: inline-block !important;
 }
 
 .acf-fields .mce-edit-area iframe,
@@ -190,9 +239,11 @@
   min-height: 200px !important;
   background: #fff !important;
   border: 0 !important;
+  display: block !important;
 }
 
 .acf-fields textarea.wp-editor-area {
+  box-sizing: border-box !important;
   width: 100% !important;
   min-height: 200px !important;
   margin: 0 !important;
@@ -207,13 +258,8 @@
   display: block !important;
 }
 
-.acf-fields .quicktags-toolbar {
-  background: #f6f7f7 !important;
-  border-bottom: 1px solid #dcdcde !important;
-  padding: 3px !important;
-}
-
 .acf-fields .quicktags-toolbar .ed_button {
+  box-sizing: border-box !important;
   display: inline-block !important;
   width: auto !important;
   height: auto !important;
@@ -227,11 +273,12 @@
   border-radius: 3px !important;
   box-shadow: none !important;
   cursor: pointer !important;
+  pointer-events: auto !important;
 }
 
-/* Image / File / Buttons */
 .acf-fields .acf-button,
-.acf-fields .button:not(.wp-switch-editor) {
+.acf-fields .button:not(.wp-switch-editor):not(.ed_button) {
+  box-sizing: border-box !important;
   display: inline-block !important;
   width: auto !important;
   height: auto !important;
@@ -247,4 +294,5 @@
 .acf-fields .select2-container {
   width: 100% !important;
   max-width: 100% !important;
+  box-sizing: border-box !important;
 }

@@ -184,7 +184,7 @@ function tragency_block_editor_safe_css_urls() {
 
 /**
  * Full CSS for the Gutenberg canvas iframe only (block previews).
- * Includes app.css / Bootstrap — safe inside the iframe, not on ACF fields chrome.
+ * editor-preview.css is appended LAST so TinyMCE resets beat Bootstrap.
  */
 function tragency_block_editor_canvas_css_urls() {
   $urls = [];
@@ -198,9 +198,9 @@ function tragency_block_editor_canvas_css_urls() {
   $theme_dir = get_template_directory();
 
   foreach ([
+    'framework/assets/custom-classes.css',
     'framework/assets/slick/slick.css',
     'framework/assets/slick/slick-theme.css',
-    'framework/assets/editor-preview.css',
   ] as $relative) {
     $full = $theme_dir . '/' . $relative;
     if (!is_readable($full)) {
@@ -209,7 +209,27 @@ function tragency_block_editor_canvas_css_urls() {
     $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
   }
 
-  return array_values(array_unique(array_merge($urls, tragency_block_editor_safe_css_urls())));
+  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
+    if (!isset(wp_styles()->registered[$handle])) {
+      continue;
+    }
+    $src = wp_styles()->registered[$handle]->src;
+    if (!$src) {
+      continue;
+    }
+    if (!preg_match('#^https?://#i', $src)) {
+      $src = site_url($src);
+    }
+    $urls[] = $src;
+  }
+
+  // MUST be last — TinyMCE content-box reset overrides Bootstrap border-box.
+  $preview = $theme_dir . '/framework/assets/editor-preview.css';
+  if (is_readable($preview)) {
+    $urls[] = $theme_uri . '/framework/assets/editor-preview.css?ver=' . filemtime($preview);
+  }
+
+  return array_values(array_unique($urls));
 }
 
 /**
@@ -234,6 +254,17 @@ function tragency_enqueue_block_editor_theme_styles() {
   foreach (tragency_block_editor_safe_css_urls() as $index => $url) {
     wp_enqueue_style('tragency-editor-safe-' . $index, $url, [], null);
   }
+
+  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-fix.js';
+  if (is_readable($js)) {
+    wp_enqueue_script(
+      'tragency-acf-wysiwyg-fix',
+      get_template_directory_uri() . '/framework/assets/acf-wysiwyg-fix.js',
+      ['jquery'],
+      filemtime($js),
+      true
+    );
+  }
 }
 add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_styles');
 
@@ -243,6 +274,11 @@ add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_s
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
     $settings['styles'] = [];
+  }
+
+  // Ensure ACF styles are registered before we read their URLs.
+  if (function_exists('acf_enqueue_scripts')) {
+    acf_enqueue_scripts();
   }
 
   foreach (tragency_block_editor_canvas_css_urls() as $url) {
