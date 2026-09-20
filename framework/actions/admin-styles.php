@@ -235,8 +235,10 @@ function tragency_block_editor_canvas_css_urls() {
 }
 
 /**
- * Enqueue ACF + TinyMCE on the editor chrome (sidebar fields).
- * Do NOT enqueue app.css / Bootstrap here.
+ * Enqueue ACF styles for the editor chrome (sidebar fields).
+ * Do NOT enqueue app.css / Bootstrap here — it breaks TinyMCE.
+ * Do NOT call wp_enqueue_editor() here — it can leave qtInit.acf_content
+ * undefined and crash ACF buildQuicktags (reading 'buttons').
  */
 function tragency_enqueue_block_editor_theme_styles() {
   if (!is_admin()) {
@@ -245,11 +247,6 @@ function tragency_enqueue_block_editor_theme_styles() {
 
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
-  }
-
-  // Ensures switchEditors + TinyMCE scripts are available for ACF WYSIWYG.
-  if (function_exists('wp_enqueue_editor')) {
-    wp_enqueue_editor();
   }
 
   foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
@@ -261,8 +258,38 @@ function tragency_enqueue_block_editor_theme_styles() {
   foreach (tragency_block_editor_safe_css_urls() as $index => $url) {
     wp_enqueue_style('tragency-editor-safe-' . $index, $url, [], null);
   }
+
+  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
+  if (is_readable($js)) {
+    // Inline BEFORE acf-input so qtInit.acf_content exists when WYSIWYG inits.
+    wp_add_inline_script(
+      'acf-input',
+      file_get_contents($js),
+      'before'
+    );
+  }
 }
 add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_styles');
+
+/**
+ * Re-apply ACF editor defaults late — WP may overwrite tinyMCEPreInit after scripts load.
+ */
+add_action('admin_print_footer_scripts', function () {
+  if (!function_exists('get_current_screen')) {
+    return;
+  }
+  $screen = get_current_screen();
+  if (!$screen || empty($screen->is_block_editor)) {
+    return;
+  }
+
+  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
+  if (is_readable($js)) {
+    echo '<script id="tragency-acf-wysiwyg-defaults-late">';
+    echo file_get_contents($js);
+    echo '</script>';
+  }
+}, 1);
 
 /**
  * Inject theme CSS into the canvas iframe only (block previews look correct).
