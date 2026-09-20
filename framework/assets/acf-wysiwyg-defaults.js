@@ -1,6 +1,11 @@
 /**
  * Fix ACF WYSIWYG in Gutenberg: missing tinyMCEPreInit.qtInit.acf_content
  * causes "Cannot read properties of undefined (reading 'buttons')".
+ *
+ * WordPress often overwrites tinyMCEPreInit in the footer, so we:
+ * 1) seed defaults
+ * 2) patch acf.tinymce.defaults / buildQuicktags
+ * 3) re-seed after scripts load
  */
 (function () {
   var QT_BUTTONS =
@@ -61,7 +66,6 @@
       return false;
     }
 
-    // Always return valid defaults.
     acf.tinymce.defaults = function () {
       ensurePreInit();
       return {
@@ -70,7 +74,6 @@
       };
     };
 
-    // Guard buildQuicktags against missing settings.
     if (typeof acf.tinymce.buildQuicktags === 'function' && !acf.tinymce._tragencyPatched) {
       var originalBuild = acf.tinymce.buildQuicktags;
       acf.tinymce.buildQuicktags = function (editor) {
@@ -85,11 +88,23 @@
       acf.tinymce._tragencyPatched = true;
     }
 
-    // Guard initializeQuicktags.
-    if (typeof acf.tinymce.initializeQuicktags === 'function' && !acf.tinymce._tragencyQtPatched) {
+    if (
+      typeof acf.tinymce.initializeQuicktags === 'function' &&
+      !acf.tinymce._tragencyQtPatched
+    ) {
       var originalQt = acf.tinymce.initializeQuicktags;
       acf.tinymce.initializeQuicktags = function (id, args) {
         ensurePreInit();
+        args = args || {};
+        args.quicktags = Object.assign(
+          { id: id, buttons: QT_BUTTONS },
+          window.tinyMCEPreInit.qtInit.acf_content || {},
+          args.quicktags || {}
+        );
+        args.quicktags.id = id;
+        if (!args.quicktags.buttons) {
+          args.quicktags.buttons = QT_BUTTONS;
+        }
         try {
           return originalQt.call(this, id, args);
         } catch (err) {
@@ -100,6 +115,14 @@
       acf.tinymce._tragencyQtPatched = true;
     }
 
+    if (typeof acf.addAction === 'function' && !acf.tinymce._tragencyActions) {
+      acf.addAction('prepare', ensurePreInit);
+      acf.addAction('ready', ensurePreInit);
+      acf.addAction('append', ensurePreInit);
+      acf.addAction('show_field/type=wysiwyg', ensurePreInit);
+      acf.tinymce._tragencyActions = true;
+    }
+
     return true;
   }
 
@@ -107,17 +130,19 @@
 
   var tries = 0;
   var timer = setInterval(function () {
-    if (patchAcfTinymce() || ++tries > 100) {
+    ensurePreInit();
+    if (patchAcfTinymce() || ++tries > 200) {
       clearInterval(timer);
     }
   }, 50);
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      ensurePreInit();
-      patchAcfTinymce();
-    });
-  } else {
+  document.addEventListener('DOMContentLoaded', function () {
+    ensurePreInit();
     patchAcfTinymce();
-  }
+  });
+
+  window.addEventListener('load', function () {
+    ensurePreInit();
+    patchAcfTinymce();
+  });
 })();

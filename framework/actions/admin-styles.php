@@ -228,16 +228,59 @@ add_filter('block_editor_settings_all', function ($settings) {
 }, 20);
 
 /**
- * Print ACF WYSIWYG fix as early as possible in the block editor.
- * Must not rely on wp_add_inline_script('acf-input') — that can be dropped
- * if the handle is not registered yet.
+ * Whether the current admin screen is the block editor.
  */
-add_action('admin_head', function () {
+function tragency_is_block_editor_screen() {
   if (!function_exists('get_current_screen')) {
+    return false;
+  }
+
+  $screen = get_current_screen();
+  if (!$screen) {
+    return false;
+  }
+
+  if (method_exists($screen, 'is_block_editor')) {
+    return (bool) $screen->is_block_editor();
+  }
+
+  return !empty($screen->is_block_editor);
+}
+
+/**
+ * Enqueue WordPress editor + Quicktags for ACF WYSIWYG in Gutenberg.
+ */
+add_action('enqueue_block_editor_assets', function () {
+  wp_enqueue_editor();
+  wp_enqueue_script('quicktags');
+  wp_enqueue_style('editor-buttons');
+});
+
+/**
+ * Register the dummy acf_content editor so WP includes it in tinyMCEPreInit.
+ * Must run before admin_print_footer_scripts.
+ */
+add_action('admin_footer', function () {
+  if (!tragency_is_block_editor_screen()) {
     return;
   }
-  $screen = get_current_screen();
-  if (!$screen || empty($screen->is_block_editor)) {
+
+  // Discard HTML to avoid duplicate visible editors; settings are still registered.
+  ob_start();
+  wp_editor('', 'acf_content', [
+    'tinymce'   => true,
+    'quicktags' => true,
+    'media_buttons' => false,
+    'textarea_rows' => 3,
+  ]);
+  ob_end_clean();
+}, 1);
+
+/**
+ * Print ACF WYSIWYG fix early, and again after WP prints tinyMCEPreInit.
+ */
+add_action('admin_head', function () {
+  if (!tragency_is_block_editor_screen()) {
     return;
   }
 
@@ -251,20 +294,19 @@ add_action('admin_head', function () {
   echo '</script>';
 }, 1);
 
-/**
- * Delay WYSIWYG init in the block editor so our TinyMCE defaults patch
- * is in place before ACF builds Quicktags.
- */
-add_filter('acf/prepare_field/type=wysiwyg', function ($field) {
-  if (!is_admin() || !function_exists('get_current_screen')) {
-    return $field;
+add_action('admin_print_footer_scripts', function () {
+  if (!tragency_is_block_editor_screen()) {
+    return;
   }
 
-  $screen = get_current_screen();
-  if ($screen && !empty($screen->is_block_editor)) {
-    $field['delay'] = 1;
+  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
+  if (!is_readable($js)) {
+    return;
   }
 
-  return $field;
-});
+  // Run AFTER core prints `var tinyMCEPreInit = ...` so we can re-seed acf_content.
+  echo '<script id="tragency-acf-wysiwyg-defaults-late">';
+  echo file_get_contents($js);
+  echo '</script>';
+}, 100);
 
