@@ -1,1 +1,7 @@
-@import "./app.scss";
+/* Minimal valid CSS so Vite emits a .css file (not a .js stub).
+ * Block preview styles in the editor come from Bootstrap + custom-classes
+ * via enqueue_block_editor_assets — do NOT import full app.scss here,
+ * it breaks ACF field UI. */
+.editor-styles-wrapper {
+  /* placeholder for editor canvas */
+}

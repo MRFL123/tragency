@@ -121,11 +121,103 @@ function custom_styles_admin() {
 add_action('admin_head', 'custom_styles_admin');
 
 /**
- * Editor chrome assets only — do NOT load Bootstrap here.
- * Bootstrap in enqueue_block_editor_assets breaks ACF field UI in the sidebar.
- * Theme/block preview styles are injected into the canvas iframe via app/setup.php.
+ * Block editor assets for ACF block previews.
+ * Bootstrap is needed so backend block templates look correct.
+ * ACF field resets below undo Bootstrap form styles on field UI only.
  */
 function gutenbergtheme_editor_styles() {
-  wp_enqueue_style('custom/custom-classes', get_theme_file_uri() . '/framework/assets/custom-classes.css', false, null);
+  wp_enqueue_style(
+    'gutenbergtheme-blocks-style',
+    'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+    [],
+    null
+  );
+  wp_enqueue_style(
+    'custom/custom-classes',
+    get_theme_file_uri() . '/framework/assets/custom-classes.css',
+    [],
+    null
+  );
+
+  $acf_fix = <<<'CSS'
+/* Undo Bootstrap form styles on ACF fields only */
+.acf-fields input[type="text"],
+.acf-fields input[type="password"],
+.acf-fields input[type="email"],
+.acf-fields input[type="url"],
+.acf-fields input[type="number"],
+.acf-fields input[type="search"],
+.acf-fields input[type="tel"],
+.acf-fields input[type="date"],
+.acf-fields textarea,
+.acf-fields select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 8px;
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  background-color: #fff;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  box-shadow: none;
 }
-add_action( 'enqueue_block_editor_assets', 'gutenbergtheme_editor_styles' );
+.acf-fields textarea {
+  padding: 8px;
+  line-height: 1.5;
+  min-height: 80px;
+}
+.acf-fields .acf-label label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+  color: #1e1e1e;
+}
+.acf-fields .select2-container {
+  width: 100% !important;
+}
+.acf-fields .acf-button,
+.acf-fields .button {
+  font-size: 13px;
+  line-height: 2;
+  height: auto;
+  padding: 0 10px;
+  text-transform: none;
+}
+.acf-fields .form-control,
+.acf-fields .form-select {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0 8px;
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  background-color: #fff;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+}
+.acf-fields .row {
+  display: block;
+  margin: 0;
+}
+.acf-fields [class*="col-"] {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  float: none;
+}
+CSS;
+
+  wp_register_style('tragency-acf-field-reset', false, ['gutenbergtheme-blocks-style']);
+  wp_enqueue_style('tragency-acf-field-reset');
+  wp_add_inline_style('tragency-acf-field-reset', $acf_fix);
+}
+add_action('enqueue_block_editor_assets', 'gutenbergtheme_editor_styles');
+
