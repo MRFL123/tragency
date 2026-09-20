@@ -121,26 +121,6 @@ function custom_styles_admin() {
 add_action('admin_head', 'custom_styles_admin');
 
 /**
- * Whether the current admin screen is the block editor.
- */
-function tragency_is_block_editor_screen() {
-  if (!function_exists('get_current_screen')) {
-    return false;
-  }
-
-  $screen = get_current_screen();
-  if (!$screen) {
-    return false;
-  }
-
-  if (method_exists($screen, 'is_block_editor')) {
-    return (bool) $screen->is_block_editor();
-  }
-
-  return !empty($screen->is_block_editor);
-}
-
-/**
  * Resolve a Vite-built CSS URL (must be a real .css file).
  */
 function tragency_vite_css_url($entry) {
@@ -160,7 +140,8 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * Safe CSS for the editor chrome / ACF sidebar (NO Bootstrap / app.css).
+ * Static theme assets for the editor (no Bootstrap / app.css).
+ * app.css must NOT load on the editor chrome — it breaks TinyMCE (Visual/Text, bold, etc).
  */
 function tragency_block_editor_safe_css_urls() {
   if (function_exists('acf_enqueue_scripts')) {
@@ -171,10 +152,12 @@ function tragency_block_editor_safe_css_urls() {
   $theme_dir = get_template_directory();
   $urls = [];
 
-  foreach ([
+  $static_paths = [
     'framework/assets/custom-classes.css',
     'framework/assets/editor-preview.css',
-  ] as $relative) {
+  ];
+
+  foreach ($static_paths as $relative) {
     $full = $theme_dir . '/' . $relative;
     if (!is_readable($full)) {
       continue;
@@ -200,21 +183,25 @@ function tragency_block_editor_safe_css_urls() {
 }
 
 /**
- * Full CSS for the Gutenberg canvas iframe (block previews).
- * Includes app.css — iframe only, not the ACF sidebar.
+ * Full CSS for the Gutenberg canvas iframe only (block previews).
+ * editor-preview.css is last so TinyMCE content-box beats Bootstrap.
  */
 function tragency_block_editor_canvas_css_urls() {
+  if (function_exists('acf_enqueue_scripts')) {
+    acf_enqueue_scripts();
+  }
+
   $urls = [];
+  $theme_uri = get_template_directory_uri();
+  $theme_dir = get_template_directory();
 
   $app_css = tragency_vite_css_url('resources/css/app.scss');
   if ($app_css) {
     $urls[] = $app_css;
   }
 
-  $theme_uri = get_template_directory_uri();
-  $theme_dir = get_template_directory();
-
   foreach ([
+    'framework/assets/custom-classes.css',
     'framework/assets/slick/slick.css',
     'framework/assets/slick/slick-theme.css',
   ] as $relative) {
@@ -225,15 +212,58 @@ function tragency_block_editor_canvas_css_urls() {
     $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
   }
 
-  return array_values(array_unique(array_merge($urls, tragency_block_editor_safe_css_urls())));
+  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
+    if (!isset(wp_styles()->registered[$handle])) {
+      continue;
+    }
+    $src = wp_styles()->registered[$handle]->src;
+    if (!$src) {
+      continue;
+    }
+    if (!preg_match('#^https?://#i', $src)) {
+      $src = site_url($src);
+    }
+    $urls[] = $src;
+  }
+
+  $preview = $theme_dir . '/framework/assets/editor-preview.css';
+  if (is_readable($preview)) {
+    $urls[] = $theme_uri . '/framework/assets/editor-preview.css?ver=' . filemtime($preview);
+  }
+
+  return array_values(array_unique($urls));
 }
 
 /**
- * Sidebar / editor chrome: ACF styles only (keeps TinyMCE usable).
- * Do NOT load app.css / Bootstrap here — it breaks TinyMCE box-sizing.
+ * Whether the current admin screen is the block editor.
  */
-add_action('enqueue_block_editor_assets', function () {
-  // Force ACF's hidden #acf_content wp_editor (seeds tinyMCEPreInit).
+function tragency_is_block_editor_screen() {
+  if (!function_exists('get_current_screen')) {
+    return false;
+  }
+
+  $screen = get_current_screen();
+  if (!$screen) {
+    return false;
+  }
+
+  if (method_exists($screen, 'is_block_editor')) {
+    return (bool) $screen->is_block_editor();
+  }
+
+  return !empty($screen->is_block_editor);
+}
+
+/**
+ * Enqueue ACF + TinyMCE on the editor chrome (sidebar fields).
+ * Do NOT enqueue app.css / Bootstrap here.
+ */
+function tragency_enqueue_block_editor_theme_styles() {
+  if (!is_admin()) {
+    return;
+  }
+
+  // Seeds #acf-hidden-wp-editor → tinyMCEPreInit.mceInit/qtInit.acf_content
   if (function_exists('acf_enqueue_uploader')) {
     acf_enqueue_uploader();
   }
@@ -241,9 +271,11 @@ add_action('enqueue_block_editor_assets', function () {
     acf_enqueue_scripts();
   }
 
-  wp_enqueue_editor();
+  // Ensures switchEditors + TinyMCE scripts are available for ACF WYSIWYG.
+  if (function_exists('wp_enqueue_editor')) {
+    wp_enqueue_editor();
+  }
   wp_enqueue_script('quicktags');
-  wp_enqueue_script('wplink');
   wp_enqueue_style('editor-buttons');
 
   foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
@@ -261,15 +293,16 @@ add_action('enqueue_block_editor_assets', function () {
     wp_enqueue_script(
       'tragency-acf-wysiwyg-defaults',
       get_template_directory_uri() . '/framework/assets/acf-wysiwyg-defaults.js',
-      ['acf-input', 'editor', 'quicktags'],
+      ['jquery', 'acf-input', 'editor', 'quicktags'],
       filemtime($js),
       true
     );
   }
-});
+}
+add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_styles');
 
 /**
- * Canvas iframe: full theme CSS for block previews.
+ * Inject theme CSS into the canvas iframe only (block previews look correct).
  */
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
@@ -286,24 +319,7 @@ add_filter('block_editor_settings_all', function ($settings) {
 }, 20);
 
 /**
- * Block-editor WYSIWYG: Visual + delay (click-to-init is more reliable in Gutenberg).
- * Note: ACF JS still enables Quicktags unless we patch it — see acf-wysiwyg-defaults.js.
- */
-add_filter('acf/prepare_field/type=wysiwyg', function ($field) {
-  if (!tragency_is_block_editor_screen()) {
-    return $field;
-  }
-
-  $field['tabs'] = 'visual';
-  $field['toolbar'] = 'full';
-  $field['media_upload'] = 1;
-  $field['delay'] = 1;
-
-  return $field;
-});
-
-/**
- * Safety-net seed after WP prints tinyMCEPreInit (in case ACF's hidden editor was skipped).
+ * After WP prints tinyMCEPreInit, guarantee acf_content defaults exist.
  */
 add_action('admin_print_footer_scripts', function () {
   if (!tragency_is_block_editor_screen()) {
@@ -315,33 +331,25 @@ add_action('admin_print_footer_scripts', function () {
     window.tinyMCEPreInit = window.tinyMCEPreInit || { mceInit: {}, qtInit: {}, ref: {}, load_ext: function () {} };
     window.tinyMCEPreInit.mceInit = window.tinyMCEPreInit.mceInit || {};
     window.tinyMCEPreInit.qtInit = window.tinyMCEPreInit.qtInit || {};
-    if (!window.tinyMCEPreInit.qtInit.acf_content) {
+    if (!window.tinyMCEPreInit.qtInit.acf_content || !window.tinyMCEPreInit.qtInit.acf_content.buttons) {
       window.tinyMCEPreInit.qtInit.acf_content = {
         id: 'acf_content',
         buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
       };
     }
     if (!window.tinyMCEPreInit.mceInit.acf_content) {
-      var donor = null;
-      for (var k in window.tinyMCEPreInit.mceInit) {
-        if (Object.prototype.hasOwnProperty.call(window.tinyMCEPreInit.mceInit, k) && k !== 'acf_content') {
-          donor = window.tinyMCEPreInit.mceInit[k];
-          break;
-        }
-      }
-      window.tinyMCEPreInit.mceInit.acf_content = donor
-        ? Object.assign({}, donor, { selector: '#acf_content', body_class: 'acf_content' })
-        : {
-            selector: '#acf_content',
-            resize: 'vertical',
-            menubar: false,
-            wpautop: true,
-            indent: false,
-            toolbar1: 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,wp_more,spellchecker,fullscreen,wp_adv',
-            toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
-          };
+      window.tinyMCEPreInit.mceInit.acf_content = {
+        selector: '#acf_content',
+        resize: 'vertical',
+        menubar: false,
+        wpautop: true,
+        indent: false,
+        toolbar1: 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,wp_more,spellchecker,fullscreen,wp_adv',
+        toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+      };
     }
   })();
   </script>
   <?php
-}, 5);
+}, 50);
+
