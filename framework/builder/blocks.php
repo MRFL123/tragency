@@ -23,9 +23,35 @@ add_filter('block_categories', function ($categories, $post) {
 // Initialize ACF blocks
 add_action('acf/init', 'my_acf_init');
 
-// Prefer ACF Blocks v3 when the installed ACF version supports it.
+/**
+ * ACF Blocks V3 (Expanded Editor pencil) needs ACF PRO >= 6.6.
+ * Production currently ships 6.4.x which hides the edit icon whenever
+ * api_version > 2 and has no Expanded Editor UI.
+ */
+function tragency_acf_supports_blocks_v3() {
+  return defined('ACF_VERSION') && version_compare(ACF_VERSION, '6.6', '>=');
+}
+
+// Opt all blocks into ACF Blocks v3 only when the plugin can render it.
 add_filter('acf/blocks/default_block_version', function ($version) {
-  return 3;
+  return tragency_acf_supports_blocks_v3() ? 3 : 2;
+});
+
+// Remind admins that the edit/pencil icon requires an ACF upgrade.
+add_action('admin_notices', function () {
+  if (!function_exists('tragency_is_block_editor_screen') || !tragency_is_block_editor_screen()) {
+    return;
+  }
+  if (tragency_acf_supports_blocks_v3() || !current_user_can('update_plugins')) {
+    return;
+  }
+  $current = defined('ACF_VERSION') ? ACF_VERSION : 'unknown';
+  echo '<div class="notice notice-warning"><p>';
+  echo esc_html(sprintf(
+    'ACF Blocks edit icon (Expanded Editor) requires ACF PRO 6.6+. Current version: %s. Upgrade ACF PRO to restore the pencil icon with api_version 3.',
+    $current
+  ));
+  echo '</p></div>';
 });
 
 if (!function_exists('my_acf_init')) {
@@ -209,17 +235,18 @@ function my_acf_init()
     ],
   ];
 
-  // Register blocks as WordPress API v3 + ACF Blocks v3.
+  // WP Block API v3 always (iframe). ACF Blocks v3 only on ACF >= 6.6.
+  $acf_blocks_v3 = tragency_acf_supports_blocks_v3();
+
   foreach ($blocks as $block) {
     $args = array_merge($block, [
       'render_callback'   => 'my_acf_block_render_callback',
       'category'          => 'Mirrorful-builder',
-      // Block API v3 (iframe editor) + ACF Blocks v3.
       'api_version'       => 3,
-      'acf_block_version' => 3,
-      // Default preview in canvas; pencil/edit icon toggles field editing.
+      'acf_block_version' => $acf_blocks_v3 ? 3 : 2,
       'mode'              => 'preview',
       'supports'          => [
+        // V3 ignores mode toggle; pencil opens Expanded Editor instead.
         'mode'  => true,
         'align' => false,
         'jsx'   => true,
