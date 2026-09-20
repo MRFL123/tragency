@@ -140,10 +140,10 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * CSS URLs needed for ACF block previews in the Gutenberg canvas.
- * Same approach as mefic: theme CSS + ACF input CSS + editor-preview fixes.
+ * Static theme assets for the editor (no Bootstrap / app.css).
+ * app.css must NOT load on the editor chrome — it breaks TinyMCE (Visual/Text, bold, etc).
  */
-function tragency_block_editor_css_urls() {
+function tragency_block_editor_safe_css_urls() {
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
@@ -152,18 +152,8 @@ function tragency_block_editor_css_urls() {
   $theme_dir = get_template_directory();
   $urls = [];
 
-  $app_css = tragency_vite_css_url('resources/css/app.scss');
-  if ($app_css) {
-    $urls[] = $app_css;
-  } else {
-    // Fallback if Vite manifest is unavailable.
-    $urls[] = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
-  }
-
   $static_paths = [
     'framework/assets/custom-classes.css',
-    'framework/assets/slick/slick.css',
-    'framework/assets/slick/slick-theme.css',
     'framework/assets/editor-preview.css',
   ];
 
@@ -193,7 +183,38 @@ function tragency_block_editor_css_urls() {
 }
 
 /**
- * Enqueue theme + ACF styles for the block editor (mefic pattern).
+ * Full CSS for the Gutenberg canvas iframe only (block previews).
+ * Includes app.css / Bootstrap — safe inside the iframe, not on ACF fields chrome.
+ */
+function tragency_block_editor_canvas_css_urls() {
+  $urls = [];
+
+  $app_css = tragency_vite_css_url('resources/css/app.scss');
+  if ($app_css) {
+    $urls[] = $app_css;
+  }
+
+  $theme_uri = get_template_directory_uri();
+  $theme_dir = get_template_directory();
+
+  foreach ([
+    'framework/assets/slick/slick.css',
+    'framework/assets/slick/slick-theme.css',
+    'framework/assets/editor-preview.css',
+  ] as $relative) {
+    $full = $theme_dir . '/' . $relative;
+    if (!is_readable($full)) {
+      continue;
+    }
+    $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
+  }
+
+  return array_values(array_unique(array_merge($urls, tragency_block_editor_safe_css_urls())));
+}
+
+/**
+ * Enqueue ACF + safe resets on the editor chrome (sidebar fields / TinyMCE).
+ * Do NOT enqueue app.css here.
  */
 function tragency_enqueue_block_editor_theme_styles() {
   if (!is_admin()) {
@@ -210,44 +231,21 @@ function tragency_enqueue_block_editor_theme_styles() {
     }
   }
 
-  foreach (tragency_block_editor_css_urls() as $index => $url) {
-    wp_enqueue_style('tragency-editor-theme-' . $index, $url, [], null);
+  foreach (tragency_block_editor_safe_css_urls() as $index => $url) {
+    wp_enqueue_style('tragency-editor-safe-' . $index, $url, [], null);
   }
 }
-add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
+add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_theme_styles');
 
 /**
- * Also load editor-preview resets on the editor chrome (sidebar ACF fields / WYSIWYG).
- */
-function tragency_enqueue_block_editor_sidebar_fixes() {
-  $path = get_template_directory() . '/framework/assets/editor-preview.css';
-  if (!is_readable($path)) {
-    return;
-  }
-
-  $deps = [];
-  if (wp_style_is('acf-input', 'registered')) {
-    $deps[] = 'acf-input';
-  }
-
-  wp_enqueue_style(
-    'tragency-editor-preview-sidebar',
-    get_template_directory_uri() . '/framework/assets/editor-preview.css',
-    $deps,
-    filemtime($path)
-  );
-}
-add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_sidebar_fixes');
-
-/**
- * Also inject the same CSS into the editor iframe styles list.
+ * Inject theme CSS into the canvas iframe only (block previews look correct).
  */
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
     $settings['styles'] = [];
   }
 
-  foreach (tragency_block_editor_css_urls() as $url) {
+  foreach (tragency_block_editor_canvas_css_urls() as $url) {
     $settings['styles'][] = [
       'css' => '@import url("' . esc_url($url) . '");',
     ];
