@@ -198,6 +198,7 @@ function tragency_block_editor_css_urls() {
 /**
  * Enqueue theme + ACF styles for the block editor (mefic pattern).
  * Uses enqueue_block_assets so styles enter the editor iframe on WP 6.3+.
+ * Do NOT enqueue these via enqueue_block_editor_assets (triggers iframe warnings).
  */
 function tragency_enqueue_block_editor_theme_styles() {
   if (!is_admin()) {
@@ -215,12 +216,17 @@ function tragency_enqueue_block_editor_theme_styles() {
   }
 
   foreach (tragency_block_editor_css_urls() as $index => $url) {
-    // Skip non-CSS URLs (guards against Vite returning .js on bad builds)
     $path = is_string($url) ? (parse_url($url, PHP_URL_PATH) ?: '') : '';
     if (!$path || !str_ends_with($path, '.css')) {
       continue;
     }
-    wp_enqueue_style('tragency-editor-theme-' . $index, $url, [], null);
+    // Stable handle for editor-preview so it is never double-enqueued elsewhere
+    $handle = str_contains($path, 'editor-preview.css')
+      ? 'tragency-editor-preview'
+      : 'tragency-editor-theme-' . $index;
+    if (!wp_style_is($handle, 'enqueued')) {
+      wp_enqueue_style($handle, $url, [], null);
+    }
   }
 }
 add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
@@ -267,8 +273,7 @@ function tragency_is_block_editor_screen() {
 }
 
 /**
- * Editor chrome scripts for ACF WYSIWYG (TinyMCE / Quicktags).
- * Also load editor-preview.css on the sidebar (fields live outside the iframe in preview mode).
+ * Editor chrome scripts only (no CSS — CSS goes through enqueue_block_assets).
  */
 add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
@@ -281,23 +286,6 @@ add_action('enqueue_block_editor_assets', function () {
     wp_enqueue_editor();
   }
   wp_enqueue_script('quicktags');
-  wp_enqueue_style('editor-buttons');
-
-  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
-    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
-      wp_enqueue_style($handle);
-    }
-  }
-
-  $preview = get_template_directory() . '/framework/assets/editor-preview.css';
-  if (is_readable($preview)) {
-    wp_enqueue_style(
-      'tragency-editor-preview-sidebar',
-      get_template_directory_uri() . '/framework/assets/editor-preview.css',
-      ['acf-input'],
-      filemtime($preview)
-    );
-  }
 
   $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
   if (is_readable($js)) {
