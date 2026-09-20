@@ -207,6 +207,13 @@ function my_acf_init()
     acf_register_block(array_merge($block, [
       'render_callback' => 'my_acf_block_render_callback',
       'category'        => 'Mirrorful-builder',
+      // Keep ACF fields in the sidebar only — frontend Bootstrap in the
+      // editor canvas must not restyle the field UI.
+      'mode'            => 'preview',
+      'supports'        => [
+        'mode'  => false,
+        'align' => false,
+      ],
     ]));
   }
 }
