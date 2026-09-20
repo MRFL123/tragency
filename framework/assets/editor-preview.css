@@ -1,0 +1,59 @@
+/* Gutenberg canvas: match the front-end block layout. */
+.editor-styles-wrapper {
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+.editor-styles-wrapper .is-root-container,
+.editor-styles-wrapper .block-editor-block-list__layout {
+  padding: 0 !important;
+}
+
+.editor-styles-wrapper .wp-block,
+.editor-styles-wrapper .is-root-container > .wp-block,
+.wp-block[data-type^="acf/"],
+.acf-block-component,
+.acf-block-preview {
+  max-width: none !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.acf-block-preview,
+.acf-block-preview > section {
+  overflow: hidden;
+}
+
+.editor-styles-wrapper img,
+.editor-styles-wrapper iframe,
+.editor-styles-wrapper video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Keep ACF field UI readable inside the iframe. */
+.acf-block-fields,
+.acf-fields,
+.acf-block-component .acf-fields,
+.acf-block-body {
+  background: #fff !important;
+  color: #1d2327 !important;
+}
+
+.acf-block-fields *,
+.acf-fields *:not(i):not(svg) {
+  color: inherit;
+}
+
+.acf-block-fields input,
+.acf-block-fields textarea,
+.acf-block-fields select,
+.acf-fields input,
+.acf-fields textarea,
+.acf-fields select {
+  color: #2c3338 !important;
+  background-color: #fff !important;
+  border: 1px solid #8c8f94 !important;
+  box-shadow: none !important;
+}

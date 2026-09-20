@@ -121,103 +121,115 @@ function custom_styles_admin() {
 add_action('admin_head', 'custom_styles_admin');
 
 /**
- * Block editor assets for ACF block previews.
- * Bootstrap is needed so backend block templates look correct.
- * ACF field resets below undo Bootstrap form styles on field UI only.
+ * Resolve a Vite-built CSS URL (must be a real .css file).
  */
-function gutenbergtheme_editor_styles() {
-  wp_enqueue_style(
-    'gutenbergtheme-blocks-style',
-    'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
-    [],
-    null
-  );
-  wp_enqueue_style(
-    'custom/custom-classes',
-    get_theme_file_uri() . '/framework/assets/custom-classes.css',
-    [],
-    null
-  );
+function tragency_vite_css_url($entry) {
+  try {
+    if (!class_exists(\Illuminate\Support\Facades\Vite::class)) {
+      return null;
+    }
+    $url = \Illuminate\Support\Facades\Vite::asset($entry);
+    if (is_string($url) && str_contains($url, '.css')) {
+      return $url;
+    }
+  } catch (\Throwable $e) {
+    // Missing Vite assets should not break the editor.
+  }
 
-  $acf_fix = <<<'CSS'
-/* Undo Bootstrap form styles on ACF fields only */
-.acf-fields input[type="text"],
-.acf-fields input[type="password"],
-.acf-fields input[type="email"],
-.acf-fields input[type="url"],
-.acf-fields input[type="number"],
-.acf-fields input[type="search"],
-.acf-fields input[type="tel"],
-.acf-fields input[type="date"],
-.acf-fields textarea,
-.acf-fields select {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  min-height: 30px;
-  margin: 0;
-  padding: 0 8px;
-  font-size: 14px;
-  line-height: 2;
-  color: #2c3338;
-  background-color: #fff;
-  border: 1px solid #8c8f94;
-  border-radius: 4px;
-  box-shadow: none;
+  return null;
 }
-.acf-fields textarea {
-  padding: 8px;
-  line-height: 1.5;
-  min-height: 80px;
-}
-.acf-fields .acf-label label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin: 0 0 4px;
-  color: #1e1e1e;
-}
-.acf-fields .select2-container {
-  width: 100% !important;
-}
-.acf-fields .acf-button,
-.acf-fields .button {
-  font-size: 13px;
-  line-height: 2;
-  height: auto;
-  padding: 0 10px;
-  text-transform: none;
-}
-.acf-fields .form-control,
-.acf-fields .form-select {
-  display: block;
-  width: 100%;
-  height: auto;
-  padding: 0 8px;
-  font-size: 14px;
-  line-height: 2;
-  color: #2c3338;
-  background-color: #fff;
-  border: 1px solid #8c8f94;
-  border-radius: 4px;
-}
-.acf-fields .row {
-  display: block;
-  margin: 0;
-}
-.acf-fields [class*="col-"] {
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  float: none;
-}
-CSS;
 
-  wp_register_style('tragency-acf-field-reset', false, ['gutenbergtheme-blocks-style']);
-  wp_enqueue_style('tragency-acf-field-reset');
-  wp_add_inline_style('tragency-acf-field-reset', $acf_fix);
+/**
+ * CSS URLs needed for ACF block previews in the Gutenberg canvas.
+ * Same approach as mefic: theme CSS + ACF input CSS + editor-preview fixes.
+ */
+function tragency_block_editor_css_urls() {
+  if (function_exists('acf_enqueue_scripts')) {
+    acf_enqueue_scripts();
+  }
+
+  $theme_uri = get_template_directory_uri();
+  $theme_dir = get_template_directory();
+  $urls = [];
+
+  $app_css = tragency_vite_css_url('resources/css/app.scss');
+  if ($app_css) {
+    $urls[] = $app_css;
+  } else {
+    // Fallback if Vite manifest is unavailable.
+    $urls[] = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+  }
+
+  $static_paths = [
+    'framework/assets/custom-classes.css',
+    'framework/assets/slick/slick.css',
+    'framework/assets/slick/slick-theme.css',
+    'framework/assets/editor-preview.css',
+  ];
+
+  foreach ($static_paths as $relative) {
+    $full = $theme_dir . '/' . $relative;
+    if (!is_readable($full)) {
+      continue;
+    }
+    $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
+  }
+
+  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
+    if (!isset(wp_styles()->registered[$handle])) {
+      continue;
+    }
+    $src = wp_styles()->registered[$handle]->src;
+    if (!$src) {
+      continue;
+    }
+    if (!preg_match('#^https?://#i', $src)) {
+      $src = site_url($src);
+    }
+    $urls[] = $src;
+  }
+
+  return array_values(array_unique($urls));
 }
-add_action('enqueue_block_editor_assets', 'gutenbergtheme_editor_styles');
+
+/**
+ * Enqueue theme + ACF styles for the block editor (mefic pattern).
+ */
+function tragency_enqueue_block_editor_theme_styles() {
+  if (!is_admin()) {
+    return;
+  }
+
+  if (function_exists('acf_enqueue_scripts')) {
+    acf_enqueue_scripts();
+  }
+
+  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
+    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
+      wp_enqueue_style($handle);
+    }
+  }
+
+  foreach (tragency_block_editor_css_urls() as $index => $url) {
+    wp_enqueue_style('tragency-editor-theme-' . $index, $url, [], null);
+  }
+}
+add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
+
+/**
+ * Also inject the same CSS into the editor iframe styles list.
+ */
+add_filter('block_editor_settings_all', function ($settings) {
+  if (!isset($settings['styles']) || !is_array($settings['styles'])) {
+    $settings['styles'] = [];
+  }
+
+  foreach (tragency_block_editor_css_urls() as $url) {
+    $settings['styles'][] = [
+      'css' => '@import url("' . esc_url($url) . '");',
+    ];
+  }
+
+  return $settings;
+}, 20);
 

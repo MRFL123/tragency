@@ -16,16 +16,13 @@ use Illuminate\Support\Facades\Vite;
 add_filter('block_editor_settings_all', function ($settings) {
     try {
         $style = Vite::asset('resources/css/editor.scss');
-        $path = parse_url($style, PHP_URL_PATH) ?: $style;
-
-        // Only inject real CSS — empty Vite CSS entries can emit a .js stub.
-        if ($style && str_ends_with($path, '.css')) {
+        if (is_string($style) && str_contains($style, '.css')) {
             $settings['styles'][] = [
                 'css' => "@import url('{$style}')",
             ];
         }
     } catch (\Throwable $e) {
-        // Ignore missing Vite assets so the editor still loads.
+        // Missing Vite editor CSS should not 500 the block editor.
     }
 
     return $settings;
@@ -42,11 +39,12 @@ add_filter('admin_head', function () {
     }
 
     try {
-        $dependencies = json_decode(Vite::content('editor.deps.json')) ?: [];
-
-        foreach ($dependencies as $dependency) {
-            if (! wp_script_is($dependency)) {
-                wp_enqueue_script($dependency);
+        $dependencies = json_decode(Vite::content('editor.deps.json'));
+        if (is_array($dependencies)) {
+            foreach ($dependencies as $dependency) {
+                if (! wp_script_is($dependency)) {
+                    wp_enqueue_script($dependency);
+                }
             }
         }
 
@@ -54,7 +52,7 @@ add_filter('admin_head', function () {
             'resources/js/editor.js',
         ])->toHtml();
     } catch (\Throwable $e) {
-        // Ignore missing Vite assets so the editor still loads.
+        // Missing Vite editor assets should not 500 wp-admin.
     }
 });
 
