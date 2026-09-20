@@ -121,6 +121,26 @@ function custom_styles_admin() {
 add_action('admin_head', 'custom_styles_admin');
 
 /**
+ * Whether the current admin screen is the block editor.
+ */
+function tragency_is_block_editor_screen() {
+  if (!function_exists('get_current_screen')) {
+    return false;
+  }
+
+  $screen = get_current_screen();
+  if (!$screen) {
+    return false;
+  }
+
+  if (method_exists($screen, 'is_block_editor')) {
+    return (bool) $screen->is_block_editor();
+  }
+
+  return !empty($screen->is_block_editor);
+}
+
+/**
  * Resolve a Vite-built CSS URL (must be a real .css file).
  */
 function tragency_vite_css_url($entry) {
@@ -140,9 +160,9 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * CSS URLs for ACF block previews (mefic pattern).
+ * Safe CSS for the editor chrome / ACF sidebar (NO Bootstrap / app.css).
  */
-function tragency_block_editor_css_urls() {
+function tragency_block_editor_safe_css_urls() {
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
@@ -151,15 +171,8 @@ function tragency_block_editor_css_urls() {
   $theme_dir = get_template_directory();
   $urls = [];
 
-  $app_css = tragency_vite_css_url('resources/css/app.scss');
-  if ($app_css) {
-    $urls[] = $app_css;
-  }
-
   foreach ([
     'framework/assets/custom-classes.css',
-    'framework/assets/slick/slick.css',
-    'framework/assets/slick/slick-theme.css',
     'framework/assets/editor-preview.css',
   ] as $relative) {
     $full = $theme_dir . '/' . $relative;
@@ -187,16 +200,51 @@ function tragency_block_editor_css_urls() {
 }
 
 /**
- * Enqueue theme + ACF styles for the block editor (same hook as mefic).
+ * Full CSS for the Gutenberg canvas iframe (block previews).
+ * Includes app.css — iframe only, not the ACF sidebar.
  */
-function tragency_enqueue_block_editor_theme_styles() {
-  if (!is_admin()) {
-    return;
+function tragency_block_editor_canvas_css_urls() {
+  $urls = [];
+
+  $app_css = tragency_vite_css_url('resources/css/app.scss');
+  if ($app_css) {
+    $urls[] = $app_css;
   }
 
+  $theme_uri = get_template_directory_uri();
+  $theme_dir = get_template_directory();
+
+  foreach ([
+    'framework/assets/slick/slick.css',
+    'framework/assets/slick/slick-theme.css',
+  ] as $relative) {
+    $full = $theme_dir . '/' . $relative;
+    if (!is_readable($full)) {
+      continue;
+    }
+    $urls[] = $theme_uri . '/' . $relative . '?ver=' . filemtime($full);
+  }
+
+  return array_values(array_unique(array_merge($urls, tragency_block_editor_safe_css_urls())));
+}
+
+/**
+ * Sidebar / editor chrome: ACF styles only (keeps TinyMCE usable).
+ * Do NOT load app.css / Bootstrap here — it breaks TinyMCE box-sizing.
+ */
+add_action('enqueue_block_editor_assets', function () {
+  // Force ACF's hidden #acf_content wp_editor (seeds tinyMCEPreInit).
+  if (function_exists('acf_enqueue_uploader')) {
+    acf_enqueue_uploader();
+  }
   if (function_exists('acf_enqueue_scripts')) {
     acf_enqueue_scripts();
   }
+
+  wp_enqueue_editor();
+  wp_enqueue_script('quicktags');
+  wp_enqueue_script('wplink');
+  wp_enqueue_style('editor-buttons');
 
   foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
     if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
@@ -204,21 +252,31 @@ function tragency_enqueue_block_editor_theme_styles() {
     }
   }
 
-  foreach (tragency_block_editor_css_urls() as $index => $url) {
-    wp_enqueue_style('tragency-editor-theme-' . $index, $url, [], null);
+  foreach (tragency_block_editor_safe_css_urls() as $index => $url) {
+    wp_enqueue_style('tragency-editor-safe-' . $index, $url, [], null);
   }
-}
-add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
+
+  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
+  if (is_readable($js)) {
+    wp_enqueue_script(
+      'tragency-acf-wysiwyg-defaults',
+      get_template_directory_uri() . '/framework/assets/acf-wysiwyg-defaults.js',
+      ['acf-input', 'editor', 'quicktags'],
+      filemtime($js),
+      true
+    );
+  }
+});
 
 /**
- * Inject the same CSS into the editor iframe styles list.
+ * Canvas iframe: full theme CSS for block previews.
  */
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
     $settings['styles'] = [];
   }
 
-  foreach (tragency_block_editor_css_urls() as $url) {
+  foreach (tragency_block_editor_canvas_css_urls() as $url) {
     $settings['styles'][] = [
       'css' => '@import url("' . esc_url($url) . '");',
     ];
@@ -228,85 +286,62 @@ add_filter('block_editor_settings_all', function ($settings) {
 }, 20);
 
 /**
- * Whether the current admin screen is the block editor.
+ * Block-editor WYSIWYG: Visual + delay (click-to-init is more reliable in Gutenberg).
+ * Note: ACF JS still enables Quicktags unless we patch it — see acf-wysiwyg-defaults.js.
  */
-function tragency_is_block_editor_screen() {
-  if (!function_exists('get_current_screen')) {
-    return false;
+add_filter('acf/prepare_field/type=wysiwyg', function ($field) {
+  if (!tragency_is_block_editor_screen()) {
+    return $field;
   }
 
-  $screen = get_current_screen();
-  if (!$screen) {
-    return false;
-  }
+  $field['tabs'] = 'visual';
+  $field['toolbar'] = 'full';
+  $field['media_upload'] = 1;
+  $field['delay'] = 1;
 
-  if (method_exists($screen, 'is_block_editor')) {
-    return (bool) $screen->is_block_editor();
-  }
-
-  return !empty($screen->is_block_editor);
-}
-
-/**
- * Enqueue WordPress editor + Quicktags for ACF WYSIWYG in Gutenberg.
- */
-add_action('enqueue_block_editor_assets', function () {
-  wp_enqueue_editor();
-  wp_enqueue_script('quicktags');
-  wp_enqueue_style('editor-buttons');
+  return $field;
 });
 
 /**
- * Register the dummy acf_content editor so WP includes it in tinyMCEPreInit.
- * Must run before admin_print_footer_scripts.
+ * Safety-net seed after WP prints tinyMCEPreInit (in case ACF's hidden editor was skipped).
  */
-add_action('admin_footer', function () {
-  if (!tragency_is_block_editor_screen()) {
-    return;
-  }
-
-  // Discard HTML to avoid duplicate visible editors; settings are still registered.
-  ob_start();
-  wp_editor('', 'acf_content', [
-    'tinymce'   => true,
-    'quicktags' => true,
-    'media_buttons' => false,
-    'textarea_rows' => 3,
-  ]);
-  ob_end_clean();
-}, 1);
-
-/**
- * Print ACF WYSIWYG fix early, and again after WP prints tinyMCEPreInit.
- */
-add_action('admin_head', function () {
-  if (!tragency_is_block_editor_screen()) {
-    return;
-  }
-
-  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
-  if (!is_readable($js)) {
-    return;
-  }
-
-  echo '<script id="tragency-acf-wysiwyg-defaults">';
-  echo file_get_contents($js);
-  echo '</script>';
-}, 1);
-
 add_action('admin_print_footer_scripts', function () {
   if (!tragency_is_block_editor_screen()) {
     return;
   }
-
-  $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
-  if (!is_readable($js)) {
-    return;
-  }
-
-  // Run AFTER core prints `var tinyMCEPreInit = ...` so we can re-seed acf_content.
-  echo '<script id="tragency-acf-wysiwyg-defaults-late">';
-  echo file_get_contents($js);
-  echo '</script>';
-}, 100);
-
+  ?>
+  <script id="tragency-acf-wysiwyg-seed">
+  (function () {
+    window.tinyMCEPreInit = window.tinyMCEPreInit || { mceInit: {}, qtInit: {}, ref: {}, load_ext: function () {} };
+    window.tinyMCEPreInit.mceInit = window.tinyMCEPreInit.mceInit || {};
+    window.tinyMCEPreInit.qtInit = window.tinyMCEPreInit.qtInit || {};
+    if (!window.tinyMCEPreInit.qtInit.acf_content) {
+      window.tinyMCEPreInit.qtInit.acf_content = {
+        id: 'acf_content',
+        buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
+      };
+    }
+    if (!window.tinyMCEPreInit.mceInit.acf_content) {
+      var donor = null;
+      for (var k in window.tinyMCEPreInit.mceInit) {
+        if (Object.prototype.hasOwnProperty.call(window.tinyMCEPreInit.mceInit, k) && k !== 'acf_content') {
+          donor = window.tinyMCEPreInit.mceInit[k];
+          break;
+        }
+      }
+      window.tinyMCEPreInit.mceInit.acf_content = donor
+        ? Object.assign({}, donor, { selector: '#acf_content', body_class: 'acf_content' })
+        : {
+            selector: '#acf_content',
+            resize: 'vertical',
+            menubar: false,
+            wpautop: true,
+            indent: false,
+            toolbar1: 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,wp_more,spellchecker,fullscreen,wp_adv',
+            toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+          };
+    }
+  })();
+  </script>
+  <?php
+}, 5);

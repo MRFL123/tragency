@@ -1,15 +1,28 @@
 /**
- * Fix ACF WYSIWYG in Gutenberg: missing tinyMCEPreInit.qtInit.acf_content
- * causes "Cannot read properties of undefined (reading 'buttons')".
+ * Fix ACF WYSIWYG in the Gutenberg block editor.
  *
- * WordPress often overwrites tinyMCEPreInit in the footer, so we:
- * 1) seed defaults
- * 2) patch acf.tinymce.defaults / buildQuicktags
- * 3) re-seed after scripts load
+ * ACF always passes quicktags:true even when tabs=visual. If
+ * tinyMCEPreInit.qtInit.acf_content is missing (or the textarea isn't
+ * in the DOM yet), buildQuicktags crashes on reading `buttons` and
+ * the Visual toolbar never becomes usable.
  */
 (function () {
-  var QT_BUTTONS =
-    'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close';
+  var QT_DEFAULT = {
+    id: 'acf_content',
+    buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close',
+  };
+
+  var MCE_FALLBACK = {
+    selector: '#acf_content',
+    resize: 'vertical',
+    menubar: false,
+    wpautop: true,
+    indent: false,
+    toolbar1:
+      'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,wp_more,spellchecker,fullscreen,wp_adv',
+    toolbar2:
+      'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
+  };
 
   function ensurePreInit() {
     if (typeof window.tinyMCEPreInit === 'undefined') {
@@ -24,13 +37,15 @@
     window.tinyMCEPreInit.mceInit = window.tinyMCEPreInit.mceInit || {};
     window.tinyMCEPreInit.qtInit = window.tinyMCEPreInit.qtInit || {};
 
-    if (!window.tinyMCEPreInit.qtInit.acf_content) {
-      window.tinyMCEPreInit.qtInit.acf_content = {
-        id: 'acf_content',
-        buttons: QT_BUTTONS,
-      };
-    } else if (!window.tinyMCEPreInit.qtInit.acf_content.buttons) {
-      window.tinyMCEPreInit.qtInit.acf_content.buttons = QT_BUTTONS;
+    if (
+      !window.tinyMCEPreInit.qtInit.acf_content ||
+      !window.tinyMCEPreInit.qtInit.acf_content.buttons
+    ) {
+      window.tinyMCEPreInit.qtInit.acf_content = Object.assign(
+        {},
+        QT_DEFAULT,
+        window.tinyMCEPreInit.qtInit.acf_content || {}
+      );
     }
 
     if (!window.tinyMCEPreInit.mceInit.acf_content) {
@@ -46,25 +61,20 @@
       }
 
       window.tinyMCEPreInit.mceInit.acf_content = donor
-        ? Object.assign({}, donor, { selector: '#acf_content' })
-        : {
+        ? Object.assign({}, donor, {
             selector: '#acf_content',
-            resize: 'vertical',
-            menubar: false,
-            wpautop: true,
-            indent: false,
-            toolbar1:
-              'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,wp_more,spellchecker,fullscreen,wp_adv',
-            toolbar2:
-              'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
-          };
+            body_class: 'acf_content',
+          })
+        : Object.assign({}, MCE_FALLBACK);
     }
   }
 
-  function patchAcfTinymce() {
+  function patchAcf() {
     if (!window.acf || !acf.tinymce) {
       return false;
     }
+
+    ensurePreInit();
 
     acf.tinymce.defaults = function () {
       ensurePreInit();
@@ -74,53 +84,47 @@
       };
     };
 
-    if (typeof acf.tinymce.buildQuicktags === 'function' && !acf.tinymce._tragencyPatched) {
-      var originalBuild = acf.tinymce.buildQuicktags;
-      acf.tinymce.buildQuicktags = function (editor) {
-        if (!editor || !editor.settings) {
-          return;
-        }
-        if (!editor.settings.buttons) {
-          editor.settings.buttons = QT_BUTTONS;
-        }
-        return originalBuild.call(this, editor);
-      };
-      acf.tinymce._tragencyPatched = true;
-    }
-
-    if (
-      typeof acf.tinymce.initializeQuicktags === 'function' &&
-      !acf.tinymce._tragencyQtPatched
-    ) {
-      var originalQt = acf.tinymce.initializeQuicktags;
-      acf.tinymce.initializeQuicktags = function (id, args) {
+    if (!acf.tinymce._tragencyInitPatched) {
+      var originalInit = acf.tinymce.initialize.bind(acf.tinymce);
+      acf.tinymce.initialize = function (id, args) {
         ensurePreInit();
         args = args || {};
-        args.quicktags = Object.assign(
-          { id: id, buttons: QT_BUTTONS },
-          window.tinyMCEPreInit.qtInit.acf_content || {},
-          args.quicktags || {}
-        );
-        args.quicktags.id = id;
-        if (!args.quicktags.buttons) {
-          args.quicktags.buttons = QT_BUTTONS;
+        // Gutenberg + ACF: Quicktags frequently crashes (missing settings.buttons).
+        // Visual TinyMCE is enough for block sidebar fields.
+        if (acf.isGutenbergPostEditor && acf.isGutenbergPostEditor()) {
+          args.quicktags = false;
+        }
+        return originalInit(id, args);
+      };
+      acf.tinymce._tragencyInitPatched = true;
+    }
+
+    if (!acf.tinymce._tragencyQtPatched) {
+      var originalQt = acf.tinymce.initializeQuicktags.bind(acf.tinymce);
+      acf.tinymce.initializeQuicktags = function (id, args) {
+        ensurePreInit();
+        if (!document.getElementById(id)) {
+          return false;
         }
         try {
-          return originalQt.call(this, id, args);
+          return originalQt(id, args);
         } catch (err) {
-          console.warn('Tragency: ACF Quicktags init skipped', err);
+          console.warn('Tragency: Quicktags skipped', err);
           return false;
         }
       };
       acf.tinymce._tragencyQtPatched = true;
     }
 
-    if (typeof acf.addAction === 'function' && !acf.tinymce._tragencyActions) {
-      acf.addAction('prepare', ensurePreInit);
-      acf.addAction('ready', ensurePreInit);
-      acf.addAction('append', ensurePreInit);
-      acf.addAction('show_field/type=wysiwyg', ensurePreInit);
-      acf.tinymce._tragencyActions = true;
+    if (!acf.tinymce._tragencyBuildPatched) {
+      var originalBuild = acf.tinymce.buildQuicktags.bind(acf.tinymce);
+      acf.tinymce.buildQuicktags = function (editor) {
+        if (!editor || !editor.settings || !editor.toolbar) {
+          return;
+        }
+        return originalBuild(editor);
+      };
+      acf.tinymce._tragencyBuildPatched = true;
     }
 
     return true;
@@ -131,18 +135,17 @@
   var tries = 0;
   var timer = setInterval(function () {
     ensurePreInit();
-    if (patchAcfTinymce() || ++tries > 200) {
+    if (patchAcf() || ++tries > 200) {
       clearInterval(timer);
     }
-  }, 50);
+  }, 25);
 
-  document.addEventListener('DOMContentLoaded', function () {
-    ensurePreInit();
-    patchAcfTinymce();
-  });
-
-  window.addEventListener('load', function () {
-    ensurePreInit();
-    patchAcfTinymce();
-  });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      ensurePreInit();
+      patchAcf();
+    });
+  } else {
+    patchAcf();
+  }
 })();
