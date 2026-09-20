@@ -14,15 +14,22 @@ use Illuminate\Support\Facades\Vite;
  * @return array
  */
 add_filter('block_editor_settings_all', function ($settings) {
-    $style = Vite::asset('resources/css/editor.scss');
+    try {
+        $style = Vite::asset('resources/css/editor.scss');
+        $path = parse_url($style, PHP_URL_PATH) ?: $style;
 
-    $settings['styles'][] = [
-        'css' => "@import url('{$style}')",
-    ];
+        // Vite emits a JS stub for empty CSS entries — only inject real stylesheets.
+        if ($style && str_ends_with($path, '.css')) {
+            $settings['styles'][] = [
+                'css' => "@import url('{$style}')",
+            ];
+        }
+    } catch (\Throwable $e) {
+        // Ignore missing Vite assets so the editor still loads.
+    }
 
     return $settings;
 });
-
 /**
  * Inject scripts into the block editor.
  *
