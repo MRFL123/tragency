@@ -122,7 +122,6 @@ add_action('admin_head', 'custom_styles_admin');
 
 /**
  * Resolve a Vite-built CSS URL (must be a real .css file — never .js).
- * Prevents production MIME errors when Vite entry resolves to JS.
  */
 function tragency_vite_css_url($entry) {
   try {
@@ -141,8 +140,28 @@ function tragency_vite_css_url($entry) {
 }
 
 /**
- * Theme CSS for block *preview* canvas only (injected via block_editor_settings_all).
- * editor-preview.css is last so ACF/WYSIWYG overrides beat Bootstrap/dark theme.
+ * Whether the current admin screen is the block editor.
+ */
+function tragency_is_block_editor_screen() {
+  if (!function_exists('get_current_screen')) {
+    return false;
+  }
+
+  $screen = get_current_screen();
+  if (!$screen) {
+    return false;
+  }
+
+  if (method_exists($screen, 'is_block_editor')) {
+    return (bool) $screen->is_block_editor();
+  }
+
+  return !empty($screen->is_block_editor);
+}
+
+/**
+ * Theme CSS for the iframe canvas (block preview look only).
+ * Never relied on alone for ACF field / TinyMCE chrome.
  */
 function tragency_block_preview_css_urls() {
   $theme_uri = get_template_directory_uri();
@@ -171,8 +190,7 @@ function tragency_block_preview_css_urls() {
 }
 
 /**
- * A) Correct enqueue — iframe-safe (WP 6.3+).
- * Do NOT enqueue these styles via enqueue_block_editor_assets.
+ * Iframe-safe styles (block preview + ACF when fields render in canvas).
  */
 add_action('enqueue_block_assets', function () {
   if (!is_admin()) {
@@ -201,8 +219,7 @@ add_action('enqueue_block_assets', function () {
 });
 
 /**
- * Inject front-end theme CSS into the canvas for block preview layout.
- * editor-preview.css is included last for WYSIWYG/field overrides.
+ * Inject theme CSS into the canvas iframe for block preview layout.
  */
 add_filter('block_editor_settings_all', function ($settings) {
   if (!isset($settings['styles']) || !is_array($settings['styles'])) {
@@ -223,27 +240,26 @@ add_filter('block_editor_settings_all', function ($settings) {
 }, 20);
 
 /**
- * Whether the current admin screen is the block editor.
+ * Sidebar (parent frame) — TinyMCE lives HERE when blocks use mode=preview.
+ * Inline CSS so WP does not flag a stylesheet handle as "added to iframe incorrectly".
  */
-function tragency_is_block_editor_screen() {
-  if (!function_exists('get_current_screen')) {
-    return false;
+add_action('admin_head', function () {
+  if (!tragency_is_block_editor_screen()) {
+    return;
   }
 
-  $screen = get_current_screen();
-  if (!$screen) {
-    return false;
+  $preview_path = get_theme_file_path('framework/assets/editor-preview.css');
+  if (!is_readable($preview_path)) {
+    return;
   }
 
-  if (method_exists($screen, 'is_block_editor')) {
-    return (bool) $screen->is_block_editor();
-  }
-
-  return !empty($screen->is_block_editor);
-}
+  echo '<style id="tragency-acf-wysiwyg-protect">' . "\n";
+  echo file_get_contents($preview_path);
+  echo "\n</style>\n";
+}, 100);
 
 /**
- * D) TinyMCE init safety — scripts only (no CSS here).
+ * TinyMCE / Quicktags scripts for ACF WYSIWYG in the sidebar.
  */
 add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
@@ -256,6 +272,7 @@ add_action('enqueue_block_editor_assets', function () {
     wp_enqueue_editor();
   }
   wp_enqueue_script('quicktags');
+  wp_enqueue_script('wplink');
 
   $js = get_theme_file_path('framework/assets/acf-wysiwyg-defaults.js');
   if (is_readable($js)) {
@@ -270,7 +287,7 @@ add_action('enqueue_block_editor_assets', function () {
 });
 
 /**
- * Seed tinyMCEPreInit.acf_content so ACF Quicktags/TinyMCE defaults exist.
+ * Seed tinyMCEPreInit.acf_content (fixes ACF buildQuicktags "buttons" crash).
  */
 add_action('admin_print_footer_scripts', function () {
   if (!tragency_is_block_editor_screen()) {
@@ -302,5 +319,21 @@ add_action('admin_print_footer_scripts', function () {
   })();
   </script>
   <?php
-}, 50);
+}, 5);
+
+/**
+ * WYSIWYG in block editor: delay init (click-to-activate) is more reliable
+ * with Gutenberg DOM moves; full toolbar; keep both Visual + Text.
+ */
+add_filter('acf/prepare_field/type=wysiwyg', function ($field) {
+  if (!tragency_is_block_editor_screen()) {
+    return $field;
+  }
+
+  $field['toolbar'] = 'full';
+  $field['media_upload'] = 1;
+  $field['delay'] = 1;
+
+  return $field;
+});
 

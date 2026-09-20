@@ -1,11 +1,11 @@
 /**
- * Loaded via enqueue_block_assets (handle: theme-editor-preview).
+ * Loaded via enqueue_block_assets (iframe) + inlined on admin_head (sidebar).
  * Protects ACF field UI / TinyMCE from front-end theme CSS.
  * Preview layout styles are scoped under .acf-block-preview only.
  */
 
 /* -------------------------------------------------------------------------
- * C) Front-end preview layout — ONLY under .acf-block-preview
+ * Front-end preview layout — ONLY under .acf-block-preview (iframe canvas)
  * ------------------------------------------------------------------------- */
 .acf-block-preview {
   max-width: none !important;
@@ -40,12 +40,13 @@
 }
 
 /* -------------------------------------------------------------------------
- * B) Keep ACF UI admin-like
+ * ACF field UI — admin-like (sidebar + any in-canvas fields)
  * ------------------------------------------------------------------------- */
 .acf-block-fields,
 .acf-fields,
 .acf-block-body,
-.acf-field {
+.acf-field,
+.interface-complementary-area .acf-fields {
   background: #fff !important;
   color: #1d2327 !important;
 }
@@ -76,7 +77,7 @@
 }
 
 /* -------------------------------------------------------------------------
- * B) WYSIWYG / TinyMCE — must look like WP admin
+ * WYSIWYG / TinyMCE — WP admin chrome (sidebar is outside the iframe)
  * ------------------------------------------------------------------------- */
 .acf-field-wysiwyg .wp-editor-wrap,
 .acf-field-wysiwyg .wp-editor-tools,
@@ -93,43 +94,68 @@
   color: #1d2327 !important;
   opacity: 1 !important;
   visibility: visible !important;
-  display: block !important;
-}
-
-.acf-field-wysiwyg .mce-edit-area,
-.acf-field-wysiwyg .wp-editor-area,
-.acf-field-wysiwyg iframe {
-  background: #fff !important;
-  min-height: 220px !important;
-}
-
-/* Neutralize theme destructive button resets, then restore TinyMCE chrome */
-.acf-field-wysiwyg button {
-  all: revert !important;
-}
-
-.acf-field-wysiwyg .mce-btn,
-.acf-field-wysiwyg .mce-btn button,
-.acf-field-wysiwyg .mce-ico,
-.acf-field-wysiwyg .wp-switch-editor {
-  color: #1d2327 !important;
-  background: #f0f0f1 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-.acf-field-wysiwyg .mce-container *,
-.acf-field-wysiwyg .mce-container-body * {
-  box-sizing: content-box;
 }
 
 .acf-field-wysiwyg .wp-editor-wrap {
   width: 100%;
   max-width: 100%;
+  display: block !important;
+}
+
+.acf-field-wysiwyg .mce-toolbar,
+.acf-field-wysiwyg .mce-toolbar-grp,
+.acf-field-wysiwyg .wp-editor-tools {
+  display: block !important;
+}
+
+.acf-field-wysiwyg .mce-edit-area,
+.acf-field-wysiwyg .wp-editor-area,
+.acf-field-wysiwyg .mce-edit-area iframe {
+  background: #fff !important;
+  min-height: 220px !important;
+}
+
+.acf-field-wysiwyg .mce-btn,
+.acf-field-wysiwyg .mce-btn button,
+.acf-field-wysiwyg .mce-ico,
+.acf-field-wysiwyg .wp-switch-editor,
+.acf-field-wysiwyg .quicktags-toolbar .ed_button {
+  color: #1d2327 !important;
+  background: #f0f0f1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  border: 1px solid #dcdcde !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.acf-field-wysiwyg .wp-switch-editor {
+  display: inline-block !important;
+  float: none !important;
+}
+
+/* TinyMCE needs content-box; Bootstrap border-box breaks the toolbar */
+.acf-field-wysiwyg .mce-container,
+.acf-field-wysiwyg .mce-container *,
+.acf-field-wysiwyg .mce-widget,
+.acf-field-wysiwyg .mce-widget *,
+.acf-field-wysiwyg .mce-toolbar,
+.acf-field-wysiwyg .mce-toolbar *,
+.acf-field-wysiwyg .mce-statusbar,
+.acf-field-wysiwyg .mce-statusbar *,
+.acf-field-wysiwyg .mce-btn,
+.acf-field-wysiwyg .mce-btn *,
+.acf-field-wysiwyg .wp-editor-tools,
+.acf-field-wysiwyg .wp-editor-tools *,
+.acf-field-wysiwyg .wp-switch-editor,
+.acf-field-wysiwyg .quicktags-toolbar,
+.acf-field-wysiwyg .quicktags-toolbar * {
+  box-sizing: content-box !important;
 }
 
 .acf-field-wysiwyg textarea.wp-editor-area {
   color: #1d2327 !important;
+  background: #fff !important;
   border: 0 !important;
 }

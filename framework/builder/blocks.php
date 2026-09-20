@@ -208,8 +208,9 @@ function my_acf_init()
     acf_register_block(array_merge($block, [
       'render_callback' => 'my_acf_block_render_callback',
       'category'        => 'Mirrorful-builder',
-      // Edit mode so ACF fields (incl. WYSIWYG/TinyMCE) mount in the editor.
-      'mode'            => 'edit',
+      // Preview in canvas; ACF fields (WYSIWYG) edit in the SIDEBAR.
+      // TinyMCE cannot run inside the Gutenberg iframe (WP 6.8+ / ACF).
+      'mode'            => 'preview',
       'supports'        => [
         'mode'  => true,
         'align' => false,
