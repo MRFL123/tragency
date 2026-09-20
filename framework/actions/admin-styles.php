@@ -120,8 +120,12 @@ function custom_styles_admin() {
 }
 add_action('admin_head', 'custom_styles_admin');
 
+/**
+ * Editor chrome assets only — do NOT load Bootstrap here.
+ * Bootstrap in enqueue_block_editor_assets breaks ACF field UI in the sidebar.
+ * Theme/block preview styles are injected into the canvas iframe via app/setup.php.
+ */
 function gutenbergtheme_editor_styles() {
-  wp_enqueue_style( 'gutenbergtheme-blocks-style', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
   wp_enqueue_style('custom/custom-classes', get_theme_file_uri() . '/framework/assets/custom-classes.css', false, null);
 }
 add_action( 'enqueue_block_editor_assets', 'gutenbergtheme_editor_styles' );

@@ -9,27 +9,46 @@ namespace App;
 use Illuminate\Support\Facades\Vite;
 
 /**
- * Inject styles into the block editor.
+ * Resolve a Vite CSS asset URL, preferring a real .css file.
+ */
+function vite_css_url(string $entry): ?string
+{
+    try {
+        $url = Vite::asset($entry);
+        $path = parse_url($url, PHP_URL_PATH) ?: $url;
+
+        if ($url && str_ends_with($path, '.css')) {
+            return $url;
+        }
+
+        // Fallback: CSS entry may share the built app stylesheet.
+        $fallback = Vite::asset('resources/css/app.scss');
+        $fallbackPath = parse_url($fallback, PHP_URL_PATH) ?: $fallback;
+
+        return ($fallback && str_ends_with($fallbackPath, '.css')) ? $fallback : null;
+    } catch (\Throwable $e) {
+        return null;
+    }
+}
+
+/**
+ * Inject theme styles into the block editor canvas iframe only
+ * (preview of blocks — not the ACF fields sidebar).
  *
  * @return array
  */
 add_filter('block_editor_settings_all', function ($settings) {
-    try {
-        $style = Vite::asset('resources/css/editor.scss');
-        $path = parse_url($style, PHP_URL_PATH) ?: $style;
+    $style = vite_css_url('resources/css/editor.scss');
 
-        // Vite emits a JS stub for empty CSS entries — only inject real stylesheets.
-        if ($style && str_ends_with($path, '.css')) {
-            $settings['styles'][] = [
-                'css' => "@import url('{$style}')",
-            ];
-        }
-    } catch (\Throwable $e) {
-        // Ignore missing Vite assets so the editor still loads.
+    if ($style) {
+        $settings['styles'][] = [
+            'css' => "@import url('{$style}')",
+        ];
     }
 
     return $settings;
 });
+
 /**
  * Inject scripts into the block editor.
  *
@@ -40,17 +59,88 @@ add_filter('admin_head', function () {
         return;
     }
 
-    $dependencies = json_decode(Vite::content('editor.deps.json'));
+    try {
+        $dependencies = json_decode(Vite::content('editor.deps.json')) ?: [];
 
-    foreach ($dependencies as $dependency) {
-        if (! wp_script_is($dependency)) {
-            wp_enqueue_script($dependency);
+        foreach ($dependencies as $dependency) {
+            if (! wp_script_is($dependency)) {
+                wp_enqueue_script($dependency);
+            }
         }
-    }
 
-    echo Vite::withEntryPoints([
-        'resources/js/editor.js',
-    ])->toHtml();
+        echo Vite::withEntryPoints([
+            'resources/js/editor.js',
+        ])->toHtml();
+    } catch (\Throwable $e) {
+        // Ignore missing Vite assets so the editor still loads.
+    }
+});
+
+/**
+ * Protect ACF field UI from any leaked frontend utility styles.
+ */
+add_action('enqueue_block_editor_assets', function () {
+    $css = <<<'CSS'
+.acf-block-component .acf-fields,
+.acf-block-panel .acf-fields,
+.interface-complementary-area .acf-fields {
+  box-sizing: border-box;
+}
+.acf-block-component .acf-fields input[type="text"],
+.acf-block-component .acf-fields input[type="url"],
+.acf-block-component .acf-fields input[type="number"],
+.acf-block-component .acf-fields input[type="email"],
+.acf-block-component .acf-fields textarea,
+.acf-block-component .acf-fields select,
+.acf-block-panel .acf-fields input[type="text"],
+.acf-block-panel .acf-fields input[type="url"],
+.acf-block-panel .acf-fields input[type="number"],
+.acf-block-panel .acf-fields input[type="email"],
+.acf-block-panel .acf-fields textarea,
+.acf-block-panel .acf-fields select,
+.interface-complementary-area .acf-fields input[type="text"],
+.interface-complementary-area .acf-fields input[type="url"],
+.interface-complementary-area .acf-fields input[type="number"],
+.interface-complementary-area .acf-fields input[type="email"],
+.interface-complementary-area .acf-fields textarea,
+.interface-complementary-area .acf-fields select {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 30px;
+  padding: 0 8px;
+  line-height: 1.4;
+  font-size: 14px;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  background: #fff;
+  color: #2c3338;
+  box-shadow: none;
+}
+.acf-block-component .acf-fields textarea,
+.acf-block-panel .acf-fields textarea,
+.interface-complementary-area .acf-fields textarea {
+  padding: 8px;
+  min-height: 80px;
+}
+.acf-block-component .acf-fields .acf-label label,
+.acf-block-panel .acf-fields .acf-label label,
+.interface-complementary-area .acf-fields .acf-label label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #1e1e1e;
+}
+.acf-block-component .acf-fields .select2-container,
+.acf-block-panel .acf-fields .select2-container,
+.interface-complementary-area .acf-fields .select2-container {
+  width: 100% !important;
+}
+CSS;
+
+    wp_register_style('tragency-acf-editor-fix', false);
+    wp_enqueue_style('tragency-acf-editor-fix');
+    wp_add_inline_style('tragency-acf-editor-fix', $css);
 });
 
 /**
