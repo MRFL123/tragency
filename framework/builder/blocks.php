@@ -207,6 +207,9 @@ function my_acf_init()
     acf_register_block(array_merge($block, [
       'render_callback' => 'my_acf_block_render_callback',
       'category'        => 'Mirrorful-builder',
+      // Preview in canvas; ACF fields (incl. WYSIWYG) stay in the sidebar
+      // so Bootstrap from the canvas preview CSS cannot break TinyMCE.
+      'mode'            => 'preview',
     ]));
   }
 }
