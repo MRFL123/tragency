@@ -217,6 +217,29 @@ function tragency_enqueue_block_editor_theme_styles() {
 add_action('enqueue_block_assets', 'tragency_enqueue_block_editor_theme_styles');
 
 /**
+ * Also load editor-preview resets on the editor chrome (sidebar ACF fields / WYSIWYG).
+ */
+function tragency_enqueue_block_editor_sidebar_fixes() {
+  $path = get_template_directory() . '/framework/assets/editor-preview.css';
+  if (!is_readable($path)) {
+    return;
+  }
+
+  $deps = [];
+  if (wp_style_is('acf-input', 'registered')) {
+    $deps[] = 'acf-input';
+  }
+
+  wp_enqueue_style(
+    'tragency-editor-preview-sidebar',
+    get_template_directory_uri() . '/framework/assets/editor-preview.css',
+    $deps,
+    filemtime($path)
+  );
+}
+add_action('enqueue_block_editor_assets', 'tragency_enqueue_block_editor_sidebar_fixes');
+
+/**
  * Also inject the same CSS into the editor iframe styles list.
  */
 add_filter('block_editor_settings_all', function ($settings) {
