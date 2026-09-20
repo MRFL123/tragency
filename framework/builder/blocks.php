@@ -22,6 +22,7 @@ add_filter('block_categories', function ($categories, $post) {
 
 // Initialize ACF blocks
 add_action('acf/init', 'my_acf_init');
+if (!function_exists('my_acf_init')) {
 function my_acf_init()
 {
   // Check if the function exists
@@ -213,23 +214,50 @@ function my_acf_init()
     ]));
   }
 }
+} // end function_exists my_acf_init
 
-// Render callback for ACF blocks
-function my_acf_block_render_callback($block)
-{
-  // Convert name ("acf/testimonial") into path-friendly slug ("testimonial")
-  $slug = str_replace('acf/', '', $block['name']);
+/**
+ * Render callback for ACF blocks.
+ * - Prefers front-end templates for admin preview (matches live layout)
+ * - Falls back to back-end template when front-end is missing
+ * - Catches fatals/throwables so REST block preview never 500s the editor
+ */
+if (!function_exists('my_acf_block_render_callback')) {
+  function my_acf_block_render_callback($block)
+  {
+    try {
+      $slug = str_replace('acf/', '', $block['name'] ?? '');
+      if ($slug === '') {
+        return;
+      }
 
-  // Include a template part from the appropriate folder
-  if (is_admin()) {
-    $backend_path = get_theme_file_path() . "/framework/builder/back-end/block-content-{$slug}.php";
-    if (file_exists($backend_path)) {
-      include $backend_path;
-    }
-  } else {
-    $frontend_path = get_theme_file_path() . "/framework/builder/front-end/block-content-{$slug}.php";
-    if (file_exists($frontend_path)) {
-      include $frontend_path;
+      $theme = get_theme_file_path();
+      $frontend = "{$theme}/framework/builder/front-end/block-content-{$slug}.php";
+      $backend  = "{$theme}/framework/builder/back-end/block-content-{$slug}.php";
+
+      // Prefer front-end for preview + front; back-end only as fallback in admin.
+      if (is_readable($frontend)) {
+        include $frontend;
+        return;
+      }
+
+      if (is_admin() && is_readable($backend)) {
+        include $backend;
+        return;
+      }
+    } catch (\Throwable $e) {
+      // Never let a block preview fatal break Gutenberg REST → unstyled editor.
+      if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+        echo '<div class="acf-block-preview-error">';
+        echo esc_html__('Block preview unavailable.', 'sage');
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+          echo '<br><small>' . esc_html($e->getMessage()) . '</small>';
+        }
+        echo '</div>';
+        return;
+      }
+
+      throw $e;
     }
   }
 }

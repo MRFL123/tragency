@@ -1,4 +1,15 @@
-/* Gutenberg canvas: match the front-end block layout. */
+/**
+ * Editor iframe + ACF field chrome resets.
+ *
+ * Loaded LAST (after theme/Bootstrap + ACF CSS) so:
+ * - Block previews keep front-end layout
+ * - ACF field panels stay readable (white / dark text)
+ * - TinyMCE / WYSIWYG chrome is never overridden by dark theme styles
+ */
+
+/* -------------------------------------------------------------------------
+ * Canvas layout (block previews)
+ * ------------------------------------------------------------------------- */
 .editor-styles-wrapper,
 .block-editor-iframe__body {
   padding: 0 !important;
@@ -35,21 +46,31 @@
   height: auto;
 }
 
-/* Keep ACF field UI readable inside the iframe / sidebar. */
+/* -------------------------------------------------------------------------
+ * ACF field panels — readable even when preview/theme background is dark
+ * ------------------------------------------------------------------------- */
 .acf-block-fields,
 .acf-fields,
 .acf-block-component .acf-fields,
-.acf-block-body {
+.acf-block-body,
+.acf-block-panel,
+.interface-complementary-area .acf-fields {
   background: #fff !important;
   color: #1d2327 !important;
 }
 
-.acf-fields > .acf-field > .acf-label label,
-.acf-block-fields > .acf-field > .acf-label label {
+.acf-fields > .acf-field,
+.acf-block-fields > .acf-field {
   color: #1d2327 !important;
 }
 
-/* Basic text inputs only — never target TinyMCE / icons here */
+.acf-fields > .acf-field > .acf-label label,
+.acf-block-fields > .acf-field > .acf-label label,
+.acf-field .acf-label label {
+  color: #1d2327 !important;
+}
+
+/* Basic inputs only — never blanket-target TinyMCE / icons */
 .acf-fields input[type="text"],
 .acf-fields input[type="password"],
 .acf-fields input[type="email"],
@@ -67,10 +88,92 @@
   max-width: 100%;
 }
 
+.acf-fields .select2-container {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* -------------------------------------------------------------------------
+ * WYSIWYG / TinyMCE — force normal WP admin chrome
+ * Theme dark body / Bootstrap must NOT restyle toolbar or editor area.
+ * ------------------------------------------------------------------------- */
+.acf-field-wysiwyg,
+.acf-field-wysiwyg .acf-input,
+.acf-field-wysiwyg .wp-editor-wrap,
+.acf-field-wysiwyg .wp-editor-container,
+.acf-field-wysiwyg .mce-tinymce,
+.acf-field-wysiwyg .mce-container,
+.acf-field-wysiwyg .mce-panel,
+.acf-field-wysiwyg .mce-toolbar-grp,
+.acf-field-wysiwyg .mce-toolbar,
+.acf-field-wysiwyg .mce-statusbar,
+.acf-field-wysiwyg .quicktags-toolbar,
+.acf-field-wysiwyg .wp-editor-tools {
+  background: #f6f7f7 !important;
+  color: #1d2327 !important;
+  border-color: #dcdcde !important;
+}
+
+.acf-field-wysiwyg .wp-editor-wrap {
+  width: 100%;
+  max-width: 100%;
+}
+
+.acf-field-wysiwyg .wp-editor-container {
+  border: 1px solid #dcdcde !important;
+  background: #fff !important;
+}
+
+.acf-field-wysiwyg .mce-tinymce,
+.acf-field-wysiwyg .mce-container-body {
+  background: #fff !important;
+}
+
+.acf-field-wysiwyg .mce-toolbar,
+.acf-field-wysiwyg .mce-toolbar-grp,
+.acf-field-wysiwyg .mce-top-part::before {
+  background: #f6f7f7 !important;
+}
+
+.acf-field-wysiwyg .mce-btn,
+.acf-field-wysiwyg .mce-btn button,
+.acf-field-wysiwyg .wp-switch-editor,
+.acf-field-wysiwyg .quicktags-toolbar input,
+.acf-field-wysiwyg .quicktags-toolbar .ed_button {
+  background: #f6f7f7 !important;
+  color: #1d2327 !important;
+  border-color: #dcdcde !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.acf-field-wysiwyg .mce-btn:hover,
+.acf-field-wysiwyg .mce-btn:hover button,
+.acf-field-wysiwyg .wp-switch-editor:hover {
+  background: #f0f0f1 !important;
+  color: #1d2327 !important;
+}
+
+.acf-field-wysiwyg .mce-ico,
+.acf-field-wysiwyg .mce-caret {
+  color: #1d2327 !important;
+}
+
+.acf-field-wysiwyg textarea.wp-editor-area {
+  background: #fff !important;
+  color: #1d2327 !important;
+  border: 0 !important;
+}
+
+.acf-field-wysiwyg .mce-edit-area,
+.acf-field-wysiwyg .mce-edit-area iframe {
+  background: #fff !important;
+}
+
 /*
- * TinyMCE requires content-box. Bootstrap (from app.css) sets border-box on *
- * which breaks Visual/Text switching and the formatting toolbar.
- * Do NOT restyle icons, buttons, or toolbar chrome beyond box-sizing.
+ * TinyMCE requires content-box. Bootstrap sets border-box on * which
+ * breaks Visual/Text switching and the formatting toolbar.
+ * Scope ONLY to TinyMCE chrome — do not restyle preview icons/SVG.
  */
 .acf-field-wysiwyg .mce-container,
 .acf-field-wysiwyg .mce-container *,
@@ -100,12 +203,12 @@
   box-sizing: content-box !important;
 }
 
-.acf-field-wysiwyg .wp-editor-wrap {
-  width: 100%;
-  max-width: 100%;
-}
-
-.acf-fields .select2-container {
-  width: 100% !important;
-  max-width: 100% !important;
+/* Preview error fallback (render callback catch) */
+.acf-block-preview-error {
+  padding: 12px 16px;
+  background: #fff !important;
+  color: #1d2327 !important;
+  border: 1px solid #dcdcde;
+  border-radius: 2px;
+  font-size: 13px;
 }

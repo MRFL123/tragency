@@ -142,7 +142,8 @@ function tragency_vite_css_url($entry) {
 
 /**
  * CSS URLs for ACF block previews in the Gutenberg canvas iframe.
- * Same approach as mefic: theme CSS + ACF input CSS + editor-preview fixes.
+ * Same approach as mefic: local theme CSS + ACF input CSS + editor-preview last.
+ * Never falls back to CDN Bootstrap alone.
  */
 function tragency_block_editor_css_urls() {
   if (function_exists('acf_enqueue_scripts')) {
@@ -159,15 +160,11 @@ function tragency_block_editor_css_urls() {
     $urls[] = $app_css;
   }
 
-  $static_paths = [
+  foreach ([
     'framework/assets/custom-classes.css',
     'framework/assets/slick/slick.css',
     'framework/assets/slick/slick-theme.css',
-    // Last: TinyMCE content-box + ACF field resets beat Bootstrap border-box
-    'framework/assets/editor-preview.css',
-  ];
-
-  foreach ($static_paths as $relative) {
+  ] as $relative) {
     $full = $theme_dir . '/' . $relative;
     if (!is_readable($full)) {
       continue;
@@ -187,6 +184,12 @@ function tragency_block_editor_css_urls() {
       $src = site_url($src);
     }
     $urls[] = $src;
+  }
+
+  // LAST: ACF field + TinyMCE chrome resets beat Bootstrap / dark theme
+  $preview = $theme_dir . '/framework/assets/editor-preview.css';
+  if (is_readable($preview)) {
+    $urls[] = $theme_uri . '/framework/assets/editor-preview.css?ver=' . filemtime($preview);
   }
 
   return array_values(array_unique($urls));
@@ -265,7 +268,7 @@ function tragency_is_block_editor_screen() {
 
 /**
  * Editor chrome scripts for ACF WYSIWYG (TinyMCE / Quicktags).
- * Styles for the iframe are handled by enqueue_block_assets above.
+ * Also load editor-preview.css on the sidebar (fields live outside the iframe in preview mode).
  */
 add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
@@ -279,6 +282,22 @@ add_action('enqueue_block_editor_assets', function () {
   }
   wp_enqueue_script('quicktags');
   wp_enqueue_style('editor-buttons');
+
+  foreach (['acf-global', 'acf-input', 'acf-pro-input'] as $handle) {
+    if (wp_style_is($handle, 'registered') && !wp_style_is($handle, 'enqueued')) {
+      wp_enqueue_style($handle);
+    }
+  }
+
+  $preview = get_template_directory() . '/framework/assets/editor-preview.css';
+  if (is_readable($preview)) {
+    wp_enqueue_style(
+      'tragency-editor-preview-sidebar',
+      get_template_directory_uri() . '/framework/assets/editor-preview.css',
+      ['acf-input'],
+      filemtime($preview)
+    );
+  }
 
   $js = get_template_directory() . '/framework/assets/acf-wysiwyg-defaults.js';
   if (is_readable($js)) {
