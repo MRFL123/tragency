@@ -205,17 +205,25 @@ function my_acf_init()
 
   // Register blocks
   foreach ($blocks as $block) {
-    acf_register_block(array_merge($block, [
+    $args = array_merge($block, [
       'render_callback' => 'my_acf_block_render_callback',
       'category'        => 'Mirrorful-builder',
-      // Preview in canvas; ACF fields (WYSIWYG) edit in the SIDEBAR.
-      // TinyMCE cannot run inside the Gutenberg iframe (WP 6.8+ / ACF).
+      // WP Block API v3 + preview-only: fields edit in sidebar (TinyMCE cannot
+      // run inside the Gutenberg iframe). See ACF guidance for iframe editors.
+      'api_version'     => 3,
       'mode'            => 'preview',
       'supports'        => [
-        'mode'  => true,
+        'mode'  => false,
         'align' => false,
       ],
-    ]));
+    ]);
+
+    // Prefer acf_register_block_type when available.
+    if (function_exists('acf_register_block_type')) {
+      acf_register_block_type($args);
+    } else {
+      acf_register_block($args);
+    }
   }
 }
 } // end function_exists my_acf_init

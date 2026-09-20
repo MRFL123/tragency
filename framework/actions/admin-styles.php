@@ -160,8 +160,8 @@ function tragency_is_block_editor_screen() {
 }
 
 /**
- * Theme CSS for the iframe canvas (block preview look only).
- * Never relied on alone for ACF field / TinyMCE chrome.
+ * Theme CSS for the iframe canvas (block preview look).
+ * editor-preview.css last so WYSIWYG/field overrides beat Bootstrap.
  */
 function tragency_block_preview_css_urls() {
   $theme_uri = get_template_directory_uri();
@@ -190,7 +190,7 @@ function tragency_block_preview_css_urls() {
 }
 
 /**
- * Iframe-safe styles (block preview + ACF when fields render in canvas).
+ * Iframe-safe styles only (correct hook — no admin_head / no sidebar-css handle).
  */
 add_action('enqueue_block_assets', function () {
   if (!is_admin()) {
@@ -240,26 +240,8 @@ add_filter('block_editor_settings_all', function ($settings) {
 }, 20);
 
 /**
- * Sidebar (parent frame) — TinyMCE lives HERE when blocks use mode=preview.
- * Inline CSS so WP does not flag a stylesheet handle as "added to iframe incorrectly".
- */
-add_action('admin_head', function () {
-  if (!tragency_is_block_editor_screen()) {
-    return;
-  }
-
-  $preview_path = get_theme_file_path('framework/assets/editor-preview.css');
-  if (!is_readable($preview_path)) {
-    return;
-  }
-
-  echo '<style id="tragency-acf-wysiwyg-protect">' . "\n";
-  echo file_get_contents($preview_path);
-  echo "\n</style>\n";
-}, 100);
-
-/**
- * TinyMCE / Quicktags scripts for ACF WYSIWYG in the sidebar.
+ * TinyMCE / Quicktags scripts + patch (no CSS here — avoids iframe warnings).
+ * Inline patch runs immediately after acf-input so it wins before field init.
  */
 add_action('enqueue_block_editor_assets', function () {
   if (function_exists('acf_enqueue_uploader')) {
@@ -274,20 +256,22 @@ add_action('enqueue_block_editor_assets', function () {
   wp_enqueue_script('quicktags');
   wp_enqueue_script('wplink');
 
+  // Sidebar field chrome: attach protect CSS to acf-input (parent frame).
+  $preview_path = get_theme_file_path('framework/assets/editor-preview.css');
+  if (is_readable($preview_path) && wp_style_is('acf-input', 'registered')) {
+    wp_enqueue_style('acf-input');
+    wp_add_inline_style('acf-input', file_get_contents($preview_path));
+  }
+
   $js = get_theme_file_path('framework/assets/acf-wysiwyg-defaults.js');
-  if (is_readable($js)) {
-    wp_enqueue_script(
-      'tragency-acf-wysiwyg-defaults',
-      get_theme_file_uri('framework/assets/acf-wysiwyg-defaults.js'),
-      ['jquery', 'acf-input', 'editor', 'quicktags'],
-      filemtime($js),
-      true
-    );
+  if (is_readable($js) && wp_script_is('acf-input', 'registered')) {
+    wp_enqueue_script('acf-input');
+    wp_add_inline_script('acf-input', file_get_contents($js), 'after');
   }
 });
 
 /**
- * Seed tinyMCEPreInit.acf_content (fixes ACF buildQuicktags "buttons" crash).
+ * Seed tinyMCEPreInit.acf_content early (fixes buildQuicktags "buttons" crash).
  */
 add_action('admin_print_footer_scripts', function () {
   if (!tragency_is_block_editor_screen()) {
@@ -319,17 +303,17 @@ add_action('admin_print_footer_scripts', function () {
   })();
   </script>
   <?php
-}, 5);
+}, 1);
 
 /**
- * WYSIWYG in block editor: delay init (click-to-activate) is more reliable
- * with Gutenberg DOM moves; full toolbar; keep both Visual + Text.
+ * Block-editor WYSIWYG: Visual + delayed click-to-init (Gutenberg-safe).
  */
 add_filter('acf/prepare_field/type=wysiwyg', function ($field) {
   if (!tragency_is_block_editor_screen()) {
     return $field;
   }
 
+  $field['tabs'] = 'visual';
   $field['toolbar'] = 'full';
   $field['media_upload'] = 1;
   $field['delay'] = 1;

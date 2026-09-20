@@ -1,30 +1,25 @@
 /**
  * Regression test: ACF buildQuicktags "reading 'buttons'" crash.
- * Run: node framework/assets/acf-wysiwyg-defaults.test.js
+ * Run: node framework/assets/acf-wysiwyg-defaults.test.cjs
  */
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
 function assert(cond, msg) {
-  if (!cond) {
-    throw new Error(msg);
-  }
+  if (!cond) throw new Error(msg);
 }
 
-// Minimal DOM
 function createDom() {
   const elements = new Map();
-
   function el(tag, id) {
     const node = {
-      tagName: tag.toUpperCase(),
+      tagName: (tag || 'div').toUpperCase(),
       id: id || '',
       className: '',
       innerHTML: '',
       children: [],
       parentNode: null,
-      dir: 'ltr',
       style: {},
       appendChild(child) {
         child.parentNode = this;
@@ -46,35 +41,30 @@ function createDom() {
     if (id) elements.set(id, node);
     return node;
   }
-
-  const document = {
-    getElementById(id) {
-      return elements.get(id) || null;
+  return {
+    document: {
+      body: { classList: { contains: () => true } },
+      getElementById(id) {
+        return elements.get(id) || null;
+      },
+      createElement(tag) {
+        return el(tag);
+      },
+      getElementsByTagName(name) {
+        if (name === 'html') return [{ dir: 'ltr' }];
+        return [];
+      },
+      readyState: 'complete',
+      addEventListener() {},
     },
-    createElement(tag) {
-      return el(tag);
-    },
-    getElementsByTagName(name) {
-      if (name === 'html') return [{ dir: 'ltr' }];
-      return [];
-    },
-    readyState: 'complete',
-    addEventListener() {},
+    el,
   };
-
-  return { document, elements, el };
 }
 
-// Minimal jQuery.extend
 function createJQuery() {
   function jQuery(fn) {
     if (typeof fn === 'function') fn();
-    const api = {
-      triggerHandler() {
-        return api;
-      },
-    };
-    return api;
+    return { triggerHandler() {} };
   }
   jQuery.extend = function () {
     const target = arguments[0] || {};
@@ -94,54 +84,34 @@ function createJQuery() {
   return jQuery;
 }
 
-// WordPress QTags (matches the early-return bug)
 function installQTags(window) {
   window.edButtons = [];
   window.QTags = function (settings) {
-    if (typeof settings === 'string') {
-      settings = { id: settings };
-    } else if (typeof settings !== 'object') {
-      return false;
-    }
-
-    const t = this;
+    if (typeof settings !== 'object') return false;
     const id = settings.id;
     const canvas = window.document.getElementById(id);
-
-    if (!id || !canvas) {
-      // Bug: returns false, but `new` still yields a hollow object.
-      return false;
-    }
-
-    t.name = 'qt_' + id;
-    t.id = id;
-    t.canvas = canvas;
-    t.settings = settings;
-
-    let tb = window.document.getElementById(t.name + '_toolbar');
-    if (!tb) {
-      tb = window.document.createElement('div');
-      tb.id = t.name + '_toolbar';
-      tb.className = 'quicktags-toolbar';
-    }
+    if (!id || !canvas) return false;
+    this.name = 'qt_' + id;
+    this.id = id;
+    this.canvas = canvas;
+    this.settings = settings;
+    const tb = window.document.createElement('div');
+    tb.id = this.name + '_toolbar';
     canvas.parentNode.insertBefore(tb, canvas);
-    t.toolbar = tb;
+    this.toolbar = tb;
   };
-
   window.quicktags = function (settings) {
     return new window.QTags(settings);
   };
-
-  window.QTags.DFWButton = function () {};
-  window.QTags.DFWButton.prototype.html = () => '';
-  window.QTags.TextDirectionButton = function () {};
-  window.QTags.TextDirectionButton.prototype.html = () => '';
 }
 
-// Stock ACF tinymce (simplified from acf-input.min.js)
 function installStockAcf(window, $) {
   window.acf = {
+    isGutenbergPostEditor() {
+      return true;
+    },
     doAction() {},
+    addAction() {},
     tinymce: {
       defaults() {
         return (
@@ -162,25 +132,23 @@ function installStockAcf(window, $) {
         const a = this.defaults();
         if (typeof window.quicktags === 'undefined') return false;
         if (!a) return false;
-        const n = $.extend({}, a.quicktags, args.quicktags);
+        const n = $.extend({}, a.quicktags, typeof args.quicktags === 'object' ? args.quicktags : {});
         n.id = id;
-        window.tinyMCEPreInit.qtInit[id] = n;
         const o = window.quicktags(n);
         if (!o) return false;
         this.buildQuicktags(o);
       },
       buildQuicktags(e) {
-        // Exact crash site from ACF:
         const i = e.settings;
         if (i.buttons) {
-          // ok
+          /* ok */
         }
       },
     },
   };
 }
 
-function runInContext(setupMissingCanvas, applyPatch) {
+function run(applyPatch) {
   const { document, el } = createDom();
   const $ = createJQuery();
   const windowObj = {
@@ -194,54 +162,17 @@ function runInContext(setupMissingCanvas, applyPatch) {
     edButtons: [],
   };
   windowObj.window = windowObj;
-
-  // tinyMCEPreInit WITHOUT acf_content (the broken Gutenberg case)
   windowObj.tinyMCEPreInit = { mceInit: {}, qtInit: {} };
-
   installQTags(windowObj);
   installStockAcf(windowObj, $);
 
-  if (!setupMissingCanvas) {
-    const wrap = el('div', 'wrap');
-    const textarea = el('textarea', 'acf-editor-1');
-    wrap.appendChild(textarea);
-    // register wrap in getElementById via el()
-  }
-
+  // missing textarea — stock ACF crashes
   if (applyPatch) {
     const code = fs.readFileSync(
       path.join(__dirname, 'acf-wysiwyg-defaults.js'),
       'utf8'
     );
     vm.runInNewContext(code, windowObj, { filename: 'acf-wysiwyg-defaults.js' });
-    // Allow interval patch to run
-    const start = Date.now();
-    while (!windowObj.acf.tinymce._tragencyPatched && Date.now() - start < 2000) {
-      // flush sync intervals won't run; call patch path via ready
-      // Force by re-evaluating ensure: trigger jQuery ready already ran.
-      // Manually wait — our patch uses setInterval; in vm it needs timers.
-      break;
-    }
-    // Directly ensure patch applied (timers don't auto-fire in sync test)
-    // Re-run patch by evaluating a nudge:
-    vm.runInNewContext(
-      `(function(){
-        var tries=0;
-        while(!acf.tinymce._tragencyPatched && tries++<5){
-          // patch function closed over; re-include by checking
-        }
-      })();`,
-      windowObj
-    );
-  }
-
-  // If patch file used setInterval, manually invoke by reloading with immediate patch check.
-  // Our file patches on $() which we already invoke. Interval is backup.
-  // Verify _tragencyPatched:
-  if (applyPatch && !windowObj.acf.tinymce._tragencyPatched) {
-    // The IIFE should have patched synchronously when acf existed.
-    // jQuery(fn) runs immediately in our mock, and patch() should succeed.
-    assert(windowObj.acf.tinymce._tragencyPatched, 'patch should apply synchronously');
   }
 
   let crashed = false;
@@ -257,44 +188,36 @@ function runInContext(setupMissingCanvas, applyPatch) {
     error = e;
   }
 
-  return { crashed, error, patched: !!(windowObj.acf.tinymce && windowObj.acf.tinymce._tragencyPatched), windowObj };
+  return {
+    crashed,
+    error,
+    patched: !!(windowObj.acf.tinymce && windowObj.acf.tinymce._tragencyPatched),
+    windowObj,
+  };
 }
 
-console.log('Test 1: stock ACF without acf_content + missing textarea → should crash');
+console.log('Test 1: stock ACF without canvas → crash');
 {
-  const r = runInContext(true, false);
-  assert(r.crashed, 'expected crash without patch');
-  assert(
-    /buttons/.test(String(r.error && r.error.message)),
-    'expected buttons error, got: ' + (r.error && r.error.message)
-  );
+  const r = run(false);
+  assert(r.crashed, 'expected crash');
+  assert(/buttons/.test(String(r.error && r.error.message)), r.error && r.error.message);
   console.log('  PASS:', r.error.message);
 }
 
-console.log('Test 2: with patch + missing textarea → must NOT crash');
+console.log('Test 2: with patch → no crash (quicktags disabled in block editor)');
 {
-  const r = runInContext(true, true);
-  assert(r.patched, 'patch not applied');
-  assert(!r.crashed, 'patch failed to prevent crash: ' + (r.error && r.error.message));
-  console.log('  PASS: no crash when canvas missing');
-}
-
-console.log('Test 3: with patch + textarea present → Quicktags usable');
-{
-  const r = runInContext(false, true);
+  const r = run(true);
   assert(r.patched, 'patch not applied');
   assert(!r.crashed, 'unexpected crash: ' + (r.error && r.error.message));
-  const qt = r.windowObj.tinyMCEPreInit.qtInit['acf-editor-1'];
-  assert(qt && qt.buttons, 'expected qtInit buttons for editor id');
-  console.log('  PASS: qtInit seeded with buttons');
+  console.log('  PASS: no crash');
 }
 
-console.log('Test 4: defaults() always returns qtInit.acf_content.buttons');
+console.log('Test 3: defaults seeded');
 {
-  const r = runInContext(false, true);
+  const r = run(true);
   const d = r.windowObj.acf.tinymce.defaults();
-  assert(d.quicktags && d.quicktags.buttons, 'defaults.quicktags.buttons missing');
   assert(d.tinymce, 'defaults.tinymce missing');
+  assert(d.quicktags && d.quicktags.buttons, 'defaults.quicktags.buttons missing');
   console.log('  PASS: defaults seeded');
 }
 
