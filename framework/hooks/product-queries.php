@@ -1,7 +1,6 @@
 <?php
 /**
- * Keep product listings newest-first across the site.
- * Hierarchical product CPT can otherwise fall back to menu_order / oldest-first.
+ * Keep product listings oldest-first (newest appears last) across the site.
  */
 
 /**
@@ -26,8 +25,8 @@ function tragency_query_is_product($query) {
 }
 
 /**
- * Force front-end product queries to date DESC (newest first).
- * Skips random / explicit custom orderby values other than menu_order/title defaults.
+ * Force front-end product queries to date ASC (newest last).
+ * Skips random / explicit custom orderby values.
  */
 add_action('pre_get_posts', function ($query) {
   if (is_admin() || !($query instanceof WP_Query) || !tragency_query_is_product($query)) {
@@ -49,14 +48,14 @@ add_action('pre_get_posts', function ($query) {
   }
 
   $query->set('orderby', [
-    'date' => 'DESC',
-    'ID'   => 'DESC',
+    'date' => 'ASC',
+    'ID'   => 'ASC',
   ]);
-  $query->set('order', 'DESC');
+  $query->set('order', 'ASC');
 });
 
 /**
- * ACF relationship field: show newest products first when picking products.
+ * ACF relationship field: oldest products first when picking products.
  */
 add_filter('acf/fields/relationship/query', function ($args, $field) {
   $post_types = $field['post_type'] ?? [];
@@ -69,29 +68,29 @@ add_filter('acf/fields/relationship/query', function ($args, $field) {
   }
 
   $args['orderby'] = [
-    'date' => 'DESC',
-    'ID'   => 'DESC',
+    'date' => 'ASC',
+    'ID'   => 'ASC',
   ];
-  $args['order'] = 'DESC';
+  $args['order'] = 'ASC';
 
   return $args;
 }, 10, 2);
 
 /**
- * Shared WP_Query args for product listings (newest first).
+ * Shared WP_Query args for product listings (newest last).
  *
  * @param array $args Extra/override args.
  * @return array
  */
 function tragency_product_query_args(array $args = []) {
   $defaults = [
-    'post_type'      => 'product',
-    'post_status'    => 'publish',
-    'orderby'        => [
-      'date' => 'DESC',
-      'ID'   => 'DESC',
+    'post_type'   => 'product',
+    'post_status' => 'publish',
+    'orderby'     => [
+      'date' => 'ASC',
+      'ID'   => 'ASC',
     ],
-    'order'          => 'DESC',
+    'order'       => 'ASC',
   ];
 
   return array_merge($defaults, $args);
