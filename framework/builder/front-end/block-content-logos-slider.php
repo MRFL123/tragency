@@ -53,7 +53,7 @@
             <div class="slick-slider">
                 <?php foreach( $logos as $img ): ?>
                     <div class="text-center d-flex align-items-center justify-content-center p-2">
-                        <img class="px-2 mw-100" height="70px" src="<?= $img['url'] ?>" alt="<?= $img['alt'] ?>">
+                        <img class="logo-img px-2" src="<?= esc_url($img['url']) ?>" alt="<?= esc_attr($img['alt'] ?? '') ?>">
                     </div>
                 <?php endforeach; ?>
             </div>

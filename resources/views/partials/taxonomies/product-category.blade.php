@@ -10,13 +10,9 @@
 
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
-    $args = [
-        'post_type'      => 'product',
-        'post_status'    => 'publish',
+    $args = tragency_product_query_args([
         'posts_per_page' => 6,
         'paged'          => $paged,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
         'tax_query'      => [
             [
                 'taxonomy' => 'product-category',
@@ -24,7 +20,7 @@
                 'terms'    => $category->slug,
             ],
         ],
-    ];
+    ]);
 
     $products_query = new WP_Query($args);
 @endphp

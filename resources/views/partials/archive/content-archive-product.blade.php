@@ -21,6 +21,8 @@
         'hide_empty' => false,
         'number'     => $per_page,
         'offset'     => ($paged - 1) * $per_page,
+        'orderby'    => 'term_id',
+        'order'      => 'DESC',
     ];
 
     $all_categories = get_terms($args);

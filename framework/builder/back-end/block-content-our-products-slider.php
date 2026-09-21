@@ -11,30 +11,23 @@ $selected_products = get_field('selected_products');
 $products = [];
 
 if ($products_selection === 'latest') {
-    $query = new WP_Query([
-        'post_type'      => 'product',
+    $query = new WP_Query(tragency_product_query_args([
         'posts_per_page' => 6,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-    ]);
+    ]));
     $products = $query->posts;
 
 } elseif ($products_selection === 'random') {
-    $query = new WP_Query([
-        'post_type'      => 'product',
+    $query = new WP_Query(tragency_product_query_args([
         'posts_per_page' => 6,
         'orderby'        => 'rand',
-    ]);
+    ]));
     $products = $query->posts;
 
 } elseif ($products_selection === 'select' && !empty($selected_products)) {
-    $args = [
-        'post_type'      => 'product',
+    $query = new WP_Query(tragency_product_query_args([
         'posts_per_page' => -1,
         'post__in'       => $selected_products,
-        'orderby'        => 'post__in',
-    ];
-    $query    = new WP_Query($args);
+    ]));
     $products = $query->posts;
 }
 ?>
