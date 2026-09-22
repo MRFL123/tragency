@@ -107,9 +107,7 @@
                 <a class="item-wrraper position-relative d-block overflow-hidden bg-white" href="{{ get_permalink() }}">
                   <div class="row h-100">
                     <div class="col-5 col-lg-4 img">
-                      @if (has_post_thumbnail())
-                        <img class="h-100 object-fit-cover" src="{{ Utilities::global_thumbnails(get_the_ID(), 'large') }}" alt="{{ get_the_title() }}">
-                      @endif
+                      <img class="h-100 object-fit-cover" src="{{ Utilities::global_thumbnails(get_the_ID(), 'large', false) }}" alt="{{ get_the_title() }}">
                     </div>
 
                     <div class="col-7 col-lg-8 content">

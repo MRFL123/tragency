@@ -147,6 +147,11 @@
                 @foreach ($all_categories as $category)
                     @php
                         $image = get_field('category_image', 'product-category_' . $category->term_id);
+                        $image_url = !empty($image['url']) ? $image['url'] : null;
+                        if (!$image_url) {
+                            $default_image = get_field('default_image', 'option');
+                            $image_url = is_array($default_image) ? ($default_image['url'] ?? null) : $default_image;
+                        }
                     @endphp
 
                     <div class="card-services col-12 col-md-6 col-lg-4">
@@ -169,8 +174,8 @@
                                   <span class="text font-22"> {{ __('Product', 'Products') }} </span>
                                 </div>
                             </div>
-                            @if (!empty($image['url']))
-                                <img class="w-100 h-100 image-back" src="{{ $image['url'] }}" alt="{{ $category->name }}">
+                            @if ($image_url)
+                                <img class="w-100 h-100 image-back" src="{{ $image_url }}" alt="{{ $category->name }}">
                             @endif
                             <div class="content">
                               <h2 class="title text-white font-30 fw-600">
